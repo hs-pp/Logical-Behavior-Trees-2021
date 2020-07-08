@@ -59,10 +59,10 @@ namespace GraphTheory.Editor
             }
             Debug.Log("Deserialized data: " + serializedData);
 
-            // Window size
-            Rect window = position;
-            window.size = m_graphWindowData.WindowDimensions; 
-            position = window;
+            // Window siz 
+            //Rect window = position; 
+            //window.size = m_graphWindowData.WindowDimensions; 
+            //position = window;
 
             // Main split view position
             m_mainSplitView.SetSplitPosition(m_graphWindowData.MainSplitViewPosition);

@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace GraphTheory.Editor
+namespace GraphTheory.Editor 
 {
     public class NodeGraphEditor
     {
