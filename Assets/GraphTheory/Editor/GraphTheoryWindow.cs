@@ -15,7 +15,6 @@ namespace GraphTheory.Editor
         private const string MAIN_SPLITVIEW = "main-TwoPanelSplit";
         private const string MAIN_PANEL_RIGHT = "main-panel-right";
 
-
         private GraphWindowData m_graphWindowData = null;
         private NodeGraphView m_nodeGraphView = null;
         private Toolbar m_toolbar = null;
@@ -101,6 +100,16 @@ namespace GraphTheory.Editor
             };
             m_nodeGraphView.StretchToParentSize();
             parent.Add(m_nodeGraphView);
+        }
+
+        public void OpenGraph(NodeGraph nodeGraph)
+        {
+            Debug.Log("Opening graph");
+        }
+
+        public void CloseGraph()
+        {
+            
         }
     }
 }

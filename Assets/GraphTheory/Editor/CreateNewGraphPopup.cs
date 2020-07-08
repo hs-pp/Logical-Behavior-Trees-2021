@@ -39,8 +39,6 @@ namespace GraphTheory.Editor
             m_allGraphTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(
                 x => typeof(NodeGraph).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract).ToArray();
             m_allGraphTypeNames = m_allGraphTypes.Select(x => x.Name).ToArray();
-
-            Debug.Log("Found" + m_allGraphTypes.Length);
         }
 
         private void OnGUI()
