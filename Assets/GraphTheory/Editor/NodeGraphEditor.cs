@@ -13,8 +13,8 @@ namespace GraphTheory.Editor
         {
             if (typeof(NodeGraph).IsAssignableFrom(EditorUtility.InstanceIDToObject(instanceID).GetType()))
             {
-                Debug.Log(EditorUtility.InstanceIDToObject(instanceID).GetType() + "yes");
-                GraphTheoryWindow.OpenWindow(); 
+                GraphTheoryWindow window = GraphTheoryWindow.OpenWindow();
+                window.OpenGraph(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(instanceID)));
                 return true;
             }
             return false;

@@ -24,7 +24,8 @@ namespace GraphTheory.Editor
 
             // Minimap
             m_miniMap = new MiniMap { anchored = true };
-            m_miniMap.SetPosition(new Rect(10, 30, 200, 140));
+            m_miniMap.SetPosition(new Rect(0, 0, 200, 200));
+            this.RegisterCallback<GeometryChangedEvent>(SetMiniMapPosition);
             Add(m_miniMap);
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
@@ -59,6 +60,11 @@ namespace GraphTheory.Editor
             NodeView nodeView = new NodeView(node);
             AddElement(nodeView);
             return nodeView;
+        }
+
+        private void SetMiniMapPosition(GeometryChangedEvent evt)
+        {
+            m_miniMap.SetPosition(new Rect(evt.newRect.xMax - 210, evt.newRect.yMax - 210, 200, 200));
         }
 
         private void Reset()

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="tab-area" style="height: 20px; flex-direction: row; background-color: rgb(200, 69, 69);">
+        <Style src="TabGroupElement.uss" />
+    </ui:VisualElement>
+    <ui:VisualElement name="content-area" style="flex-grow: 1;">
+        <Style src="TabGroupElement.uss" />
+    </ui:VisualElement>
+</ui:UXML>
