@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
@@ -77,3 +76,27 @@ namespace GraphTheory.Editor
         }
     }
 }
+
+// Trying to figure out how to undo forced dark theme. No success yes...
+//https://github.com/Unity-Technologies/UnityCsReference/blob/master/Modules/GraphViewEditor/Views/GraphView.cs
+//https://github.com/Unity-Technologies/UnityCsReference/blob/master/Modules/UIElementsEditor/UIElementsEditorUtility.cs
+//https://github.com/Unity-Technologies/UnityCsReference/blob/master/External/MirroredPackageSources/com.unity.ui/Core/VisualElementStyleSheetSet.cs
+//UIElementsEditorUtility.ForceDarkStyleSheet(false);
+//Type type = Assembly.GetAssembly(typeof(UnityEditor.UIElements.ColorField)).GetTypes().FirstOrDefault(x => x.Name == "UIElementsEditorUtility");
+//MemberInfo[] infos = type.GetMembers(BindingFlags.Static | BindingFlags.NonPublic);
+//StyleSheet darkStyle = type.GetField("s_DefaultCommonDarkStyleSheet", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as StyleSheet;
+//StyleSheet lightStyle = type.GetField("s_DefaultCommonLightStyleSheet", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as StyleSheet;
+
+//MethodInfo swap = typeof(VisualElementStyleSheetSet).GetMethod("Swap", BindingFlags.NonPublic | BindingFlags.Instance);
+//VisualElement e = this;
+//while (e != null)
+//{
+//    Debug.Log("loop");
+//    if (e.styleSheets.Contains(lightStyle))
+//    {
+//        Debug.Log("swapping");
+//        swap.Invoke(e.styleSheets, new object[] { lightStyle, darkStyle });
+//        break;
+//    }
+//    e = e.parent;
+//}

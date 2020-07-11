@@ -14,8 +14,6 @@ namespace GraphTheory.Editor.UIElements
     public class TabElement : VisualElement
     {
         private const string TAB_NAME_LABEL = "TabName";
-        private const string NEUTRAL_LIGHT_STYLE = "neutral-tab-light";
-        private const string SELECTED_LIGHT_STYLE = "selected-tab-light";
         private const string NEUTRAL_DARK_STYLE = "neutral-tab-dark";
         private const string SELECTED_DARK_STYLE = "selected-tab-dark";
 
@@ -48,35 +46,16 @@ namespace GraphTheory.Editor.UIElements
         public void SetIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
-
-            bool isDarkTheme = EditorGUIUtility.isProSkin;
-            if (isDarkTheme)
+            if (IsSelected)
             {
-                if (IsSelected)
-                {
-                    this.RemoveFromClassList(NEUTRAL_DARK_STYLE);
-                    this.AddToClassList(SELECTED_DARK_STYLE);
-                }
-                else
-                {
-                    this.RemoveFromClassList(SELECTED_DARK_STYLE);
-                    this.AddToClassList(NEUTRAL_DARK_STYLE);
-                }
+                this.RemoveFromClassList(NEUTRAL_DARK_STYLE);
+                this.AddToClassList(SELECTED_DARK_STYLE);
             }
             else
             {
-                if (IsSelected)
-                {
-                    this.RemoveFromClassList(NEUTRAL_LIGHT_STYLE);
-                    this.AddToClassList(SELECTED_LIGHT_STYLE);
-                }
-                else
-                {
-                    this.RemoveFromClassList(SELECTED_LIGHT_STYLE);
-                    this.AddToClassList(NEUTRAL_LIGHT_STYLE);
-                }
+                this.RemoveFromClassList(SELECTED_DARK_STYLE);
+                this.AddToClassList(NEUTRAL_DARK_STYLE);
             }
-
             Content.visible = IsSelected;
         }
 

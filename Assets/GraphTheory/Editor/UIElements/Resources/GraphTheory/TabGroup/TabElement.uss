@@ -2,29 +2,17 @@
     flex-grow: 1;
     flex-shrink: 0;
     background-color: rgb(115, 115, 115);
-    border-left-width: 2px;
-    border-right-width: 2px;
-    border-top-width: 2px;
-    border-bottom-width: 2px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
     border-left-color: rgb(82, 82, 82);
     border-right-color: rgb(82, 82, 82);
-    border-top-color: rgb(82, 82, 82);
     border-bottom-color: rgb(82, 82, 82);
 }
 
 .selected-tab-dark {
     flex-grow: 1;
     flex-shrink: 0;
-    top: 0;
-    bottom: 0;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-top-width: 2px;
-    border-bottom-width: 0;
-    border-left-color: rgb(82, 82, 82);
-    border-right-color: rgb(82, 82, 82);
-    border-top-color: rgb(82, 82, 82);
-    border-bottom-color: rgb(82, 82, 82);
     background-color: rgb(56, 56, 56);
 }
 

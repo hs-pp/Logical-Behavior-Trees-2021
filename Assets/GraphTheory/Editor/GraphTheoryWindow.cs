@@ -1,5 +1,4 @@
 ﻿using GraphTheory.Editor.UIElements;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -33,6 +32,7 @@ namespace GraphTheory.Editor
             window.titleContent = new GUIContent("NodeGraph");
             return window;
         }
+
         [MenuItem("Graph/Clear Graph Data")]
         public static void ClearGraphData()
         {
@@ -102,7 +102,7 @@ namespace GraphTheory.Editor
 
         private void RegisterToolbarButton_CreateNewGraph()
         { 
-            var graphCreateButton = new Button(() =>
+            var graphCreateButton = new ToolbarButton(() =>
             {
                 CreateNewGraphPopup.OpenWindow();
             });
@@ -133,7 +133,6 @@ namespace GraphTheory.Editor
 
         public void OpenGraph(string guid)
         {
-            Debug.Log("Opening graph");
             m_graphWindowData.OpenGraphGUID = guid;
             m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
             m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance);
