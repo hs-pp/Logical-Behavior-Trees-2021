@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class NodeGraphe : EditorWindow
 {
-    private NodeGraphView m_graphView;
+    private NodeGraphView2 m_graphView;
 
     [MenuItem("Graph/NodeGraph")]
     public static void OpenNodeGraph()
@@ -36,7 +36,7 @@ public class NodeGraphe : EditorWindow
 
     private void ConstructGraphView()
     {
-        m_graphView = new NodeGraphView
+        m_graphView = new NodeGraphView2
         {
             name = "Main Graph"
         };

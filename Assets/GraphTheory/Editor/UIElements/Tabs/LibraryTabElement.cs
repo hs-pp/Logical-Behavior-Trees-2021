@@ -16,8 +16,7 @@ namespace GraphTheory.Editor
 
         public LibraryTabElement() 
         {
-            //this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/TabGroup/TabElement"));
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/LibraryTabElement");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/Tabs/LibraryTabElement");
             xmlAsset.CloneTree(this);
 
             m_objectDisplayField = this.Q<ObjectDisplayField>(OPENED_GRAPH_FIELD);

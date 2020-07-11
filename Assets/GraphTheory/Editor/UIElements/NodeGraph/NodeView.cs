@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace GraphTheory.Editor
+namespace GraphTheory.Editor.UIElements
 {
     public class NodeView : Node
     {

@@ -41,7 +41,7 @@ namespace GraphTheory.Editor
 
         private void OnEnable() 
         {
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheoryWindow");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/GraphTheoryWindow");
             xmlAsset.CloneTree(rootVisualElement);
 
             // Get all the elements

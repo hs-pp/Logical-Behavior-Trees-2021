@@ -3,18 +3,19 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 
-namespace GraphTheory.Editor
+namespace GraphTheory.Editor.UIElements
 {
     public class NodeGraphView : GraphView
     {
         private GridBackground m_gridBackground = null;
         private MiniMap m_miniMap = null;
+        private BreadcrumbsView m_breadcrumbs = null;
         private NodeGraph m_nodeGraph = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
 
         public NodeGraphView() 
         {
-            styleSheets.Add(Resources.Load<StyleSheet>("NodeGraph"));//TODO: Move this out of Resources.
+            styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/NodeGraph/NodeGraphView"));
 
             // Grid lines
             m_gridBackground = new GridBackground();
@@ -31,6 +32,10 @@ namespace GraphTheory.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
+            Add(m_breadcrumbs = new BreadcrumbsView());
+            m_breadcrumbs.SetBreadcrumbPath("Hello/this/is/a/test/path/");
+            m_breadcrumbs.OnBreadcrumbChanged += (string path) => { Debug.Log(path); };
         }
 
         public void SetNodeGraph(NodeGraph nodeGraph)

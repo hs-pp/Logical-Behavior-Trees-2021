@@ -5,11 +5,11 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System;
 
-public class NodeGraphView : GraphView
+public class NodeGraphView2 : GraphView
 {
-    public NodeGraphView()
+    public NodeGraphView2()
     {
-        styleSheets.Add(Resources.Load<StyleSheet>("NodeGraph"));  
+        styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/NodeGraph/NodeGraphView"));  
         SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());

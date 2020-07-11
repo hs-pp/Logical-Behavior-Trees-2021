@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="breadcrumb" style="flex-shrink: 0; justify-content: center; flex-direction: row;">
+        <ui:Label text="text" name="breadcrumb-label" style="-unity-text-align: middle-left;" />
+        <ui:Label text="/" name="backslash" style="-unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>
