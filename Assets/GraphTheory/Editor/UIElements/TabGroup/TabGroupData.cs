@@ -10,7 +10,7 @@ namespace GraphTheory.Editor.UIElements
     [System.Serializable]
     public class TabGroupData
     {
-        public int SelectedTab = -1;
+        public int SelectedTab = 0;
         public List<string> TabData = new List<string>();
     }
 }

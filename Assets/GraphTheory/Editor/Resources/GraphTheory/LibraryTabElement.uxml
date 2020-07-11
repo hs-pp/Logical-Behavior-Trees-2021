@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <GraphTheory.Editor.UIElements.ObjectDisplayField name="opened-graph-field" />
+</ui:UXML>

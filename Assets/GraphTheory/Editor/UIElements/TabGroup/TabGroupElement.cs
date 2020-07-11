@@ -19,7 +19,7 @@ namespace GraphTheory.Editor.UIElements
 
         private TabGroupData m_tabGroupData = new TabGroupData();
 
-        public TabGroupElement(List<(string, TabContent)> tabs)
+        public TabGroupElement(List<(string, TabContentElement)> tabs)
         {
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/TabGroup/TabGroupElement");
             xmlAsset.CloneTree(this);
@@ -33,7 +33,7 @@ namespace GraphTheory.Editor.UIElements
             }
         }
 
-        private void AddTab((string, TabContent) content)
+        private void AddTab((string, TabContentElement) content)
         {
             TabElement tabElement = new TabElement(content.Item1, content.Item2);
             tabElement.OnSelected += (bool isSelected) =>

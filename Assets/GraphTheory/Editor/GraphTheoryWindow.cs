@@ -22,12 +22,21 @@ namespace GraphTheory.Editor
         private TwoPaneSplitView m_mainSplitView = null;
         private TabGroupElement m_mainTabGroup = null;
 
+        private LibraryTabElement m_libraryTab = null;
+
+        private NodeGraph m_openedGraphInstance = null;
+
         [MenuItem("Graph/GraphTheory")]
         public static GraphTheoryWindow OpenWindow()
         {
             var window = GetWindow<GraphTheoryWindow>();
             window.titleContent = new GUIContent("NodeGraph");
             return window;
+        }
+        [MenuItem("Graph/Clear Graph Data")]
+        public static void ClearGraphData()
+        {
+            EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(new GraphWindowData(), true));
         }
 
         private void OnEnable() 
@@ -67,9 +76,12 @@ namespace GraphTheory.Editor
             //Rect window = position; 
             //window.size = m_graphWindowData.WindowDimensions; 
             //position = window;
-
-            // Main split view position
+            
             m_mainSplitView.SetSplitPosition(m_graphWindowData.MainSplitViewPosition);
+            if(!string.IsNullOrEmpty(m_graphWindowData.OpenGraphGUID))
+            {
+                OpenGraph(m_graphWindowData.OpenGraphGUID);
+            }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
         }
 
@@ -100,8 +112,8 @@ namespace GraphTheory.Editor
 
         private void RegisterMainPanelLeft(VisualElement leftPanel)
         {
-            List<(string, TabContent)> tabs = new List<(string, TabContent)>();
-            tabs.Add(("Library", new TestContent()));
+            List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
+            tabs.Add(("Library", m_libraryTab = new LibraryTabElement()));
             tabs.Add(("Inspector", new TestContent()));
 
             m_mainTabGroup = new TabGroupElement(tabs);
@@ -122,6 +134,9 @@ namespace GraphTheory.Editor
         public void OpenGraph(string guid)
         {
             Debug.Log("Opening graph");
+            m_graphWindowData.OpenGraphGUID = guid;
+            m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
+            m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance);
         }
 
         public void CloseGraph()

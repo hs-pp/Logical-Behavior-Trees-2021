@@ -20,11 +20,11 @@ namespace GraphTheory.Editor.UIElements
         private const string SELECTED_DARK_STYLE = "selected-tab-dark";
 
         public string Name { get; private set; }
-        public TabContent Content { get; private set; }
+        public TabContentElement Content { get; private set; }
         public bool IsSelected { get; private set; }
         public Action<bool> OnSelected = null;
 
-        public TabElement(string tabName, TabContent content)
+        public TabElement(string tabName, TabContentElement content)
         {
             this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/TabGroup/TabElement"));
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/TabGroup/TabElement");
