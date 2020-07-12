@@ -13,6 +13,8 @@ namespace GraphTheory.Editor.UIElements
         private List<BreadcrumbElement> m_breadcrumbs = new List<BreadcrumbElement>();
         public Action<string> OnBreadcrumbChanged { get; set; }
 
+        private string m_currentFullPath = "";
+
         public BreadcrumbsView()
         {
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/Breadcrumbs/BreadcrumbsView");
@@ -21,8 +23,12 @@ namespace GraphTheory.Editor.UIElements
             m_breadcrumbContainer = this.Q<VisualElement>(BREADCRUMB_CONTAINER);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="path"> Formatted as "Hello/this/is/a/path/" </param>
         public void SetBreadcrumbPath(string path)// This could be more efficient
         {
+            m_currentFullPath = path;
             ClearCrumbs();
             string[] parsed = path.Split('/');
             string constructed = "";
@@ -53,7 +59,10 @@ namespace GraphTheory.Editor.UIElements
 
         private void OnBreadcrumbClick(string path)
         {
-            SetBreadcrumbPath(path);
+            if(path == m_currentFullPath)
+            {
+                return;
+            }
             OnBreadcrumbChanged?.Invoke(path);
         }
 

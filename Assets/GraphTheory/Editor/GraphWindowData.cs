@@ -10,8 +10,10 @@ namespace GraphTheory.Editor
     {
         public Vector2 WindowDimensions = new Vector2(600, 400);
         public float MainSplitViewPosition = 200;
+
         public TabGroupData MainTabGroup = new TabGroupData();
 
         public string OpenGraphGUID = "";
+        public string GraphBreadcrumbPath = "";
     }
 }

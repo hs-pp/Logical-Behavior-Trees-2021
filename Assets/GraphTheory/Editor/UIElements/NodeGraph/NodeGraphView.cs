@@ -9,8 +9,7 @@ namespace GraphTheory.Editor.UIElements
     {
         private GridBackground m_gridBackground = null;
         private MiniMap m_miniMap = null;
-        private BreadcrumbsView m_breadcrumbs = null;
-        private NodeGraph m_nodeGraph = null;
+        private NodeGraphData m_nodeGraphData = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
 
         public NodeGraphView() 
@@ -32,21 +31,17 @@ namespace GraphTheory.Editor.UIElements
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-
-            Add(m_breadcrumbs = new BreadcrumbsView());
-            m_breadcrumbs.SetBreadcrumbPath("Hello/this/is/a/test/path/");
-            m_breadcrumbs.OnBreadcrumbChanged += (string path) => { Debug.Log(path); };
         }
 
-        public void SetNodeGraph(NodeGraph nodeGraph)
+        public void SetNodeGraphData(NodeGraphData nodeGraphData)
         {
             Reset();
-            m_nodeGraph = nodeGraph;
+            m_nodeGraphData = nodeGraphData;
 
-            if (m_nodeGraph == null)
+            if (m_nodeGraphData == null)
                 return;
 
-            List<ANode> nodeData = m_nodeGraph.NodeGraphData.GetAllNodes();
+            List<ANode> nodeData = m_nodeGraphData.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
             {
                 m_nodeViews.Add(nodeData[i].Id, CreateNodeView(nodeData[i]));
@@ -83,6 +78,7 @@ namespace GraphTheory.Editor.UIElements
 }
 
 // Trying to figure out how to undo forced dark theme. No success yes...
+// MAYBE I should always force dark theme by calling this method myself. That would future proof this scenario.
 //https://github.com/Unity-Technologies/UnityCsReference/blob/master/Modules/GraphViewEditor/Views/GraphView.cs
 //https://github.com/Unity-Technologies/UnityCsReference/blob/master/Modules/UIElementsEditor/UIElementsEditorUtility.cs
 //https://github.com/Unity-Technologies/UnityCsReference/blob/master/External/MirroredPackageSources/com.unity.ui/Core/VisualElementStyleSheetSet.cs

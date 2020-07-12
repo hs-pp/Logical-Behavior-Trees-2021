@@ -16,12 +16,12 @@ namespace GraphTheory.Editor
         private const string MAIN_PANEL_RIGHT = "main-panel-right";
 
         private GraphWindowData m_graphWindowData = null;
-        private NodeGraphView m_nodeGraphView = null;
         private Toolbar m_toolbar = null;
         private TwoPaneSplitView m_mainSplitView = null;
         private TabGroupElement m_mainTabGroup = null;
-
         private LibraryTabElement m_libraryTab = null;
+        private NodeGraphView m_nodeGraphView = null;
+        private BreadcrumbsView m_breadcrumbs = null;
 
         private NodeGraph m_openedGraphInstance = null;
 
@@ -80,9 +80,11 @@ namespace GraphTheory.Editor
             m_mainSplitView.SetSplitPosition(m_graphWindowData.MainSplitViewPosition);
             if(!string.IsNullOrEmpty(m_graphWindowData.OpenGraphGUID))
             {
-                OpenGraph(m_graphWindowData.OpenGraphGUID);
+                OpenGraph(m_graphWindowData.OpenGraphGUID, m_graphWindowData.GraphBreadcrumbPath);
             }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
+            
+            SetGraphBreadcrumbPath("Hello/this/is/a/test/path/");
         }
 
         private void SerializeData()
@@ -123,24 +125,43 @@ namespace GraphTheory.Editor
 
         private void RegisterMainPanelRight(VisualElement rightPanel)
         {
-            m_nodeGraphView = new NodeGraphView
-            {
-                name = "NodeGraphView" 
-            };
+            m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
             rightPanel.Add(m_nodeGraphView);
+
+            m_nodeGraphView.Add(m_breadcrumbs = new BreadcrumbsView());
+            m_breadcrumbs.OnBreadcrumbChanged += SetGraphBreadcrumbPath;
         }
 
-        public void OpenGraph(string guid)
+        public void OpenGraph(string guid, string breadcrumb = "")
         {
             m_graphWindowData.OpenGraphGUID = guid;
             m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
             m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance);
+            if(string.IsNullOrEmpty(breadcrumb))
+            {
+                breadcrumb = "base/";
+            }
+            SetGraphBreadcrumbPath(breadcrumb);
         }
 
         public void CloseGraph()
         {
             
+        }
+
+        private void SetGraphBreadcrumbPath(string path)
+        {
+            Debug.Log("New breadcrumb path is " + path);
+            m_graphWindowData.GraphBreadcrumbPath = path;
+            m_breadcrumbs.SetBreadcrumbPath(path);
+            NodeGraphData graphData = GetNodeGraphDataByBreadcrumb(m_openedGraphInstance, path);
+            m_nodeGraphView.SetNodeGraphData(graphData);
+        }
+
+        private NodeGraphData GetNodeGraphDataByBreadcrumb(NodeGraph graph, string path)
+        {
+            return graph.NodeGraphData;
         }
     }
 }
