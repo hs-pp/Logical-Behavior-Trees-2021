@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor.UIElements
 {
@@ -9,52 +11,83 @@ namespace GraphTheory.Editor.UIElements
     {
         private ANode m_node = null;
         public string NodeId { get { return m_node != null ? m_node.Id : string.Empty; } }
-        private List<Port> m_inports = new List<Port>();
-        private List<Port> m_outports = new List<Port>();
-
-        public NodeView(ANode node) : base()
+        private PortView m_inport = null;
+        private List<PortView> m_outports = new List<PortView>();
+        private IEdgeConnectorListener m_edgeConnectorListener = null;
+        
+        public NodeView(ANode node, IEdgeConnectorListener edgeConnectorListener) : base()
         {
             m_node = node;
-
+            m_edgeConnectorListener = edgeConnectorListener;
             if(m_node != null)
             {
                 title = m_node.Name;
 
                 m_node.DrawNodeView(this);
 
-                //Add ports
-                for(int i = 0; i < m_node.NumInports; i++)
+                if (m_node.HasInport)
                 {
-                    Port newInport = InstantiatePort(Orientation.Horizontal, 
-                        Direction.Input, 
-                        Port.Capacity.Single, 
-                        typeof(bool));
-                    newInport.portName = $"Inport {i}";
-                    m_inports.Add(newInport);
-                    inputContainer.Add(newInport);
+                    //Add ports
+                    m_inport = new PortView(this,
+                        Orientation.Horizontal,
+                        Direction.Input,
+                        Port.Capacity.Single,
+                        typeof(bool),
+                        0,
+                        m_edgeConnectorListener);
+                    m_inport.portName = "";
+                    inputContainer.Add(m_inport);
                 }
+
                 for (int j = 0; j < m_node.NumOutports; j++)
                 {
-                    Port newOutport = InstantiatePort(Orientation.Horizontal,
+                    PortView newPort = new PortView(this,
+                        Orientation.Horizontal,
                         Direction.Output,
                         Port.Capacity.Single,
-                        typeof(bool));
-                    newOutport.portName = $"Outport {j}";
-                    m_outports.Add(newOutport);
-                    outputContainer.Add(newOutport);
+                        typeof(bool),
+                        j,
+                        m_edgeConnectorListener);
+                    newPort.portName = $"Outport {m_outports.Count}";
+                    m_outports.Add(newPort);
+                    outputContainer.Add(newPort);
                 }
                 RefreshExpandedState();
                 RefreshPorts();
-
-                Debug.Log(m_node.Size);
+                
                 SetPosition(new Rect(m_node.Position, m_node.Size));
+
+                this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { m_node.Position = gce.newRect.position; });
             }
         }
 
-        private Port GetPortInstance(Direction nodeDirection,
-    Port.Capacity capacity = Port.Capacity.Single)
+        public void OnRemove()
         {
-            return InstantiatePort(Orientation.Horizontal, nodeDirection, capacity, typeof(float));
+
+        }
+
+        public Port GetInport()
+        {
+            return m_inport;
+        }
+
+        public Port GetOutport(int outportIndex)
+        {
+            return m_outports[outportIndex];
+        }
+
+        public void ConnectPort(int outportIndex, NodeView otherNode)
+        {
+            m_node.AddOutportEdge(outportIndex, new OutportEdge() { ConnectedNodeId = otherNode.NodeId });
+        }
+        public void RemovePort(int outportIndex)
+        {
+            m_node.RemoveOutportEdge(outportIndex);
+        }
+
+        public bool OutportHasEdge(int outportIndex)
+        {
+            return m_node.GetOutportEdge(outportIndex) != null;
         }
     }
 }

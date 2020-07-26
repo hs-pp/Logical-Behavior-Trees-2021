@@ -5,6 +5,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+//https://docs.unity3d.com/Manual/UIE-Events-Reference.html
+
 namespace GraphTheory.Editor
 {
     public class GraphTheoryWindow : EditorWindow
@@ -28,8 +30,9 @@ namespace GraphTheory.Editor
         [MenuItem("Graph/GraphTheory")]
         public static GraphTheoryWindow OpenWindow()
         {
-            var window = GetWindow<GraphTheoryWindow>();
+            var window = CreateInstance<GraphTheoryWindow>();
             window.titleContent = new GUIContent("NodeGraph");
+            window.Show();
             return window;
         }
 
@@ -155,13 +158,7 @@ namespace GraphTheory.Editor
             Debug.Log("New breadcrumb path is " + path);
             m_graphWindowData.GraphBreadcrumbPath = path;
             m_breadcrumbs.SetBreadcrumbPath(path);
-            NodeGraphData graphData = GetNodeGraphDataByBreadcrumb(m_openedGraphInstance, path);
-            m_nodeGraphView.SetNodeGraphData(graphData);
-        }
-
-        private NodeGraphData GetNodeGraphDataByBreadcrumb(NodeGraph graph, string path)
-        {
-            return graph.NodeGraphData;
+            m_nodeGraphView.SetNodeGraphData(m_openedGraphInstance, path);
         }
     }
 }

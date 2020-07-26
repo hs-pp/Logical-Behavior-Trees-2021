@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace GraphTheory
 {
-    [System.Serializable]
     public class NodeGraphData
     {
         [SerializeField]
@@ -21,17 +20,24 @@ namespace GraphTheory
         }
 
 #if UNITY_EDITOR
+        public ANode GetNodeById(string id)
+        {
+            return m_nodes[id];
+        }
         public List<ANode> GetAllNodes()
         {
             return m_nodes.Values.ToList();
         }
-        public ANode CreateNode(Type type)
+        public ANode CreateNode(Type type, Vector2 pos)
         {
-            return null;
+            ANode node = Activator.CreateInstance(type) as ANode;
+            node.Position = pos;
+            m_nodes.Add(node.Id, node);
+            return node;
         }
         public void RemoveNode(string nodeId)
         {
-
+            m_nodes.Remove(nodeId);
         }
         public void MakeConnection(ANode outportNode, int outportIndex, ANode inportNode, int inportIndex)
         {

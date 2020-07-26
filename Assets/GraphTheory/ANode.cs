@@ -8,90 +8,81 @@ using UnityEditor.Experimental.GraphView;
 
 namespace GraphTheory
 {
+    [Serializable]
     public abstract class ANode
     {
         [SerializeField]
         private string m_id = "";
         [SerializeField]
-        private List<InportEdge> m_inportEdges;
-        [SerializeField]
-        private List<OutportEdge> m_outportEdges;
+        private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         public string Id { get { return m_id; } }
-
-        public abstract string Name { get; }
-        public abstract int NumInports { get; }
-        public abstract int NumOutports { get; }
+        public int NumOutports { get { return m_outports.Count; } }
 
         public ANode()
         {
             m_id = Guid.NewGuid().ToString();
-            m_inportEdges = new List<InportEdge>(NumInports);
-            m_outportEdges = new List<OutportEdge>(NumOutports);
         }
-
-        [SerializeField]
-        private Vector2 m_position;
 
         /// <summary>
         /// Only one outportEdge allowed per outportIndex. So we can safely return the first outportEdge with the correct outportIndex.
         /// </summary>
         public OutportEdge GetOutportEdge(int outportIndex)
         {
-            return m_outportEdges.Find(x => x.OutportIndex == outportIndex);
-        }
-        public List<InportEdge> GetInportEdges(int inportIndex)
-        {
-            return m_inportEdges.FindAll(x => x.InportIndex == inportIndex);
+            return m_outports[outportIndex];
         }
 
+        [SerializeField]
+        private Vector2 m_position;
 #if UNITY_EDITOR
-        public Vector2 Position { get { return m_position; } }
+        public abstract string Name { get; }
+        public abstract List<Type> CompatibleGraphs { get; }//Returning null = compatible to all. Returning empty list = compatible to none.
+        public virtual bool HasInport { get { return true; } }
+
+        public Vector2 Position { get { return m_position; } set { m_position = value; } }
         public virtual Vector2 Size { get { return new Vector2(600, 300); } }
         public virtual Color NodeColor { get { return Color.gray; } }
-        public List<Type> CompatibleGraphs { get; }
 
         public virtual void DrawNodeView(Node nodeView)
         {
 
         }
 
-        public bool CanAddInportEdge(InportEdge inportEdge, out GraphErrorMessage errorMessage)
+        public List<OutportEdge> GetAllEdges()
         {
-            errorMessage = default;
-            return true;
-        }
-        public void AddInportEdge(InportEdge inportEdge)
-        {
-            m_inportEdges.Add(inportEdge);
+            return m_outports;
         }
 
+        protected int CreateOutport()
+        {
+            m_outports.Add(null);
+            return m_outports.Count - 1;
+        }
+        protected void DestroyOutport(int index)
+        {
+            m_outports.RemoveAt(index);
+        }
         /// <summary>
         /// Only one outportEdge allowed per outport index.
         /// </summary>
-        public bool CanAddOutportEdge(OutportEdge outportEdge, out GraphErrorMessage errorMessage)
+        public void AddOutportEdge(int outportIndex, OutportEdge outportEdge)
         {
-            if(m_outportEdges.Exists(x => x.OutportIndex == outportEdge.OutportIndex))
+            if(outportIndex > m_outports.Count - 1)
             {
-                errorMessage = new GraphErrorMessage("Output ports can only have one edge!");
-                return false;
+                Debug.LogError("Error adding outport edge!");
+                return;
             }
-
-            errorMessage = default;
-            return true;
-        }
-        public void AddOutportEdge(OutportEdge outportEdge)
-        {
-            m_outportEdges.Add(outportEdge);
+            m_outports[outportIndex] = outportEdge;
         }
 
-        public void RemoveInportEdge(InportEdge inportEdge)
+        public void RemoveOutportEdge(int outportIndex)
         {
-            m_inportEdges.Remove(inportEdge);
-        }
-        public void RemoveOutportEdge()
-        {
-
+            if (outportIndex > m_outports.Count - 1)
+            {
+                Debug.LogError("Error removing outport edge!");
+                return;
+            }
+            m_outports[outportIndex] = null;
         }
 #endif
     }
