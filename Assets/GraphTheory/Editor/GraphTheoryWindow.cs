@@ -27,15 +27,6 @@ namespace GraphTheory.Editor
 
         private NodeGraph m_openedGraphInstance = null;
 
-        [MenuItem("Graph/GraphTheory")]
-        public static GraphTheoryWindow OpenWindow()
-        {
-            var window = CreateInstance<GraphTheoryWindow>();
-            window.titleContent = new GUIContent("NodeGraph");
-            window.Show();
-            return window;
-        }
-
         [MenuItem("Graph/Clear Graph Data")]
         public static void ClearGraphData()
         {

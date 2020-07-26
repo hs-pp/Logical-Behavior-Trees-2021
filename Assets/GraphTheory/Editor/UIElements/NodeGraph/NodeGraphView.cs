@@ -135,6 +135,7 @@ namespace GraphTheory.Editor.UIElements
                         output = m_nodeViews[nodeData[j].Id].GetOutport(k),
                     };
                     AddElement(edgeView);
+                    m_edgeViews.Add(edgeView);
                 }
             }
         }
@@ -188,7 +189,12 @@ namespace GraphTheory.Editor.UIElements
             {
                 RemoveElement(m_nodeViews[id]);
             }
+            foreach(EdgeView edgeView in m_edgeViews)
+            {
+                RemoveElement(edgeView);
+            }
             m_nodeViews.Clear();
+            m_edgeViews.Clear();
         }
 
         public void AddEdge(EdgeView edgeView)
@@ -206,7 +212,7 @@ namespace GraphTheory.Editor.UIElements
             // We just need to remove the data representation of it.
             PortView outPort = edgeView.output as PortView;
             outPort.Owner.RemovePort(outPort.PortIndex);
-
+            Debug.Log("Removing edgeeeeeee");
             m_edgeViews.Remove(edgeView);
             if(Contains(edgeView))
             {
