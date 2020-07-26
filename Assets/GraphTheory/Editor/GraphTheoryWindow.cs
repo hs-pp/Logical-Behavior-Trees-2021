@@ -113,6 +113,17 @@ namespace GraphTheory.Editor
             });
             graphCreateButton.text = "Create Graph";
             m_toolbar.Add(graphCreateButton);
+
+            var saveGraphButton = new ToolbarButton(() =>
+            {
+                if (m_openedGraphInstance != null)
+                {
+                    EditorUtility.SetDirty(m_openedGraphInstance);
+                    AssetDatabase.SaveAssets();
+                }
+            });
+            saveGraphButton.text = "Save";
+            m_toolbar.Add(saveGraphButton);
         }
 
         private void RegisterMainPanelLeft(VisualElement leftPanel)

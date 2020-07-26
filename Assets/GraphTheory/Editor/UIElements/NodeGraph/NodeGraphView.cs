@@ -17,6 +17,7 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraph m_nodeGraph = null;
         private NodeGraphData m_nodeGraphData = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
+        private List<EdgeView> m_edgeViews = new List<EdgeView>();
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
@@ -51,6 +52,54 @@ namespace GraphTheory.Editor.UIElements
             graphViewChanged += OnGraphViewChanged;
 
             m_edgeConectorListener = new EdgeConnectorListener(this);
+        }
+
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            var compatiblePorts = new List<Port>();
+
+            compatiblePorts.AddRange(ports.ToList().Where(p => {
+                var portView = p as PortView;
+
+                if (p.direction == startPort.direction)
+                    return false;
+
+                //TODO: Check if the edge already exists
+
+                return true;
+            }));
+
+            return compatiblePorts;
+        }
+
+        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            if (graphViewChange.elementsToRemove != null)
+            {
+                for (int i = 0; i < graphViewChange.elementsToRemove.Count; i++)
+                {
+                    if (graphViewChange.elementsToRemove[i] is NodeView)
+                    {
+                        RemoveNode(graphViewChange.elementsToRemove[i] as NodeView);
+                    }
+                    else if (graphViewChange.elementsToRemove[i] is EdgeView)
+                    {
+                        RemoveEdge(graphViewChange.elementsToRemove[i] as EdgeView);
+                    }
+                }
+            }
+            if (graphViewChange.movedElements != null)
+            {
+                for (int k = 0; k < graphViewChange.movedElements.Count; k++)
+                {
+                    if(graphViewChange.movedElements[k] is NodeView)
+                    {
+                        (graphViewChange.movedElements[k] as NodeView).UpdateNodeDataPosition();
+                    }
+                }
+            }
+            return graphViewChange;
         }
 
         public void SetNodeGraphData(NodeGraph nodeGraph, string path)
@@ -113,48 +162,19 @@ namespace GraphTheory.Editor.UIElements
             return nodeView;
         }
 
-        private void RemoveNodeData(NodeView nodeView)
+        private void RemoveNode(NodeView nodeView)
         {
+            for(int i = m_edgeViews.Count - 1; i >= 0; i--)
+            {
+                if((m_edgeViews[i].output as PortView).Owner.NodeId == nodeView.NodeId
+                    || (m_edgeViews[i].input as PortView).Owner.NodeId == nodeView.NodeId)
+                {
+                    RemoveEdge(m_edgeViews[i]);
+                }
+            }
             nodeView.OnRemove();
             m_nodeGraphData.RemoveNode(nodeView.NodeId);
             Debug.Log("Removed node " + nodeView.NodeId);
-        }
-
-        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
-        {
-            if (graphViewChange.elementsToRemove != null)
-            {
-                for (int i = 0; i < graphViewChange.elementsToRemove.Count; i++)
-                {
-                    if (graphViewChange.elementsToRemove[i] is NodeView)
-                    {
-                        RemoveNodeData(graphViewChange.elementsToRemove[i] as NodeView);
-                    }
-                    else if(graphViewChange.elementsToRemove[i] is EdgeView)
-                    {
-                        Debug.Log("Removing edge view");
-                        RemoveEdge(graphViewChange.elementsToRemove[i] as EdgeView);
-                    }
-                }
-            }
-            if (graphViewChange.edgesToCreate != null)
-            {
-                for (int j = 0; j < graphViewChange.edgesToCreate.Count; j++)
-                {
-                    Debug.Log("Create an edge bro");
-                    Edge e = graphViewChange.edgesToCreate[j];
-                    Port input = e.input;
-                }
-            }
-            if(graphViewChange.movedElements != null)
-            {
-                Debug.Log("Something moved!");
-                for(int k = 0; k < graphViewChange.movedElements.Count; k++)
-                {
-                    (graphViewChange.movedElements[k] as Node).MarkDirtyRepaint();
-                }
-            }
-            return graphViewChange;
         }
 
         private void SetMiniMapPosition(GeometryChangedEvent evt)
@@ -171,29 +191,12 @@ namespace GraphTheory.Editor.UIElements
             m_nodeViews.Clear();
         }
 
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-        {
-            var compatiblePorts = new List<Port>();
-
-            compatiblePorts.AddRange(ports.ToList().Where(p => {
-                var portView = p as PortView;
-
-                if (p.direction == startPort.direction)
-                    return false;
-
-                //TODO: Check if the edge already exists
-
-                return true;
-            }));
-
-            return compatiblePorts;
-        }
-
         public void AddEdge(EdgeView edgeView)
         {
             PortView outPort = edgeView.output as PortView;
             PortView inPort = edgeView.input as PortView;
             outPort.Owner.ConnectPort(outPort.PortIndex, inPort.Owner);
+            m_edgeViews.Add(edgeView);
             AddElement(edgeView);
         }
 
@@ -203,6 +206,12 @@ namespace GraphTheory.Editor.UIElements
             // We just need to remove the data representation of it.
             PortView outPort = edgeView.output as PortView;
             outPort.Owner.RemovePort(outPort.PortIndex);
+
+            m_edgeViews.Remove(edgeView);
+            if(Contains(edgeView))
+            {
+                RemoveElement(edgeView);
+            }
         }
     }
 }

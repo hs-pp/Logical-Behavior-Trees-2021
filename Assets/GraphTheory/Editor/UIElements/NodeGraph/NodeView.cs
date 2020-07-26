@@ -57,7 +57,7 @@ namespace GraphTheory.Editor.UIElements
                 
                 SetPosition(new Rect(m_node.Position, m_node.Size));
 
-                this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { m_node.Position = gce.newRect.position; });
+                //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
             }
         }
 
@@ -80,6 +80,7 @@ namespace GraphTheory.Editor.UIElements
         {
             m_node.AddOutportEdge(outportIndex, new OutportEdge() { ConnectedNodeId = otherNode.NodeId });
         }
+
         public void RemovePort(int outportIndex)
         {
             m_node.RemoveOutportEdge(outportIndex);
@@ -88,6 +89,11 @@ namespace GraphTheory.Editor.UIElements
         public bool OutportHasEdge(int outportIndex)
         {
             return m_node.GetOutportEdge(outportIndex) != null;
+        }
+
+        public void UpdateNodeDataPosition()
+        {
+            m_node.Position = this.GetPosition().position;
         }
     }
 }

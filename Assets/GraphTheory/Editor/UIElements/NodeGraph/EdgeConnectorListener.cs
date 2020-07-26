@@ -16,7 +16,6 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnDrop(GraphView graphView, Edge edge)
         {
-            Debug.Log("OnDrop");
             var edgeView = edge as EdgeView;
             
             if (edgeView?.input == null || edgeView?.output == null)
