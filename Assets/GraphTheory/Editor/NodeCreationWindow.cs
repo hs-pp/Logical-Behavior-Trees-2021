@@ -29,12 +29,6 @@ public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
                 && x.GetCustomAttribute<SupportedGraphTypesAttribute>() != null));
             //TODO SORT THEM!
         }
-        string debug2 = "ValidNodeTypes: ";
-        foreach (Type type in m_validNodeTypes)
-        {
-            debug2 += type.Name + " ";
-        }
-        Debug.Log(debug2);
 
         if (m_universalNodeTypes == null)
         {
@@ -46,13 +40,6 @@ public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
                     && x.GetCustomAttribute<SupportedGraphTypesAttribute>() == null));
             }
             //TODO SORT THEM!!
-
-            string debug1 = "UniversalNodeTypes: ";
-            foreach (Type type in m_universalNodeTypes)
-            {
-                debug1 += type.Name + " ";
-            }
-            Debug.Log(debug1);
         }
     }
 

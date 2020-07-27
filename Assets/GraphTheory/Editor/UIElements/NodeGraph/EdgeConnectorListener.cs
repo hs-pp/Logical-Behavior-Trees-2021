@@ -36,8 +36,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnDropOutsidePort(Edge edge, Vector2 position)
         {
-            Debug.Log("OnDropOutsidePort " + (edge.input != null) + " " + (edge.output != null));
-
+            Debug.Log("OnDropOutsidePort");
         }
     }
 }
