@@ -96,16 +96,18 @@ namespace GraphTheory.Editor.UIElements
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            var compatiblePorts = new List<Port>();
+            PortView portOne = startPort as PortView;
+            List<Port> compatiblePorts = new List<Port>();
 
-            compatiblePorts.AddRange(ports.ToList().Where(p => {
-                var portView = p as PortView;
+            compatiblePorts.AddRange(ports.ToList().Where(port => {
+                PortView portTwo = port as PortView;
 
-                if (p.direction == startPort.direction)
+                if (portOne.direction == portTwo.direction)
                     return false;
 
-                //TODO: Check if the edge already exists
-
+                if (portOne.Node == portTwo.Node)
+                    return false;
+                
                 return true;
             }));
 

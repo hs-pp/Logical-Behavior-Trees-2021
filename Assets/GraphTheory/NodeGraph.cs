@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using GraphTheory.Internal.OdinSerializer;
 using GraphTheory.BuiltInNodes;
-using System;
-using System.Collections.Generic;
 
 namespace GraphTheory
 {
