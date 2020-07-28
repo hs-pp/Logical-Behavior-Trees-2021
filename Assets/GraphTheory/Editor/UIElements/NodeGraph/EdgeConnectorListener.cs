@@ -21,17 +21,17 @@ namespace GraphTheory.Editor.UIElements
             if (edgeView?.input == null || edgeView?.output == null)
                 return;
 
-            PortView outPort = edgeView.output as PortView;
-            PortView inPort = edgeView.input as PortView;
+            edgeView.Setup();
 
             // Outports can only have one edge connected to them.
-            if (outPort.Owner.OutportHasEdge(outPort.PortIndex))
+            if (edgeView.FirstPort.Node.OutportHasEdge(edgeView.FirstPort.PortIndex))
             {
+
                 Debug.LogError("Outport already has edge.");
                 return;
             }
 
-            (graphView as NodeGraphView).AddEdge(edgeView);
+            edgeView.FirstPort.Node.AddEdge(edgeView);
         }
 
         public void OnDropOutsidePort(Edge edge, Vector2 position)

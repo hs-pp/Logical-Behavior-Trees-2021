@@ -6,15 +6,19 @@ namespace GraphTheory.Editor.UIElements
 {
     public class NodeView : Node
     {
+        private NodeGraphView m_nodeGraphView = null;
+
         private ANode m_node = null;
         public string NodeId { get { return m_node != null ? m_node.Id : string.Empty; } }
-        private PortView m_inport = null;
+        public PortView Inport { get; } = null;
         private List<PortView> m_outports = new List<PortView>();
+        private List<EdgeView> m_edgeViews = new List<EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
         
-        public NodeView(ANode node, IEdgeConnectorListener edgeConnectorListener) : base()
+        public NodeView(ANode node, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
         {
             m_node = node;
+            m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
             if(m_node != null)
             {
@@ -25,15 +29,15 @@ namespace GraphTheory.Editor.UIElements
                 if (m_node.HasInport)
                 {
                     //Add ports
-                    m_inport = new PortView(this,
+                    Inport = new PortView(this,
                         Orientation.Horizontal,
                         Direction.Input,
                         Port.Capacity.Single,
                         typeof(bool),
                         0,
                         m_edgeConnectorListener);
-                    m_inport.portName = "";
-                    inputContainer.Add(m_inport);
+                    Inport.portName = "";
+                    inputContainer.Add(Inport);
                 }
 
                 for (int j = 0; j < m_node.NumOutports; j++)
@@ -58,34 +62,95 @@ namespace GraphTheory.Editor.UIElements
             }
         }
 
-        public void OnRemove()
+        public void OnLoadView()
         {
-
+            List<OutportEdge> edges = m_node.GetAllEdges();
+            for (int k = 0; k < edges.Count; k++)
+            {
+                if (edges[k] == null)
+                {
+                    continue;
+                }
+                EdgeView edgeView = new EdgeView()
+                {
+                    input = m_nodeGraphView.GetNodeViewById(edges[k].ConnectedNodeId).Inport,
+                    output = m_outports[k],
+                };
+                edgeView.Setup();
+                AddEdgeView(edgeView);
+            }
         }
 
-        public Port GetInport()
+        public void OnUnloadView()
         {
-            return m_inport;
+            for(int i = m_edgeViews.Count - 1; i >= 0; i--)
+            {
+                if (m_nodeGraphView.Contains(m_edgeViews[i]))
+                {
+                    m_nodeGraphView.RemoveElement(m_edgeViews[i]);
+                }
+            }
         }
-
-        public Port GetOutport(int outportIndex)
+        
+        public void OnDeleteNode()
         {
-            return m_outports[outportIndex];
-        }
-
-        public void ConnectPort(int outportIndex, NodeView otherNode)
-        {
-            m_node.AddOutportEdge(outportIndex, new OutportEdge() { ConnectedNodeId = otherNode.NodeId });
-        }
-
-        public void RemovePort(int outportIndex)
-        {
-            m_node.RemoveOutportEdge(outportIndex);
+            for (int i = m_edgeViews.Count - 1; i >= 0; i--)
+            {
+                RemoveEdge(m_edgeViews[i]);
+            }
         }
 
         public bool OutportHasEdge(int outportIndex)
         {
             return m_node.GetOutportEdge(outportIndex) != null;
+        }
+
+        public PortView GetOutport(int outportIndex)
+        {
+            return m_outports[outportIndex];
+        }
+
+        public void AddEdge(EdgeView edgeView)
+        {
+            if (edgeView.FirstPort.Node == this)
+            {
+                m_node.AddOutportEdge(edgeView.FirstPort.PortIndex, new OutportEdge() { ConnectedNodeId = edgeView.SecondPort.Node.NodeId });
+            }
+            AddEdgeView(edgeView);
+        }
+
+        public void AddEdgeView(EdgeView edgeView)
+        {
+            if (edgeView.FirstPort.Node == this)
+            {
+                m_edgeViews.Add(edgeView);
+                edgeView.FirstPort.Connect(edgeView);
+                edgeView.SecondPort.Node.AddEdgeView(edgeView);
+                m_nodeGraphView.Add(edgeView);
+            }
+            else if(edgeView.SecondPort.Node == this)
+            {
+                edgeView.SecondPort.Connect(edgeView);
+            }
+        }
+
+        public void RemoveEdge(EdgeView edgeView)
+        {
+            if(edgeView.FirstPort.Node == this)
+            {
+                edgeView.FirstPort.Disconnect(edgeView);
+                edgeView.SecondPort.Node.RemoveEdge(edgeView);
+                if (edgeView.parent != null && edgeView.parent is GraphView)
+                {
+                    (edgeView.parent as GraphView).RemoveElement(edgeView);
+                }
+                m_edgeViews.Remove(edgeView);
+                m_node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
+            }
+            else if(edgeView.SecondPort.Node == this)
+            {
+                edgeView.SecondPort.Disconnect(edgeView);
+            }
         }
 
         public void UpdateNodeDataPosition()

@@ -17,7 +17,6 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraph m_nodeGraph = null;
         private NodeGraphData m_nodeGraphData = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
-        private List<EdgeView> m_edgeViews = new List<EdgeView>();
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
@@ -74,26 +73,7 @@ namespace GraphTheory.Editor.UIElements
             }
             for(int j = 0; j < nodeData.Count; j++)
             {
-                List<OutportEdge> edges = nodeData[j].GetAllEdges();
-                for(int k = 0; k < edges.Count; k++)
-                {
-                    if(edges[k] == null)
-                    {
-                        continue;
-                    }
-                    PortView inport = m_nodeViews[edges[k].ConnectedNodeId].GetInport() as PortView;
-                    PortView outport = m_nodeViews[nodeData[j].Id].GetOutport(k) as PortView;
-                    EdgeView edgeView = new EdgeView()
-                    {
-                        input = inport,
-                        output = outport,
-                    };
-
-                    inport.Connect(edgeView);
-                    outport.Connect(edgeView);
-                    m_edgeViews.Add(edgeView);
-                    AddElement(edgeView);
-                }
+                m_nodeViews[nodeData[j].Id].OnLoadView();
             }
         }
 
@@ -103,14 +83,15 @@ namespace GraphTheory.Editor.UIElements
             m_nodeGraphData = null;
             foreach (string id in m_nodeViews.Keys)
             {
+                m_nodeViews[id].OnUnloadView();
                 RemoveElement(m_nodeViews[id]);
             }
-            foreach (EdgeView edgeView in m_edgeViews)
-            {
-                RemoveElement(edgeView);
-            }
             m_nodeViews.Clear();
-            m_edgeViews.Clear();
+        }
+
+        public NodeView GetNodeViewById(string id)
+        {
+            return m_nodeViews[id];
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -139,11 +120,12 @@ namespace GraphTheory.Editor.UIElements
                 {
                     if (graphViewChange.elementsToRemove[i] is NodeView)
                     {
-                        RemoveNode(graphViewChange.elementsToRemove[i] as NodeView);
+                        DeleteNode(graphViewChange.elementsToRemove[i] as NodeView);
                     }
                     else if (graphViewChange.elementsToRemove[i] is EdgeView)
                     {
-                        RemoveEdge(graphViewChange.elementsToRemove[i] as EdgeView);
+                        EdgeView edgeView = graphViewChange.elementsToRemove[i] as EdgeView;
+                        edgeView.FirstPort.Node.RemoveEdge(edgeView);
                     }
                 }
             }
@@ -168,8 +150,6 @@ namespace GraphTheory.Editor.UIElements
         /// <summary>
         /// Create both a data instance as well as a visual instance of a fresh node.
         /// </summary>
-        /// <param name="nodeType"></param>
-        /// <param name="pos"></param>
         public NodeView CreateNode(Type nodeType, Vector2 pos)
         {
             ANode node = m_nodeGraphData.CreateNode(nodeType, pos);
@@ -178,49 +158,16 @@ namespace GraphTheory.Editor.UIElements
 
         private NodeView CreateNodeView(ANode node)
         {
-            NodeView nodeView = new NodeView(node, m_edgeConectorListener);
+            NodeView nodeView = new NodeView(node, this, m_edgeConectorListener);
             AddElement(nodeView);
             m_nodeViews.Add(node.Id, nodeView);
             return nodeView;
         }
 
-        private void RemoveNode(NodeView nodeView)
+        private void DeleteNode(NodeView nodeView)
         {
-            for(int i = m_edgeViews.Count - 1; i >= 0; i--)
-            {
-                if((m_edgeViews[i].output as PortView).Owner.NodeId == nodeView.NodeId
-                    || (m_edgeViews[i].input as PortView).Owner.NodeId == nodeView.NodeId)
-                {
-                    RemoveEdge(m_edgeViews[i]);
-                }
-            }
-            nodeView.OnRemove();
+            nodeView.OnDeleteNode();
             m_nodeGraphData.RemoveNode(nodeView.NodeId);
-        }
-
-        public void AddEdge(EdgeView edgeView)
-        {
-            PortView outPort = edgeView.output as PortView;
-            PortView inPort = edgeView.input as PortView;
-            outPort.Owner.ConnectPort(outPort.PortIndex, inPort.Owner);
-            outPort.Connect(edgeView);
-            inPort.Connect(edgeView);
-            m_edgeViews.Add(edgeView);
-            AddElement(edgeView);
-        }
-
-        public void RemoveEdge(EdgeView edgeView)
-        {
-            PortView outPort = edgeView.output as PortView;
-            PortView inPort = edgeView.input as PortView;
-            outPort.Owner.RemovePort(outPort.PortIndex); 
-            m_edgeViews.Remove(edgeView);
-            outPort.Disconnect(edgeView);
-            inPort.Disconnect(edgeView);
-            if (Contains(edgeView))
-            {
-                RemoveElement(edgeView);
-            }
         }
     }
 }
