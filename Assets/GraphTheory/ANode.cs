@@ -15,7 +15,7 @@ namespace GraphTheory
         [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
-        protected NodeGraph ParentGraph { get; private set; } = null;
+        protected NodeGraphData ParentGraphData { get; private set; } = null;
 
         public string Id { get { return m_id; } }
 
@@ -24,7 +24,7 @@ namespace GraphTheory
             m_id = Guid.NewGuid().ToString();
         }
 
-        public virtual void OnNodeEnter(NodeGraph nodeGraph) { ParentGraph = nodeGraph; }
+        public virtual void OnNodeEnter(NodeGraphData nodeGraphData) { ParentGraphData = nodeGraphData; }
         public virtual void OnNodeUpdate() { }
         public virtual void OnNodeExit() { }
 

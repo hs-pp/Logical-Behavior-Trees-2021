@@ -9,25 +9,12 @@ namespace GraphTheory
     {
         [SerializeField]
         private NodeGraphData m_nodeGraphData;
-        [SerializeField]
-        private string m_entryNodeId = "";
-
         [NonSerialized]
         public Action OnGraphStart = null;
         [NonSerialized]
         public Action OnGraphStop = null;
         [NonSerialized]
         public Action<ANode> OnNodeChange = null;
-
-        public NodeGraphData NodeGraphData { get { return m_nodeGraphData; } }
-        public ANode CurrentNode { get; private set; } = null;
-
-        public NodeGraph()
-        {
-            m_nodeGraphData = new NodeGraphData();
-            ANode entryNode = m_nodeGraphData.CreateNode(typeof(EntryNode), Vector2.zero);
-            m_entryNodeId = entryNode.Id;
-        }
 
         public void Awake()
         {
@@ -36,49 +23,31 @@ namespace GraphTheory
 
         public void StartGraph()
         {
-            Debug.Log("Starting graph");
-            OnGraphStart?.Invoke();
+            m_nodeGraphData.ParentNodeGraph = this;
+            m_nodeGraphData.OnGraphStart += OnGraphStart;
+            m_nodeGraphData.OnGraphStop += OnGraphStop;
+            m_nodeGraphData.OnNodeChange += OnNodeChange;
 
-            CurrentNode = GetNodeById(m_entryNodeId);
-            CurrentNode?.OnNodeEnter(this);
+            m_nodeGraphData.StartExecution();
         }
-
         public void UpdateGraph()
         {
-            CurrentNode?.OnNodeUpdate();
+            m_nodeGraphData.UpdateExecution();
         }
-
         public void StopGraph()
         {
-            CurrentNode = null;
-            OnGraphStop?.Invoke();
-            Debug.Log("Stopping graph");
+            m_nodeGraphData.StopExecution();
         }
 
-        public void ChangeNode(ANode source, OutportEdge edge)
+#if UNITY_EDITOR
+        public NodeGraphData NodeGraphData { get { return m_nodeGraphData; } }
+
+        public NodeGraph()
         {
-            if (CurrentNode != source)
-            {
-                Debug.LogError("Source is not the currently running node!");
-                return;
-            }
-
-            CurrentNode?.OnNodeExit();
-
-            if (edge == null)
-            {
-                CurrentNode = null;
-                StopGraph();
-                return;
-            }
-
-            CurrentNode = GetNodeById(edge.ConnectedNodeId);
-            CurrentNode?.OnNodeEnter(this);
+            m_nodeGraphData = new NodeGraphData();
+            ANode entryNode = m_nodeGraphData.CreateNode(typeof(EntryNode), Vector2.zero);
+            m_nodeGraphData.SetEntryNode(entryNode.Id);
         }
-
-        private ANode GetNodeById(string id)
-        {
-            return m_nodeGraphData.GetNodeById(id);
-        }
+#endif
     }
 }
