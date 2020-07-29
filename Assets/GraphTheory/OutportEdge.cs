@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GraphTheory
+﻿namespace GraphTheory
 {
     [System.Serializable]
     public class OutportEdge

@@ -15,11 +15,22 @@ namespace GraphTheory
         [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
+        protected NodeGraph ParentGraph { get; private set; } = null;
+
         public string Id { get { return m_id; } }
 
         public ANode()
         {
             m_id = Guid.NewGuid().ToString();
+        }
+
+        public virtual void OnNodeEnter(NodeGraph nodeGraph) { ParentGraph = nodeGraph; }
+        public virtual void OnNodeUpdate() { }
+        public virtual void OnNodeExit() { }
+
+        public OutportEdge GetOutportEdge(int index)
+        {
+            return m_outports[index];
         }
 
         [SerializeField]
@@ -28,7 +39,6 @@ namespace GraphTheory
         public abstract string Name { get; }
         public int NumOutports { get { return m_outports.Count; } }
         public abstract List<Type> CompatibleGraphs { get; }//Returning null = compatible to all. Returning empty list = compatible to none.
-        public virtual bool HasInport { get { return true; } }
 
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
         public virtual Vector2 Size { get { return new Vector2(600, 300); } }
@@ -50,11 +60,6 @@ namespace GraphTheory
         public List<OutportEdge> GetAllEdges()
         {
             return m_outports;
-        }
-
-        public OutportEdge GetOutportEdge(int outportIndex)
-        {
-            return m_outports[outportIndex];
         }
         
         public void AddOutportEdge(int outportIndex, OutportEdge outportEdge)

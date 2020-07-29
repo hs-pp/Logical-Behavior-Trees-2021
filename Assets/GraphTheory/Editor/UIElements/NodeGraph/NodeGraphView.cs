@@ -118,7 +118,7 @@ namespace GraphTheory.Editor.UIElements
         {
             if (graphViewChange.elementsToRemove != null)
             {
-                for (int i = 0; i < graphViewChange.elementsToRemove.Count; i++)
+                for (int i = graphViewChange.elementsToRemove.Count - 1; i >= 0; i--)
                 {
                     if (graphViewChange.elementsToRemove[i] is NodeView)
                     {

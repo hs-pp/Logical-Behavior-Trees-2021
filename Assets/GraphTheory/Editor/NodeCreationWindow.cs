@@ -78,9 +78,8 @@ public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
                 window.rootVisualElement.parent,
                 context.screenMousePosition - window.position.position));
 
-        //if (SearchTreeEntry.userData != null 
-        //    && SearchTreeEntry.userData as Type != typeof(EntryNode))
-        if(SearchTreeEntry.userData != null)
+        if (SearchTreeEntry.userData != null 
+            && !(typeof(EntryNode).IsAssignableFrom(SearchTreeEntry.userData as Type)))
         {
             m_nodeGraphView.CreateNode(SearchTreeEntry.userData as Type, pos);
             return true;

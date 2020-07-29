@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GraphTheory.BuiltInNodes
@@ -8,10 +9,24 @@ namespace GraphTheory.BuiltInNodes
     [Serializable]
     public class EntryNode : ANode
     {
+        public override void OnNodeEnter(NodeGraph nodeGraph)
+        {
+            Debug.Log("EntryNode Enter");
+            nodeGraph.ChangeNode(this, GetOutportEdge(0));
+        }
+
+        public override void OnNodeUpdate()
+        {
+            Debug.Log("EntryNode Update");
+        }
+
+        public override void OnNodeExit()
+        {
+            Debug.Log("EntryNode Exit");
+        }
 
 #if UNITY_EDITOR
         public override string Name => "Entry";
-        public override bool HasInport => false;
         public override List<Type> CompatibleGraphs { get { return null; } }
 
         public EntryNode() : base()

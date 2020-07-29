@@ -20,13 +20,19 @@ namespace GraphTheory.Editor.UIElements
             m_node = node;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
-            if(m_node != null)
+            bool isEntryNode = m_node is BuiltInNodes.EntryNode;
+            if (m_node != null)
             {
                 title = m_node.Name;
 
+                if (isEntryNode)
+                {
+                    this.capabilities = this.capabilities & (~Capabilities.Deletable);
+                }
+
                 m_node.DrawNodeView(this);
 
-                if (m_node.HasInport)
+                if (!isEntryNode)
                 {
                     //Add ports
                     Inport = new PortView(this,

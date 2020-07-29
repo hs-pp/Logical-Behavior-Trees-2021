@@ -37,19 +37,19 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: 428f3d29-abe2-43de-891e-0d499aff330a
+      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
     - Name: $v
       Entry: 7
-      Data: 3|GraphTheory.BuiltInNodes.EntryNode, Assembly-CSharp
+      Data: 3|TestNode, Assembly-CSharp
     - Name: m_id
       Entry: 1
-      Data: 428f3d29-abe2-43de-891e-0d499aff330a
+      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
     - Name: m_outports
       Entry: 7
       Data: 4|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 5|GraphTheory.OutportEdge, Assembly-CSharp
     - Name: ConnectedNodeId
       Entry: 1
-      Data: f30179c6-a5d0-4aec-8cdd-1c70dec87a47
+      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
     - Name: 
       Entry: 8
       Data: 
@@ -77,10 +77,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 92
+      Data: 291
     - Name: 
       Entry: 4
-      Data: 205
+      Data: 339
     - Name: 
       Entry: 8
       Data: 
@@ -95,13 +95,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: f30179c6-a5d0-4aec-8cdd-1c70dec87a47
+      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
     - Name: $v
       Entry: 7
       Data: 6|TestNode, Assembly-CSharp
     - Name: m_id
       Entry: 1
-      Data: f30179c6-a5d0-4aec-8cdd-1c70dec87a47
+      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
     - Name: m_outports
       Entry: 7
       Data: 7|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
@@ -123,10 +123,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 320
+      Data: 201
     - Name: 
       Entry: 4
-      Data: 258
+      Data: 532
     - Name: 
       Entry: 8
       Data: 
@@ -141,13 +141,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
+      Data: 14de1e86-c012-48fd-9c49-d1e244c9fe04
     - Name: $v
       Entry: 7
-      Data: 8|TestNode, Assembly-CSharp
+      Data: 8|GraphTheory.BuiltInNodes.EntryNode, Assembly-CSharp
     - Name: m_id
       Entry: 1
-      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
+      Data: 14de1e86-c012-48fd-9c49-d1e244c9fe04
     - Name: m_outports
       Entry: 7
       Data: 9|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
@@ -160,7 +160,7 @@ MonoBehaviour:
       Data: 10|GraphTheory.OutportEdge, Assembly-CSharp
     - Name: ConnectedNodeId
       Entry: 1
-      Data: f30179c6-a5d0-4aec-8cdd-1c70dec87a47
+      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
     - Name: 
       Entry: 8
       Data: 
@@ -175,62 +175,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 106
+      Data: 75
     - Name: 
       Entry: 4
-      Data: 354
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: 661c676f-f2e3-486f-9907-c5aa759df403
-    - Name: $v
-      Entry: 7
-      Data: 11|TestNode, Assembly-CSharp
-    - Name: m_id
-      Entry: 1
-      Data: 661c676f-f2e3-486f-9907-c5aa759df403
-    - Name: m_outports
-      Entry: 7
-      Data: 12|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 13|GraphTheory.OutportEdge, Assembly-CSharp
-    - Name: ConnectedNodeId
-      Entry: 1
-      Data: f30179c6-a5d0-4aec-8cdd-1c70dec87a47
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: m_position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 102
-    - Name: 
-      Entry: 4
-      Data: 486
+      Data: 383
     - Name: 
       Entry: 8
       Data: 
@@ -249,3 +197,8 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: testNode
+      Entry: 6
+      Data: 
+  m_entryNodeId: 14de1e86-c012-48fd-9c49-d1e244c9fe04
+  abc: 1

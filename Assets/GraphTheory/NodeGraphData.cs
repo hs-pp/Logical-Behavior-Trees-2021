@@ -10,15 +10,6 @@ namespace GraphTheory
         [SerializeField]
         private Dictionary<string, ANode> m_nodes = new Dictionary<string, ANode>();
 
-        public ANode GetConnectedNode(InportEdge inportEdge)
-        {
-            return null;
-        }
-        public ANode GetConnectedNode(OutportEdge outportEdge)
-        {
-            return null;
-        }
-
 #if UNITY_EDITOR
         public ANode GetNodeById(string id)
         {
