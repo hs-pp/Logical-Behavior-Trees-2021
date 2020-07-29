@@ -15,7 +15,7 @@ namespace GraphTheory.Editor.UIElements
         private IEdgeConnectorListener m_edgeConectorListener = null;
 
         private NodeGraph m_nodeGraph = null;
-        private NodeGraphData m_nodeGraphData = null;
+        private NodeCollection m_nodeCollection = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
@@ -53,20 +53,20 @@ namespace GraphTheory.Editor.UIElements
             m_edgeConectorListener = new EdgeConnectorListener(this);
         }
 
-        public void SetNodeGraphData(NodeGraph nodeGraph, string path)
+        public void SetNodeCollection(NodeGraph nodeGraph, string path)
         {
             Reset();
 
-            NodeGraphData nodeGraphData = GetNodeGraphDataByBreadcrumb(nodeGraph, path);
+            NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph, path);
 
-            if (nodeGraph == null || nodeGraphData == null)
+            if (nodeGraph == null || nodeCollection == null)
                 return;
 
             m_nodeGraph = nodeGraph;
-            m_nodeGraphData = nodeGraphData;
+            m_nodeCollection = nodeCollection;
             m_nodeCreationWindow.Setup(this);
 
-            List<ANode> nodeData = m_nodeGraphData.GetAllNodes();
+            List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
             {
                 CreateNodeView(nodeData[i]);
@@ -80,7 +80,7 @@ namespace GraphTheory.Editor.UIElements
         private void Reset()
         {
             m_nodeGraph = null;
-            m_nodeGraphData = null;
+            m_nodeCollection = null;
             foreach (string id in m_nodeViews.Keys)
             {
                 m_nodeViews[id].OnUnloadView();
@@ -144,9 +144,9 @@ namespace GraphTheory.Editor.UIElements
             return graphViewChange;
         }
 
-        private NodeGraphData GetNodeGraphDataByBreadcrumb(NodeGraph graph, string path)
+        private NodeCollection GetNodeCollectionByBreadcrumb(NodeGraph graph, string path)
         {
-            return graph.NodeGraphData;
+            return graph.NodeCollection;
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace GraphTheory.Editor.UIElements
         /// </summary>
         public NodeView CreateNode(Type nodeType, Vector2 pos)
         {
-            ANode node = m_nodeGraphData.CreateNode(nodeType, pos);
+            ANode node = m_nodeCollection.CreateNode(nodeType, pos);
             return CreateNodeView(node);
         }
 
@@ -169,7 +169,7 @@ namespace GraphTheory.Editor.UIElements
         private void DeleteNode(NodeView nodeView)
         {
             nodeView.OnDeleteNode();
-            m_nodeGraphData.RemoveNode(nodeView.NodeId);
+            m_nodeCollection.RemoveNode(nodeView.NodeId);
         }
     }
 }

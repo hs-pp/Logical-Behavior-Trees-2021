@@ -9,11 +9,11 @@ namespace GraphTheory.BuiltInNodes
     [Serializable]
     public class EntryNode : ANode
     {
-        public override void OnNodeEnter(NodeGraphData nodeGraphData)
+        public override void OnNodeEnter(NodeCollection nodeCollection)
         {
             Debug.Log("EntryNode Enter");
-            base.OnNodeEnter(nodeGraphData);
-            nodeGraphData.ChangeNode(this, GetOutportEdge(0));
+            base.OnNodeEnter(nodeCollection);
+            nodeCollection.ChangeNode(this, GetOutportEdge(0));
         }
 
         public override void OnNodeUpdate()

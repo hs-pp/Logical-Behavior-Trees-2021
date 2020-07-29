@@ -160,7 +160,7 @@ namespace GraphTheory.Editor
             Debug.Log("New breadcrumb path is " + path);
             m_graphWindowData.GraphBreadcrumbPath = path;
             m_breadcrumbs.SetBreadcrumbPath(path);
-            m_nodeGraphView.SetNodeGraphData(m_openedGraphInstance, path);
+            m_nodeGraphView.SetNodeCollection(m_openedGraphInstance, path);
         }
     }
 }

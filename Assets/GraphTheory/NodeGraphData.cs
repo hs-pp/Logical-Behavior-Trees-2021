@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace GraphTheory
 {
-    public class NodeGraphData
+    public class NodeCollection
     {
         [SerializeField]
         private Dictionary<string, ANode> m_nodes = new Dictionary<string, ANode>();

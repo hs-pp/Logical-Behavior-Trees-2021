@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: m_nodeGraphData
+    - Name: m_nodeCollection
       Entry: 7
-      Data: 0|GraphTheory.NodeGraphData, Assembly-CSharp
+      Data: 0|GraphTheory.NodeCollection, Assembly-CSharp
     - Name: m_nodes
       Entry: 7
       Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[GraphTheory.ANode,
@@ -43,13 +43,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
+      Data: 4a61a14a-8130-4aa0-982a-137a718495e6
     - Name: $v
       Entry: 7
-      Data: 3|TestNode, Assembly-CSharp
+      Data: 3|GraphTheory.BuiltInNodes.EntryNode, Assembly-CSharp
     - Name: m_id
       Entry: 1
-      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
+      Data: 4a61a14a-8130-4aa0-982a-137a718495e6
     - Name: m_outports
       Entry: 7
       Data: 4|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 5|GraphTheory.OutportEdge, Assembly-CSharp
     - Name: ConnectedNodeId
       Entry: 1
-      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
+      Data: c74b87ff-0b24-4683-b39f-c085989aed58
     - Name: 
       Entry: 8
       Data: 
@@ -77,7 +77,105 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 291
+      Data: 26
+    - Name: 
+      Entry: 4
+      Data: 88
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: c74b87ff-0b24-4683-b39f-c085989aed58
+    - Name: $v
+      Entry: 7
+      Data: 6|TestNode, Assembly-CSharp
+    - Name: m_id
+      Entry: 1
+      Data: c74b87ff-0b24-4683-b39f-c085989aed58
+    - Name: m_outports
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 8|GraphTheory.OutportEdge, Assembly-CSharp
+    - Name: ConnectedNodeId
+      Entry: 1
+      Data: 9a631c97-670b-49cf-a734-708bac00477b
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: m_position
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 269
+    - Name: 
+      Entry: 4
+      Data: 207
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: 9a631c97-670b-49cf-a734-708bac00477b
+    - Name: $v
+      Entry: 7
+      Data: 9|TestNode, Assembly-CSharp
+    - Name: m_id
+      Entry: 1
+      Data: 9a631c97-670b-49cf-a734-708bac00477b
+    - Name: m_outports
+      Entry: 7
+      Data: 10|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: m_position
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 304
     - Name: 
       Entry: 4
       Data: 339
@@ -91,114 +189,15 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
-    - Name: $v
-      Entry: 7
-      Data: 6|TestNode, Assembly-CSharp
-    - Name: m_id
-      Entry: 1
-      Data: 9b4f7505-22fb-4072-9d47-5fcdccc09292
-    - Name: m_outports
-      Entry: 7
-      Data: 7|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 6
-      Data: 
-    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-    - Name: m_position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 201
-    - Name: 
-      Entry: 4
-      Data: 532
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
+    - Name: m_entryNodeId
       Entry: 1
-      Data: 14de1e86-c012-48fd-9c49-d1e244c9fe04
-    - Name: $v
-      Entry: 7
-      Data: 8|GraphTheory.BuiltInNodes.EntryNode, Assembly-CSharp
-    - Name: m_id
-      Entry: 1
-      Data: 14de1e86-c012-48fd-9c49-d1e244c9fe04
-    - Name: m_outports
-      Entry: 7
-      Data: 9|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 10|GraphTheory.OutportEdge, Assembly-CSharp
-    - Name: ConnectedNodeId
-      Entry: 1
-      Data: ea27889f-5707-4f30-b1d8-b8e0730ea9be
+      Data: 4a61a14a-8130-4aa0-982a-137a718495e6
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: m_position
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 75
-    - Name: 
-      Entry: 4
-      Data: 383
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: testNode
-      Entry: 6
-      Data: 
-  m_entryNodeId: 14de1e86-c012-48fd-9c49-d1e244c9fe04
-  abc: 1
+  waitTime: 4

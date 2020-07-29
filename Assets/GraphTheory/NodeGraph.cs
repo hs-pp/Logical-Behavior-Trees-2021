@@ -8,7 +8,7 @@ namespace GraphTheory
     public abstract class NodeGraph : SerializedScriptableObject
     {
         [SerializeField]
-        private NodeGraphData m_nodeGraphData;
+        private NodeCollection m_nodeCollection;
         [NonSerialized]
         public Action OnGraphStart = null;
         [NonSerialized]
@@ -23,30 +23,30 @@ namespace GraphTheory
 
         public void StartGraph()
         {
-            m_nodeGraphData.ParentNodeGraph = this;
-            m_nodeGraphData.OnGraphStart += OnGraphStart;
-            m_nodeGraphData.OnGraphStop += OnGraphStop;
-            m_nodeGraphData.OnNodeChange += OnNodeChange;
+            m_nodeCollection.ParentNodeGraph = this;
+            m_nodeCollection.OnGraphStart += OnGraphStart;
+            m_nodeCollection.OnGraphStop += OnGraphStop;
+            m_nodeCollection.OnNodeChange += OnNodeChange;
 
-            m_nodeGraphData.StartExecution();
+            m_nodeCollection.StartExecution();
         }
         public void UpdateGraph()
         {
-            m_nodeGraphData.UpdateExecution();
+            m_nodeCollection.UpdateExecution();
         }
         public void StopGraph()
         {
-            m_nodeGraphData.StopExecution();
+            m_nodeCollection.StopExecution();
         }
 
 #if UNITY_EDITOR
-        public NodeGraphData NodeGraphData { get { return m_nodeGraphData; } }
+        public NodeCollection NodeCollection { get { return m_nodeCollection; } }
 
         public NodeGraph()
         {
-            m_nodeGraphData = new NodeGraphData();
-            ANode entryNode = m_nodeGraphData.CreateNode(typeof(EntryNode), Vector2.zero);
-            m_nodeGraphData.SetEntryNode(entryNode.Id);
+            m_nodeCollection = new NodeCollection();
+            ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
+            m_nodeCollection.SetEntryNode(entryNode.Id);
         }
 #endif
     }

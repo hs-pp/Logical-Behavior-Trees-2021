@@ -24,11 +24,11 @@ public class TestNode : ANode
         m_maxTime = 9;
     }
 
-    public override void OnNodeEnter(NodeGraphData nodeGraphData)
+    public override void OnNodeEnter(NodeCollection nodeCollection)
     {
         Debug.Log("TestNode Enter");
-        base.OnNodeEnter(nodeGraphData);
-        m_maxTime = (nodeGraphData.ParentNodeGraph as TestGraph).waitTime;
+        base.OnNodeEnter(nodeCollection);
+        m_maxTime = (nodeCollection.ParentNodeGraph as TestGraph).waitTime;
         elapsedTime = 0;
     }
 
@@ -39,7 +39,7 @@ public class TestNode : ANode
 
         if (elapsedTime > m_maxTime)
         {
-            ParentGraphData.ChangeNode(this, GetOutportEdge(0));
+            ParentNodeCollection.ChangeNode(this, GetOutportEdge(0));
         }
     }
 
