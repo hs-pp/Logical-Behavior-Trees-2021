@@ -171,6 +171,15 @@ namespace GraphTheory.Editor.UIElements
             nodeView.OnDeleteNode();
             m_nodeCollection.RemoveNode(nodeView.NodeId);
         }
+
+        public override void AddToSelection(ISelectable selectable)
+        {
+            base.AddToSelection(selectable);
+            if(selection.Count == 1)
+            {
+                //Debug.Log("selected" + selectable.GetType());
+            }
+        }
     }
 }
 

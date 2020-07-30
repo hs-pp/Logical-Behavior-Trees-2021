@@ -10,6 +10,7 @@ namespace GraphTheory.Editor.UIElements
     public class ObjectDisplayField : VisualElement
     {
         private ObjectField m_objectField = null;
+        private Object m_objectRef = null;
 
         public ObjectDisplayField()
         {
