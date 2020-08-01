@@ -19,9 +19,9 @@ namespace GraphTheory.Editor
 
         private VisualElement m_allGraphsGroup = null;
         private ObjectDisplayField m_objectDisplayField = null;
-        private ObjectDisplayFoldout m_recentsFoldout = null;
-        private ObjectDisplayFoldout m_favoritesFoldout = null;
-        private List<ObjectDisplayFoldout> m_allGraphsFoldouts = new List<ObjectDisplayFoldout>();
+        private GraphGroupFoldout m_recentsFoldout = null;
+        private GraphGroupFoldout m_favoritesFoldout = null;
+        private Dictionary<Type, GraphGroupFoldout> m_allGraphsFoldouts = new Dictionary<Type,GraphGroupFoldout>();
 
         public LibraryTabElement() 
         {
@@ -31,19 +31,11 @@ namespace GraphTheory.Editor
             m_allGraphsGroup = this.Q<VisualElement>(ALL_GRAPHS_GROUP);
             m_objectDisplayField = this.Q<ObjectDisplayField>(OPENED_GRAPH_FIELD);
 
-            List<UnityEngine.Object> objects = new List<UnityEngine.Object>();
-            for(int i = 0; i < 3; i++)
-            {
-                objects.Add(null);
-            }
+            m_favoritesFoldout = this.Q<GraphGroupFoldout>(FAVORITES_FOLDOUT);
+            m_favoritesFoldout.Setup("Favorites", false);
 
-            m_favoritesFoldout = this.Q<ObjectDisplayFoldout>(FAVORITES_FOLDOUT);
-            m_favoritesFoldout.SetName("Favorites");
-            m_favoritesFoldout.SetAssets(objects);
-
-            m_recentsFoldout = this.Q<ObjectDisplayFoldout>(RECENTS_FOLDOUT);
-            m_recentsFoldout.SetName("Recents");
-            m_recentsFoldout.SetAssets(objects);
+            m_recentsFoldout = this.Q<GraphGroupFoldout>(RECENTS_FOLDOUT);
+            m_recentsFoldout.Setup("Recents", false);
 
             m_recentsFoldout.AddDisplayFieldManipulator(AddToFavManipCreator);
             m_favoritesFoldout.AddDisplayFieldManipulator(RemoveFromFavManipCreator);
@@ -53,20 +45,17 @@ namespace GraphTheory.Editor
 
             foreach(Type t in m_allGraphTypes)
             {
-                List<UnityEngine.Object> graphs = new List<UnityEngine.Object>();
-
-                Debug.Log(t.ToString());
                 string[] foundGraphGUIDs = AssetDatabase.FindAssets("t: " + t.ToString());
-                foreach(string guid in foundGraphGUIDs)
-                {
-                    NodeGraph graph = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-                    graphs.Add(graph);
-                }
 
-                ObjectDisplayFoldout foldout = new ObjectDisplayFoldout();
-                foldout.SetName($"{t.ToString()}  ({graphs.Count})");
-                foldout.SetAssets(graphs);
+                GraphGroupFoldout foldout = new GraphGroupFoldout();
+                foldout.Setup($"{t.ToString()}  ({foundGraphGUIDs.Length})", true);
+
+                foreach (string guid in foundGraphGUIDs)
+                {
+                    foldout.AddGraphByGUID(guid);
+                }
                 m_allGraphsGroup.Add(foldout);
+                m_allGraphsFoldouts.Add(t, foldout);
             }
         }
 
@@ -104,14 +93,6 @@ namespace GraphTheory.Editor
         public override string GetSerializedData()
         {
             return "lib tab";
-        }
-
-        private class GraphMetaData
-        {
-            public string GUID = "";
-            public string Name = "";
-            public UnityEngine.Object ObjectRef = null;
-            public ObjectDisplayFoldout ParentFoldout = null;
         }
     }
 }

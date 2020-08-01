@@ -163,4 +163,22 @@ namespace GraphTheory.Editor
             m_nodeGraphView.SetNodeCollection(m_openedGraphInstance, path);
         }
     }
+
+    public class GraphModificationProcessor : UnityEditor.AssetModificationProcessor
+    {
+        public static void OnGraphCreated()
+        {
+
+        }
+        private static AssetDeleteResult OnWillDeleteAsset(string sourcePath, RemoveAssetOptions removeAssetOptions)
+        {
+            Debug.Log("deleting " + sourcePath);
+            return AssetDeleteResult.DidNotDelete;
+        }
+        private static AssetMoveResult OnWillMoveAsset(string sourcePath, string destinationPath)
+        {
+            Debug.Log("Source path: " + sourcePath + ". Destination path: " + destinationPath + ".");
+            return AssetMoveResult.DidNotMove;
+        }
+    }
 }
