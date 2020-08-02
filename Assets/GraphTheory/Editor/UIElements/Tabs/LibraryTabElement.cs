@@ -19,12 +19,18 @@ namespace GraphTheory.Editor
 
         private VisualElement m_allGraphsGroup = null;
         private ObjectDisplayField m_objectDisplayField = null;
+        private string m_openGraphGUID = "";
         private GraphGroupFoldout m_recentsFoldout = null;
         private GraphGroupFoldout m_favoritesFoldout = null;
         private Dictionary<Type, GraphGroupFoldout> m_allGraphsFoldouts = new Dictionary<Type,GraphGroupFoldout>();
+        private Action<string> m_onObjectFieldDoubleClick = null;
 
-        public LibraryTabElement() 
+        private LibraryTabData m_libraryTabData = null;
+
+        public LibraryTabElement(Action<string> onObjectFieldDoubleClick) 
         {
+            m_onObjectFieldDoubleClick = onObjectFieldDoubleClick;
+
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/Tabs/LibraryTabElement");
             xmlAsset.CloneTree(this);
 
@@ -32,10 +38,10 @@ namespace GraphTheory.Editor
             m_objectDisplayField = this.Q<ObjectDisplayField>(OPENED_GRAPH_FIELD);
 
             m_favoritesFoldout = this.Q<GraphGroupFoldout>(FAVORITES_FOLDOUT);
-            m_favoritesFoldout.Setup("Favorites", false);
+            m_favoritesFoldout.Setup("Favorites", GraphGroupFoldout.SortRule.TYPE_AND_NAME, m_onObjectFieldDoubleClick);
 
             m_recentsFoldout = this.Q<GraphGroupFoldout>(RECENTS_FOLDOUT);
-            m_recentsFoldout.Setup("Recents", false);
+            m_recentsFoldout.Setup("Recents", GraphGroupFoldout.SortRule.NONE, m_onObjectFieldDoubleClick);
 
             m_recentsFoldout.AddDisplayFieldManipulator(AddToFavManipCreator);
             m_favoritesFoldout.AddDisplayFieldManipulator(RemoveFromFavManipCreator);
@@ -48,7 +54,7 @@ namespace GraphTheory.Editor
                 string[] foundGraphGUIDs = AssetDatabase.FindAssets("t: " + t.ToString());
 
                 GraphGroupFoldout foldout = new GraphGroupFoldout();
-                foldout.Setup($"{t.ToString()}  ({foundGraphGUIDs.Length})", true);
+                foldout.Setup(t.ToString(), GraphGroupFoldout.SortRule.NAME, m_onObjectFieldDoubleClick);
 
                 foreach (string guid in foundGraphGUIDs)
                 {
@@ -56,10 +62,12 @@ namespace GraphTheory.Editor
                 }
                 m_allGraphsGroup.Add(foldout);
                 m_allGraphsFoldouts.Add(t, foldout);
+                foldout.AddDisplayFieldManipulator(AddToFavManipCreator);
+
             }
         }
 
-        public Manipulator AddToFavManipCreator()
+        private Manipulator AddToFavManipCreator()
         {
             return new ContextualMenuManipulator((evt) =>
             {
@@ -70,7 +78,7 @@ namespace GraphTheory.Editor
             });
         }
 
-        public Manipulator RemoveFromFavManipCreator()
+        private Manipulator RemoveFromFavManipCreator()
         {
             return new ContextualMenuManipulator((evt) =>
             {
@@ -81,18 +89,81 @@ namespace GraphTheory.Editor
             });
         }
 
-        public void SetOpenNodeGraph(NodeGraph graph)
+        public void SetOpenNodeGraph(NodeGraph graph, string graphGUID)
         {
+            if(graphGUID == m_openGraphGUID)
+            {
+                return;
+            }
+
+            RegisterNewRecentGraph(m_openGraphGUID, graphGUID);
+            m_openGraphGUID = graphGUID;
             m_objectDisplayField.SetObject(graph);
+        }
+
+        private void RegisterNewRecentGraph(string oldGUID, string newGUID)
+        {
+            if(string.IsNullOrEmpty(oldGUID) || m_libraryTabData == null)
+            {
+                return;
+            }
+            
+            int existingIndex = m_libraryTabData.RecentsGUIDs.FindIndex(x => x == newGUID);
+            if(existingIndex != -1)
+            {
+                m_libraryTabData.RecentsGUIDs.RemoveAt(existingIndex);
+                m_libraryTabData.RecentsGUIDs.Add("");
+            }
+
+            m_libraryTabData.RecentsGUIDs.Insert(0, oldGUID);
+            m_libraryTabData.RecentsGUIDs.RemoveAt(3);
+
+            m_recentsFoldout.Reset(); //TODO: THIS CAN BE MORE EFFICIENT
+            for (int j = 0; j < m_libraryTabData.RecentsGUIDs.Count; j++)
+            {
+                m_recentsFoldout.AddGraphByGUID(m_libraryTabData.RecentsGUIDs[j]);
+            }
         }
 
         public override void DeserializeData(string data)
         {
+            m_libraryTabData = JsonUtility.FromJson<LibraryTabData>(data);
+            if(m_libraryTabData == null)
+            {
+                m_libraryTabData = new LibraryTabData();
+                m_libraryTabData.RecentsGUIDs = new List<string> { "", "", ""};
+            }
+
+            for (int i = 0; i < m_libraryTabData.FavoritesGUIDs.Count; i++)
+            {
+                m_favoritesFoldout.AddGraphByGUID(m_libraryTabData.FavoritesGUIDs[i]);
+            }
+            m_favoritesFoldout.SetToggle(m_libraryTabData.IsFavoritesFoldoutOpen);
+
+            int numInvalid = 0;
+            for (int i = 0; i < m_libraryTabData.RecentsGUIDs.Count; i++)
+            {
+                bool isValid = m_recentsFoldout.AddGraphByGUID(m_libraryTabData.RecentsGUIDs[i]);
+                if (!isValid)
+                {
+                    m_libraryTabData.RecentsGUIDs.RemoveAt(i);
+                    i--;
+                    numInvalid++;
+                }
+            }
+            for (int i = 0; i < numInvalid; i++)
+            {
+                m_recentsFoldout.AddGraphByGUID("");
+                m_libraryTabData.RecentsGUIDs.Add("");
+            }
+            m_recentsFoldout.SetToggle(m_libraryTabData.IsRecentsFoldoutOpen);
         }
 
         public override string GetSerializedData()
         {
-            return "lib tab";
+            m_libraryTabData.IsFavoritesFoldoutOpen = m_favoritesFoldout.IsToggledOn;
+            m_libraryTabData.IsRecentsFoldoutOpen = m_recentsFoldout.IsToggledOn;
+            return JsonUtility.ToJson(m_libraryTabData);
         }
     }
 }

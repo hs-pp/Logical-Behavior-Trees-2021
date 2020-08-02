@@ -71,10 +71,11 @@ namespace GraphTheory.Editor.UIElements
         public void DeserializeData(TabGroupData data)
         {
             m_tabGroupData = data;
+            int tabDataCount = m_tabGroupData.TabData.Count;
 
-            for (int i = 0; i < m_tabGroupData.TabData.Count; i++)
+            for (int i = 0; i < m_allTabs.Count; i++)
             {
-                m_allTabs[i].Content.DeserializeData(m_tabGroupData.TabData[i]);
+                m_allTabs[i].Content.DeserializeData(tabDataCount > i ? m_tabGroupData.TabData[i] : "");
             }
 
             if (m_tabGroupData.SelectedTab != -1)

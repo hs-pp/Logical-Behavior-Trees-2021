@@ -1,4 +1,5 @@
 ﻿using GraphTheory.Editor.UIElements;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -120,7 +121,7 @@ namespace GraphTheory.Editor
         private void RegisterMainPanelLeft(VisualElement leftPanel)
         {
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
-            tabs.Add(("Library", m_libraryTab = new LibraryTabElement()));
+            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
             tabs.Add(("Inspector", new TestContent()));
 
             m_mainTabGroup = new TabGroupElement(tabs);
@@ -142,7 +143,7 @@ namespace GraphTheory.Editor
         {
             m_graphWindowData.OpenGraphGUID = guid;
             m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-            m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance);
+            m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance, guid);
             if(string.IsNullOrEmpty(breadcrumb))
             {
                 breadcrumb = "base/";
@@ -166,18 +167,38 @@ namespace GraphTheory.Editor
 
     public class GraphModificationProcessor : UnityEditor.AssetModificationProcessor
     {
-        public static void OnGraphCreated()
-        {
+        public static Action<NodeGraph> OnGraphCreated = null;
+        public static Action<NodeGraph> OnGraphWillDelete = null;
+        public static Action<NodeGraph, string> OnGraphWillMove = null;
 
+        public static void OnAssetCreated(NodeGraph nodeGraph)
+        {
+            OnGraphCreated?.Invoke(nodeGraph);
         }
+
         private static AssetDeleteResult OnWillDeleteAsset(string sourcePath, RemoveAssetOptions removeAssetOptions)
         {
-            Debug.Log("deleting " + sourcePath);
+            if(OnGraphWillDelete != null)
+            {
+                NodeGraph graphToDelete = AssetDatabase.LoadAssetAtPath<NodeGraph>(sourcePath);
+                if(graphToDelete != null)
+                {
+                    OnGraphWillDelete?.Invoke(graphToDelete);
+                }
+            }
             return AssetDeleteResult.DidNotDelete;
         }
+
         private static AssetMoveResult OnWillMoveAsset(string sourcePath, string destinationPath)
         {
-            Debug.Log("Source path: " + sourcePath + ". Destination path: " + destinationPath + ".");
+            if (OnGraphWillMove != null)
+            {
+                NodeGraph graphToDelete = AssetDatabase.LoadAssetAtPath<NodeGraph>(sourcePath);
+                if (graphToDelete != null)
+                {
+                    OnGraphWillMove?.Invoke(graphToDelete, destinationPath);
+                }
+            }
             return AssetMoveResult.DidNotMove;
         }
     }

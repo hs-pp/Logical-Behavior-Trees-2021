@@ -56,6 +56,10 @@ namespace GraphTheory.Editor.UIElements
         public void SetNodeCollection(NodeGraph nodeGraph, string path)
         {
             Reset();
+            if(nodeGraph == null)
+            {
+                return;
+            }
 
             NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph, path);
 
