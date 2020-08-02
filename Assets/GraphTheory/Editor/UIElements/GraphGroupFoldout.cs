@@ -92,18 +92,14 @@ namespace GraphTheory.Editor.UIElements
 
         public bool AddGraphByGUID(string graphGUID)
         {
-            GraphInstanceMetaContainer newInstance = new GraphInstanceMetaContainer(graphGUID);
-            if (!newInstance.IsValid && !string.IsNullOrEmpty(graphGUID)) // The case where the graph SHOULD have existed but did not. Ignore this guid.
+            GraphInstanceMetaContainer newInstance = CreateNewGraphMetaContainer(graphGUID);
+            if(newInstance == null)
             {
                 return false;
             }
 
-            newInstance.DisplayField.OnDoubleClick += (UnityEngine.Object obj) => 
-            {
-                m_onElementDoubleClick?.Invoke(m_graphInstances.Find(x => x.ObjectRef == (obj as NodeGraph)).GUID);
-            };
 
-            if(m_sortRule != SortRule.NONE)
+            if (m_sortRule != SortRule.NONE)
             {
                 int insertIndex = 0;
                 if (m_sortRule == SortRule.NAME)
@@ -141,6 +137,21 @@ namespace GraphTheory.Editor.UIElements
             return true;
         }
 
+        private GraphInstanceMetaContainer CreateNewGraphMetaContainer(string guid)
+        {
+            GraphInstanceMetaContainer newInstance = new GraphInstanceMetaContainer(guid);
+            if (!newInstance.IsValid && !string.IsNullOrEmpty(guid)) // The case where the graph SHOULD have existed but did not. Ignore this guid.
+            {
+                return null;
+            }
+
+            newInstance.DisplayField.OnDoubleClick += (UnityEngine.Object obj) =>
+            {
+                m_onElementDoubleClick?.Invoke(m_graphInstances.Find(x => x.ObjectRef == (obj as NodeGraph)).GUID);
+            };
+            return newInstance;
+        }
+
         public void RemoveGraphByGUID(string graphGUID)
         {
             int index = m_graphInstances.FindIndex(x => x.GUID == graphGUID);
@@ -149,6 +160,30 @@ namespace GraphTheory.Editor.UIElements
                 m_foldout.Remove(m_graphInstances[index].DisplayField);
                 m_graphInstances.RemoveAt(index);
             }
+            SetFoldoutName(m_foldoutName);
+        }
+
+        public void AddByIndex(int index, string graphGUID)
+        {
+            if(m_sortRule != SortRule.NONE)
+            {
+                Debug.LogError("Cannot add by index when sort rule exists!");
+            }
+
+            GraphInstanceMetaContainer newInstance = CreateNewGraphMetaContainer(graphGUID);
+            if(newInstance == null)
+            {
+                return;
+            }
+
+            m_foldout.Insert(0, newInstance.DisplayField);
+            m_graphInstances.Insert(0, newInstance);
+        }
+        public void RemoveByIndex(int index)
+        {
+            m_foldout.Remove(m_graphInstances[index].DisplayField);
+            m_graphInstances.RemoveAt(index);
+
             SetFoldoutName(m_foldoutName);
         }
 

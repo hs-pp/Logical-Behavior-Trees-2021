@@ -16,6 +16,7 @@ namespace GraphTheory.Editor
         private const string OPENED_GRAPH_FIELD = "opened-graph-field";
         private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string FAVORITES_FOLDOUT = "favorites-foldout";
+        private const int NUM_RECENT = 3;
 
         private VisualElement m_allGraphsGroup = null;
         private ObjectDisplayField m_objectDisplayField = null;
@@ -112,17 +113,18 @@ namespace GraphTheory.Editor
             if(existingIndex != -1)
             {
                 m_libraryTabData.RecentsGUIDs.RemoveAt(existingIndex);
+                m_recentsFoldout.RemoveByIndex(existingIndex);
                 m_libraryTabData.RecentsGUIDs.Add("");
             }
 
-            m_libraryTabData.RecentsGUIDs.Insert(0, oldGUID);
-            m_libraryTabData.RecentsGUIDs.RemoveAt(3);
-
-            m_recentsFoldout.Reset(); //TODO: THIS CAN BE MORE EFFICIENT
-            for (int j = 0; j < m_libraryTabData.RecentsGUIDs.Count; j++)
+            m_recentsFoldout.AddByIndex(0, oldGUID);
+            if (existingIndex == -1)
             {
-                m_recentsFoldout.AddGraphByGUID(m_libraryTabData.RecentsGUIDs[j]);
+                m_recentsFoldout.RemoveByIndex(NUM_RECENT);
             }
+
+            m_libraryTabData.RecentsGUIDs.Insert(0, oldGUID);
+            m_libraryTabData.RecentsGUIDs.RemoveAt(NUM_RECENT);
         }
 
         public override void DeserializeData(string data)
@@ -131,7 +133,11 @@ namespace GraphTheory.Editor
             if(m_libraryTabData == null)
             {
                 m_libraryTabData = new LibraryTabData();
-                m_libraryTabData.RecentsGUIDs = new List<string> { "", "", ""};
+                m_libraryTabData.RecentsGUIDs = new List<string>();
+                for(int i = 0; i < NUM_RECENT; i++)
+                {
+                    m_libraryTabData.RecentsGUIDs.Add("");
+                }
             }
 
             for (int i = 0; i < m_libraryTabData.FavoritesGUIDs.Count; i++)
@@ -139,7 +145,24 @@ namespace GraphTheory.Editor
                 m_favoritesFoldout.AddGraphByGUID(m_libraryTabData.FavoritesGUIDs[i]);
             }
             m_favoritesFoldout.SetToggle(m_libraryTabData.IsFavoritesFoldoutOpen);
-
+            
+            // Prune or grow recents count if necessary
+            int recentsCount = m_libraryTabData.RecentsGUIDs.Count;
+            if (m_libraryTabData.RecentsGUIDs.Count > NUM_RECENT)
+            {
+                for(int i = 0; i < (recentsCount - NUM_RECENT); i++)
+                {
+                    m_libraryTabData.RecentsGUIDs.RemoveAt(m_libraryTabData.RecentsGUIDs.Count - 1);
+                }
+            }
+            else if(m_libraryTabData.RecentsGUIDs.Count < NUM_RECENT)
+            {
+                for(int i = 0; i < (NUM_RECENT - recentsCount); i++)
+                {
+                    m_libraryTabData.RecentsGUIDs.Add("");
+                }
+            }
+            // Remove invalid guids in recents and replace with nulls
             int numInvalid = 0;
             for (int i = 0; i < m_libraryTabData.RecentsGUIDs.Count; i++)
             {
