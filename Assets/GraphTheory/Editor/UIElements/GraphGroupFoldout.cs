@@ -69,7 +69,7 @@ namespace GraphTheory.Editor.UIElements
         private string m_foldoutName = "";
         private Foldout m_foldout = null;
         private SortRule m_sortRule = SortRule.NAME;
-        private List<Func<Manipulator>> m_manipulators = new List<Func<Manipulator>>();
+        private List<Func<string, Manipulator>> m_manipulators = new List<Func<string, Manipulator>>();
         private List<GraphInstanceMetaContainer> m_graphInstances = new List<GraphInstanceMetaContainer>();
         private Action<string> m_onElementDoubleClick = null;
 
@@ -130,7 +130,7 @@ namespace GraphTheory.Editor.UIElements
             
             for(int i = 0; i < m_manipulators.Count; i++)
             {
-                newInstance.DisplayField.AddManipulator(m_manipulators[i]());
+                newInstance.DisplayField.AddManipulator(m_manipulators[i](newInstance.GUID));
             }
             SetFoldoutName(m_foldoutName);
 
@@ -202,11 +202,11 @@ namespace GraphTheory.Editor.UIElements
             m_foldout.value = isOpen;
         }
 
-        public void AddDisplayFieldManipulator(Func<Manipulator> manipulatorFunc)
+        public void AddDisplayFieldManipulator(Func<string, Manipulator> manipulatorFunc)
         {
             for (int i = 0; i < m_graphInstances.Count; i++)
             {
-                m_graphInstances[i].DisplayField.AddManipulator(manipulatorFunc());
+                m_graphInstances[i].DisplayField.AddManipulator(manipulatorFunc(m_graphInstances[i].GUID));
             }
             m_manipulators.Add(manipulatorFunc);
         }

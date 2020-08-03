@@ -11,8 +11,8 @@ namespace GraphTheory.Editor.UIElements
     public class ObjectDisplayField : VisualElement
     {
         private ObjectField m_objectField = null;
-        private UnityEngine.Object m_objectRef = null;
-        public UnityEngine.Object ObjectRef { get { return m_objectRef; } }
+        public UnityEngine.Object ObjectRef { get; private set; } = null;
+
         public Action<UnityEngine.Object> OnDoubleClick = null;
 
         public ObjectDisplayField()
@@ -27,7 +27,7 @@ namespace GraphTheory.Editor.UIElements
         public void SetObject(UnityEngine.Object objectInstance)
         {
             m_objectField.value = objectInstance;
-            m_objectRef = objectInstance;
+            ObjectRef = objectInstance;
         }
 
         private void OpenGraphInstance()
@@ -45,11 +45,11 @@ namespace GraphTheory.Editor.UIElements
 
             if(evt.clickCount == 1)
             {
-                EditorGUIUtility.PingObject(m_objectRef);
+                EditorGUIUtility.PingObject(ObjectRef);
             }
             else if(evt.clickCount == 2)
             {
-                OnDoubleClick?.Invoke(m_objectRef);
+                OnDoubleClick?.Invoke(ObjectRef);
             }
         }
 
