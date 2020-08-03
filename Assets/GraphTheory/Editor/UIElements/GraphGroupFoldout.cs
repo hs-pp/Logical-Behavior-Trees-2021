@@ -128,10 +128,6 @@ namespace GraphTheory.Editor.UIElements
                 m_graphInstances.Add(newInstance);
             }
             
-            for(int i = 0; i < m_manipulators.Count; i++)
-            {
-                newInstance.DisplayField.AddManipulator(m_manipulators[i](newInstance.GUID));
-            }
             SetFoldoutName(m_foldoutName);
 
             return true;
@@ -149,6 +145,10 @@ namespace GraphTheory.Editor.UIElements
             {
                 m_onElementDoubleClick?.Invoke(m_graphInstances.Find(x => x.ObjectRef == (obj as NodeGraph)).GUID);
             };
+            for (int i = 0; i < m_manipulators.Count; i++)
+            {
+                newInstance.DisplayField.AddManipulator(m_manipulators[i](newInstance.GUID));
+            }
             return newInstance;
         }
 
@@ -179,6 +179,7 @@ namespace GraphTheory.Editor.UIElements
             m_foldout.Insert(0, newInstance.DisplayField);
             m_graphInstances.Insert(0, newInstance);
         }
+
         public void RemoveByIndex(int index)
         {
             m_foldout.Remove(m_graphInstances[index].DisplayField);
