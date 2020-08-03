@@ -14,15 +14,17 @@ namespace GraphTheory.Editor
     {
         private const string ALL_GRAPHS_GROUP = "all-graphs-group";
         private const string OPENED_GRAPH_FIELD = "opened-graph-field";
-        private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string FAVORITES_FOLDOUT = "favorites-foldout";
+        private const string RECENTS_FOLDOUT = "recents-foldout";
+        private const string SEARCH_FIELD = "graphs-search-bar";
         private const int NUM_RECENT = 3;
 
         private VisualElement m_allGraphsGroup = null;
         private ObjectDisplayField m_objectDisplayField = null;
         private string m_openGraphGUID = "";
-        private GraphGroupFoldout m_recentsFoldout = null;
         private GraphGroupFoldout m_favoritesFoldout = null;
+        private GraphGroupFoldout m_recentsFoldout = null;
+        private ToolbarSearchField m_searchField = null;
         private Dictionary<Type, GraphGroupFoldout> m_allGraphsFoldouts = new Dictionary<Type,GraphGroupFoldout>();
         private Action<string> m_onObjectFieldDoubleClick = null;
 
@@ -43,6 +45,9 @@ namespace GraphTheory.Editor
 
             m_recentsFoldout = this.Q<GraphGroupFoldout>(RECENTS_FOLDOUT);
             m_recentsFoldout.Setup("Recents", GraphGroupFoldout.SortRule.NONE, m_onObjectFieldDoubleClick);
+
+            m_searchField = this.Q<ToolbarSearchField>(SEARCH_FIELD);
+            m_searchField.RegisterValueChangedCallback(x => { OnSearchQueryChanged(x.newValue); });
 
             m_recentsFoldout.AddDisplayFieldManipulator(AddToFavManipCreator);
             m_favoritesFoldout.AddDisplayFieldManipulator(RemoveFromFavManipCreator);
@@ -139,6 +144,14 @@ namespace GraphTheory.Editor
             m_libraryTabData.RecentsGUIDs.RemoveAt(NUM_RECENT);
         }
 
+        private void OnSearchQueryChanged(string query)
+        {
+            foreach(GraphGroupFoldout foldout in m_allGraphsFoldouts.Values)
+            {
+                foldout.ApplySearchQuery(query);
+            }
+        }
+
         public override void DeserializeData(string data)
         {
             m_libraryTabData = JsonUtility.FromJson<LibraryTabData>(data);
@@ -192,12 +205,16 @@ namespace GraphTheory.Editor
                 m_libraryTabData.RecentsGUIDs.Add("");
             }
             m_recentsFoldout.SetToggle(m_libraryTabData.IsRecentsFoldoutOpen);
+
+            m_searchField.value = m_libraryTabData.SearchQuery;
+            OnSearchQueryChanged(m_libraryTabData.SearchQuery);
         }
 
         public override string GetSerializedData()
         {
             m_libraryTabData.IsFavoritesFoldoutOpen = m_favoritesFoldout.IsToggledOn;
             m_libraryTabData.IsRecentsFoldoutOpen = m_recentsFoldout.IsToggledOn;
+            m_libraryTabData.SearchQuery = m_searchField.value;
             return JsonUtility.ToJson(m_libraryTabData);
         }
     }

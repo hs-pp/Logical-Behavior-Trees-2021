@@ -187,6 +187,29 @@ namespace GraphTheory.Editor.UIElements
             SetFoldoutName(m_foldoutName);
         }
 
+        public void ApplySearchQuery(string query)
+        {
+            Debug.Log("applying query " + query);
+            bool atLeastOneFound = false;
+            for (int i = 0; i < m_graphInstances.Count; i++)
+            {
+                bool searchHit = NameContainsSearchQuery(m_graphInstances[i].Name, query);
+                atLeastOneFound |= searchHit;
+                m_graphInstances[i].DisplayField.style.display = searchHit ? DisplayStyle.Flex: DisplayStyle.None;
+            }
+            style.display = atLeastOneFound ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private bool NameContainsSearchQuery(string name, string query)
+        {
+            if(string.IsNullOrEmpty(query))
+            {
+                return true;
+            }
+
+            return name.Contains(query);
+        }
+
         public void FilterByQuery(string searchQuery)
         {
 
