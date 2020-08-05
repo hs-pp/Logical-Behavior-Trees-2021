@@ -15,7 +15,7 @@ namespace GraphTheory
         public Action OnGraphStop = null;
         [NonSerialized]
         public Action<ANode> OnNodeChange = null;
-
+        
         public void Awake()
         {
             //TODO: Register to runtime tracker here

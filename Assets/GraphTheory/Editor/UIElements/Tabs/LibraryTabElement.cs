@@ -116,9 +116,18 @@ namespace GraphTheory.Editor
                 return;
             }
 
-            RegisterNewRecentGraph(m_openGraphGUID, graphGUID);
-            m_openGraphGUID = graphGUID;
-            m_objectDisplayField.SetObject(graph);
+            if(graph != null)
+            {
+                RegisterNewRecentGraph(m_openGraphGUID, graphGUID);
+                m_openGraphGUID = graphGUID;
+                m_objectDisplayField.SetObject(graph);
+            }
+            else
+            {
+                RegisterNewRecentGraph(m_openGraphGUID, null);
+                m_openGraphGUID = null;
+                m_objectDisplayField.SetObject(null);
+            }
         }
 
         public void RegisterNewlyCreatedGraph(NodeGraph graph, string guid)
@@ -129,20 +138,33 @@ namespace GraphTheory.Editor
             }
         }
 
+        public void HandleDeletedGraph(NodeGraph graph, string guid)
+        {
+            if(m_recentsFoldout.RemoveGraphByGUID(guid))
+            {
+                m_recentsFoldout.AddByIndex(NUM_RECENT - 1, "");
+            }
+            m_favoritesFoldout.RemoveGraphByGUID(guid);
+            m_allGraphsFoldouts[graph.GetType()]?.RemoveGraphByGUID(guid);
+        }
+
         private void RegisterNewRecentGraph(string oldGUID, string newGUID)
         {
             if (string.IsNullOrEmpty(oldGUID) || m_libraryTabData == null)
             {
                 return;
             }
-            
-            int existingIndex = m_libraryTabData.RecentsGUIDs.FindIndex(x => x == newGUID);
-            if(existingIndex != -1)
+
+            if (!string.IsNullOrEmpty(newGUID))
             {
-                m_libraryTabData.RecentsGUIDs.RemoveAt(existingIndex);
-                m_recentsFoldout.RemoveByIndex(existingIndex);
-                m_libraryTabData.RecentsGUIDs.Add("");
-                m_recentsFoldout.AddGraphByGUID("");
+                int existingIndex = m_libraryTabData.RecentsGUIDs.FindIndex(x => x == newGUID);
+                if (existingIndex != -1)
+                {
+                    m_libraryTabData.RecentsGUIDs.RemoveAt(existingIndex);
+                    m_recentsFoldout.RemoveByIndex(existingIndex);
+                    m_libraryTabData.RecentsGUIDs.Add("");
+                    m_recentsFoldout.AddGraphByGUID("");
+                }
             }
 
             if (m_recentsFoldout.AddByIndex(0, oldGUID))

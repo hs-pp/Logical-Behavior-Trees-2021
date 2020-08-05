@@ -52,6 +52,7 @@ namespace GraphTheory.Editor
             RegisterToolbarButton_CreateNewGraph();
 
             GraphModificationProcessor.OnGraphCreated += OnNewGraphCreated;
+            GraphModificationProcessor.OnGraphWillDelete += OnGraphWillDelete;
 
             DeserializeData();
         }
@@ -86,8 +87,6 @@ namespace GraphTheory.Editor
                 OpenGraph(m_graphWindowData.OpenGraphGUID, m_graphWindowData.GraphBreadcrumbPath);
             }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
-            
-            SetGraphBreadcrumbPath("Hello/this/is/a/test/path/");
         }
 
         private void SerializeData()
@@ -139,7 +138,7 @@ namespace GraphTheory.Editor
             rightPanel.Add(m_nodeGraphView);
 
             m_nodeGraphView.Add(m_breadcrumbs = new BreadcrumbsView());
-            m_breadcrumbs.OnBreadcrumbChanged += SetGraphBreadcrumbPath;
+            m_breadcrumbs.OnBreadcrumbChanged += (path) => { SetGraphBreadcrumbPath(m_openedGraphInstance, path); };
         }
 
         public void OpenGraph(string guid, string breadcrumb = "")
@@ -151,20 +150,23 @@ namespace GraphTheory.Editor
             {
                 breadcrumb = "base/";
             }
-            SetGraphBreadcrumbPath(breadcrumb);
+            SetGraphBreadcrumbPath(m_openedGraphInstance, breadcrumb);
         }
 
-        public void CloseGraph()
+        private void CloseCurrentGraph()
         {
-            
+            m_graphWindowData.OpenGraphGUID = "";
+            m_openedGraphInstance = null;
+            m_libraryTab.SetOpenNodeGraph(null, null);
+            SetGraphBreadcrumbPath(null, null);
         }
 
-        private void SetGraphBreadcrumbPath(string path)
+        private void SetGraphBreadcrumbPath(NodeGraph graph, string path)
         {
             Debug.Log("New breadcrumb path is " + path);
             m_graphWindowData.GraphBreadcrumbPath = path;
             m_breadcrumbs.SetBreadcrumbPath(path);
-            m_nodeGraphView.SetNodeCollection(m_openedGraphInstance, path);
+            m_nodeGraphView.SetNodeCollection(graph, path);
         }
 
         private void OnNewGraphCreated(NodeGraph graph)
@@ -172,6 +174,16 @@ namespace GraphTheory.Editor
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(graph, out string guid, out long localId);
             m_libraryTab.RegisterNewlyCreatedGraph(graph, guid);
             OpenGraph(guid);
+        }
+
+        private void OnGraphWillDelete(NodeGraph graph)
+        {
+            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(graph, out string guid, out long localId);
+            if (graph == m_openedGraphInstance)
+            {
+                CloseCurrentGraph();
+            }
+            m_libraryTab.HandleDeletedGraph(graph, guid);
         }
     }
 

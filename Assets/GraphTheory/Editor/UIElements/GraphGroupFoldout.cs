@@ -152,7 +152,7 @@ namespace GraphTheory.Editor.UIElements
             return newInstance;
         }
 
-        public void RemoveGraphByGUID(string graphGUID)
+        public bool RemoveGraphByGUID(string graphGUID)
         {
             int index = m_graphInstances.FindIndex(x => x.GUID == graphGUID);
             if(index != -1)
@@ -161,6 +161,7 @@ namespace GraphTheory.Editor.UIElements
                 m_graphInstances.RemoveAt(index);
             }
             SetFoldoutName(m_foldoutName);
+            return (index != -1);
         }
 
         public bool AddByIndex(int index, string graphGUID)
@@ -184,7 +185,6 @@ namespace GraphTheory.Editor.UIElements
 
         public void RemoveByIndex(int index)
         {
-            Debug.Log(NumElements + "but deleting " + index);
             m_foldout.Remove(m_graphInstances[index].DisplayField);
             m_graphInstances.RemoveAt(index);
 

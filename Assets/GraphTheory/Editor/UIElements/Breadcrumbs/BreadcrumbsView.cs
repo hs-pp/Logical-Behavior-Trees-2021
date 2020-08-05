@@ -30,6 +30,11 @@ namespace GraphTheory.Editor.UIElements
         {
             m_currentFullPath = path;
             ClearCrumbs();
+            if(path == null)
+            {
+                return;
+            }
+
             string[] parsed = path.Split('/');
             string constructed = "";
             for (int i = 0; i < parsed.Length; i++)
