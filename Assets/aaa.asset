@@ -77,10 +77,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 26
+      Data: 123
     - Name: 
       Entry: 4
-      Data: 88
+      Data: 430
     - Name: 
       Entry: 8
       Data: 
@@ -129,10 +129,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 269
+      Data: 240
     - Name: 
       Entry: 4
-      Data: 207
+      Data: 228
     - Name: 
       Entry: 8
       Data: 
@@ -175,10 +175,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 304
+      Data: 405
     - Name: 
       Entry: 4
-      Data: 339
+      Data: 139
     - Name: 
       Entry: 8
       Data: 

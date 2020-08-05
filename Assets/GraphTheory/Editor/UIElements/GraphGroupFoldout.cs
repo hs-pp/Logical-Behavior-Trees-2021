@@ -74,7 +74,7 @@ namespace GraphTheory.Editor.UIElements
         private Action<string> m_onElementDoubleClick = null;
 
         public bool IsToggledOn { get { return m_foldout.value; } }
-
+        public int NumElements { get { return m_graphInstances.Count; } }
         public GraphGroupFoldout()
         {
             m_foldout = new Foldout();
@@ -163,7 +163,7 @@ namespace GraphTheory.Editor.UIElements
             SetFoldoutName(m_foldoutName);
         }
 
-        public void AddByIndex(int index, string graphGUID)
+        public bool AddByIndex(int index, string graphGUID)
         {
             if(m_sortRule != SortRule.NONE)
             {
@@ -173,15 +173,18 @@ namespace GraphTheory.Editor.UIElements
             GraphInstanceMetaContainer newInstance = CreateNewGraphMetaContainer(graphGUID);
             if(newInstance == null)
             {
-                return;
+                return false;
             }
 
             m_foldout.Insert(0, newInstance.DisplayField);
             m_graphInstances.Insert(0, newInstance);
+
+            return true;
         }
 
         public void RemoveByIndex(int index)
         {
+            Debug.Log(NumElements + "but deleting " + index);
             m_foldout.Remove(m_graphInstances[index].DisplayField);
             m_graphInstances.RemoveAt(index);
 

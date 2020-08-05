@@ -121,9 +121,17 @@ namespace GraphTheory.Editor
             m_objectDisplayField.SetObject(graph);
         }
 
+        public void RegisterNewlyCreatedGraph(NodeGraph graph, string guid)
+        {
+            if (!string.IsNullOrEmpty(guid))
+            {
+                m_allGraphsFoldouts[graph.GetType()].AddGraphByGUID(guid);
+            }
+        }
+
         private void RegisterNewRecentGraph(string oldGUID, string newGUID)
         {
-            if(string.IsNullOrEmpty(oldGUID) || m_libraryTabData == null)
+            if (string.IsNullOrEmpty(oldGUID) || m_libraryTabData == null)
             {
                 return;
             }
@@ -137,11 +145,13 @@ namespace GraphTheory.Editor
                 m_recentsFoldout.AddGraphByGUID("");
             }
 
-            m_recentsFoldout.AddByIndex(0, oldGUID);
-            m_recentsFoldout.RemoveByIndex(NUM_RECENT);
+            if (m_recentsFoldout.AddByIndex(0, oldGUID))
+            {
+                m_recentsFoldout.RemoveByIndex(NUM_RECENT);
 
-            m_libraryTabData.RecentsGUIDs.Insert(0, oldGUID);
-            m_libraryTabData.RecentsGUIDs.RemoveAt(NUM_RECENT);
+                m_libraryTabData.RecentsGUIDs.Insert(0, oldGUID);
+                m_libraryTabData.RecentsGUIDs.RemoveAt(NUM_RECENT);
+            }
         }
 
         private void OnSearchQueryChanged(string query)
@@ -197,6 +207,7 @@ namespace GraphTheory.Editor
                     m_libraryTabData.RecentsGUIDs.RemoveAt(i);
                     i--;
                     numInvalid++;
+                    Debug.Log("Found invalid");
                 }
             }
             for (int i = 0; i < numInvalid; i++)
@@ -204,6 +215,7 @@ namespace GraphTheory.Editor
                 m_recentsFoldout.AddGraphByGUID("");
                 m_libraryTabData.RecentsGUIDs.Add("");
             }
+            Debug.Log("loaded recents count: " + m_libraryTabData.RecentsGUIDs.Count);
             m_recentsFoldout.SetToggle(m_libraryTabData.IsRecentsFoldoutOpen);
 
             m_searchField.value = m_libraryTabData.SearchQuery;

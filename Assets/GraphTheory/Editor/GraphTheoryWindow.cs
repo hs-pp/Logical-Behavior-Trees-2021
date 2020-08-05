@@ -51,7 +51,15 @@ namespace GraphTheory.Editor
             //Register toolbar last!
             RegisterToolbarButton_CreateNewGraph();
 
+            GraphModificationProcessor.OnGraphCreated += OnNewGraphCreated;
+
             DeserializeData();
+        }
+
+        private void OnDisable()
+        {
+            SerializeData();
+            GraphModificationProcessor.OnGraphCreated -= OnNewGraphCreated;
         }
 
         private void DeserializeData()
@@ -90,11 +98,6 @@ namespace GraphTheory.Editor
 
             Debug.Log("Serializing data: " + JsonUtility.ToJson(m_graphWindowData, true));
             EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(m_graphWindowData, true));
-        }
-
-        private void OnDisable()
-        {
-            SerializeData();
         }
 
         private void RegisterToolbarButton_CreateNewGraph()
@@ -163,6 +166,13 @@ namespace GraphTheory.Editor
             m_breadcrumbs.SetBreadcrumbPath(path);
             m_nodeGraphView.SetNodeCollection(m_openedGraphInstance, path);
         }
+
+        private void OnNewGraphCreated(NodeGraph graph)
+        {
+            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(graph, out string guid, out long localId);
+            m_libraryTab.RegisterNewlyCreatedGraph(graph, guid);
+            OpenGraph(guid);
+        }
     }
 
     public class GraphModificationProcessor : UnityEditor.AssetModificationProcessor
@@ -200,6 +210,11 @@ namespace GraphTheory.Editor
                 }
             }
             return AssetMoveResult.DidNotMove;
+        }
+
+        private static void OnGraphLoadedInRuntime(NodeGraph nodeGraph)
+        {
+
         }
     }
 }

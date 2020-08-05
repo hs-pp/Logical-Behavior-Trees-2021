@@ -69,7 +69,9 @@ namespace GraphTheory.Editor
             }
             if(GUILayout.Button("Create Graph"))
             {
-                AssetDatabase.CreateAsset(CreateInstance(m_allGraphTypes[m_selectedIndex]), GetFullAssetPath(m_assetName));
+                string path = GetFullAssetPath(m_assetName);
+                AssetDatabase.CreateAsset(CreateInstance(m_allGraphTypes[m_selectedIndex]), path);
+                GraphModificationProcessor.OnAssetCreated(AssetDatabase.LoadAssetAtPath<NodeGraph>(path) as NodeGraph);
             }
 
             GUI.enabled = true;

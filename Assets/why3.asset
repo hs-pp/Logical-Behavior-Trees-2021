@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 253d407e77183e6408827a14b7095824, type: 3}
-  m_Name: ssssssdfs
+  m_Name: why3
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -43,13 +43,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: 468578b7-316d-4e84-8fa8-00dc6d2b26a7
+      Data: 5f93ce5e-9e99-44cd-8f1c-f79c21ba0704
     - Name: $v
       Entry: 7
       Data: 3|GraphTheory.BuiltInNodes.EntryNode, Assembly-CSharp
     - Name: m_id
       Entry: 1
-      Data: 468578b7-316d-4e84-8fa8-00dc6d2b26a7
+      Data: 5f93ce5e-9e99-44cd-8f1c-f79c21ba0704
     - Name: m_outports
       Entry: 7
       Data: 4|System.Collections.Generic.List`1[[GraphTheory.OutportEdge, Assembly-CSharp]],
@@ -92,7 +92,7 @@ MonoBehaviour:
       Data: 
     - Name: m_entryNodeId
       Entry: 1
-      Data: 468578b7-316d-4e84-8fa8-00dc6d2b26a7
+      Data: 5f93ce5e-9e99-44cd-8f1c-f79c21ba0704
     - Name: 
       Entry: 8
       Data: 
