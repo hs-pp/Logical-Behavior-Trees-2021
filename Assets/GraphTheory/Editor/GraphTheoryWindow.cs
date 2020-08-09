@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -23,6 +24,7 @@ namespace GraphTheory.Editor
         private TwoPaneSplitView m_mainSplitView = null;
         private TabGroupElement m_mainTabGroup = null;
         private LibraryTabElement m_libraryTab = null;
+        private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
         private BreadcrumbsView m_breadcrumbs = null;
 
@@ -45,8 +47,8 @@ namespace GraphTheory.Editor
             VisualElement mainPanelLeft = rootVisualElement.Q<VisualElement>(MAIN_PANEL_LEFT);
             m_toolbar = rootVisualElement.Q<Toolbar>(TOOLBAR);
 
-            RegisterMainPanelLeft(mainPanelLeft);
             RegisterMainPanelRight(mainPanelRight);
+            RegisterMainPanelLeft(mainPanelLeft); // Left is dependent on right already existing.
 
             //Register toolbar last!
             RegisterToolbarButton_CreateNewGraph();
@@ -124,7 +126,7 @@ namespace GraphTheory.Editor
         {
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
             tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
-            tabs.Add(("Inspector", new TestContent()));
+            tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement()));
 
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();
@@ -135,10 +137,12 @@ namespace GraphTheory.Editor
         {
             m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
-            rightPanel.Add(m_nodeGraphView);
 
             m_nodeGraphView.Add(m_breadcrumbs = new BreadcrumbsView());
+            m_nodeGraphView.OnSelectionChanged += OnGraphElementsSelected;
             m_breadcrumbs.OnBreadcrumbChanged += (path) => { SetGraphBreadcrumbPath(m_openedGraphInstance, path); };
+
+            rightPanel.Add(m_nodeGraphView);
         }
 
         public void OpenGraph(string guid, string breadcrumb = "")
@@ -184,6 +188,17 @@ namespace GraphTheory.Editor
                 CloseCurrentGraph();
             }
             m_libraryTab.HandleDeletedGraph(graph, guid);
+        }
+
+        private void OnGraphElementsSelected(List<ISelectable> selectedElements)
+        {
+            if(selectedElements.Count == 1)
+            {
+                if(selectedElements[0] is NodeView)
+                {
+
+                }
+            }
         }
     }
 

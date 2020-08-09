@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace GraphTheory
 {
+    //[System.Serializable]
     public class NodeCollection
     {
         [SerializeField]

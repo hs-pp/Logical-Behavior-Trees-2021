@@ -13,16 +13,4 @@ namespace GraphTheory.Editor.UIElements
         public abstract string GetSerializedData();
         public abstract void DeserializeData(string data);
     }
-
-    public class TestContent : TabContentElement
-    {
-        public override string GetSerializedData()
-        {
-            return "This is test serialized data!";
-        }
-        public override void DeserializeData(string data)
-        {
-        }
-    }
-
 }

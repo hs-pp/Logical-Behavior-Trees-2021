@@ -17,6 +17,7 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraph m_nodeGraph = null;
         private NodeCollection m_nodeCollection = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
+        public Action<List<ISelectable>> OnSelectionChanged = null;
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
@@ -29,7 +30,6 @@ namespace GraphTheory.Editor.UIElements
             this.AddManipulator(contentDragger);
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            //Add(new GraphAxisLabels(this, contentDragger));
 
             // Grid lines
             m_gridBackground = new GridBackground();
@@ -179,10 +179,7 @@ namespace GraphTheory.Editor.UIElements
         public override void AddToSelection(ISelectable selectable)
         {
             base.AddToSelection(selectable);
-            if(selection.Count == 1)
-            {
-                //Debug.Log("selected" + selectable.GetType());
-            }
+            OnSelectionChanged?.Invoke(selection);
         }
     }
 }

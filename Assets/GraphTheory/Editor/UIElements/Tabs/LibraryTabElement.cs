@@ -8,7 +8,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphTheory.Editor
+namespace GraphTheory.Editor.UIElements
 {
     public class LibraryTabElement : TabContentElement
     {
