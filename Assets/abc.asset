@@ -16,6 +16,7 @@ MonoBehaviour:
     m_nodes:
     - id: 0
     - id: 1
+    - id: 2
     m_entryNodeId: d0597093-e525-4e37-bb34-a8fc74a5aacd
   waitTime: 4
   references:
@@ -26,11 +27,18 @@ MonoBehaviour:
         m_id: d0597093-e525-4e37-bb34-a8fc74a5aacd
         m_outports:
         - ConnectedNodeId: 7973377c-8507-41a2-b784-ab1d3d8c8d04
-        m_position: {x: 70, y: 88}
+        m_position: {x: 125, y: 8}
     00000001:
       type: {class: TestNode, ns: , asm: Assembly-CSharp}
       data:
         m_id: 7973377c-8507-41a2-b784-ab1d3d8c8d04
         m_outports:
         - ConnectedNodeId: 
-        m_position: {x: 309, y: 122}
+        m_position: {x: 353, y: 90}
+    00000002:
+      type: {class: TestNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 1a2ad1c0-aa1a-4da1-bc00-c6df413d8efb
+        m_outports:
+        - ConnectedNodeId: 
+        m_position: {x: 176, y: 204}

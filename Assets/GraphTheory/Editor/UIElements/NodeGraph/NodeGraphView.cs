@@ -53,7 +53,7 @@ namespace GraphTheory.Editor.UIElements
             m_edgeConectorListener = new EdgeConnectorListener(this);
         }
 
-        public void SetNodeCollection(NodeGraph nodeGraph, string path)
+        public void SetNodeCollection(NodeGraph nodeGraph)
         {
             Reset();
             if(nodeGraph == null)
@@ -61,7 +61,7 @@ namespace GraphTheory.Editor.UIElements
                 return;
             }
 
-            NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph, path);
+            NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph);
 
             if (nodeGraph == null || nodeCollection == null)
                 return;
@@ -148,7 +148,7 @@ namespace GraphTheory.Editor.UIElements
             return graphViewChange;
         }
 
-        private NodeCollection GetNodeCollectionByBreadcrumb(NodeGraph graph, string path)
+        private NodeCollection GetNodeCollectionByBreadcrumb(NodeGraph graph)
         {
             return graph.NodeCollection;
         }

@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class SupportedGraphTypesAttribute : Attribute
+namespace GraphTheory
 {
-    public List<Type> SupportedTypes { get; private set; }
-    public SupportedGraphTypesAttribute(params Type[] supportedTypes)
+    public class SupportedGraphTypesAttribute : Attribute
     {
-        SupportedTypes = supportedTypes.ToList();
+        public List<Type> SupportedTypes { get; private set; }
+        public SupportedGraphTypesAttribute(params Type[] supportedTypes)
+        {
+            SupportedTypes = supportedTypes.ToList();
+        }
     }
 }
