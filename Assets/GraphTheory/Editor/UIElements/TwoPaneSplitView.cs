@@ -76,7 +76,7 @@ namespace GraphTheory.Editor.UIElements
             AddToClassList(s_UssClassName);
 
             //styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Examples/Editor/TwoPaneSplitView/TwoPaneSplitView.uss"));
-            styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/TwoPaneSplitView"));
+            styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/TwoPaneSplitView"));
             m_Content = new VisualElement();
             m_Content.name = "unity-content-container";
             m_Content.AddToClassList(s_ContentContainerClassName);

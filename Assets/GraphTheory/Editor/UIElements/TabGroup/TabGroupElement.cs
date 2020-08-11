@@ -21,9 +21,9 @@ namespace GraphTheory.Editor.UIElements
 
         public TabGroupElement(List<(string, TabContentElement)> tabs)
         {
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/TabGroup/TabGroupElement");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/TabGroup/TabGroupElement");
             xmlAsset.CloneTree(this);
-            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/TabGroup/TabGroupElement"));
+            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/TabGroup/TabGroupElement"));
             m_tabArea = this.Q<VisualElement>(TAB_AREA);
             m_contentArea = this.Q<VisualElement>(CONTENT_AREA);
 

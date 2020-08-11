@@ -17,7 +17,7 @@ namespace GraphTheory.Editor.UIElements
 
         public BreadcrumbsView()
         {
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/Breadcrumbs/BreadcrumbsView");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/Breadcrumbs/BreadcrumbsView");
             xmlAsset.CloneTree(this);
 
             m_breadcrumbContainer = this.Q<VisualElement>(BREADCRUMB_CONTAINER);

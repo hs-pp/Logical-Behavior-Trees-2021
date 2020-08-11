@@ -24,8 +24,8 @@ namespace GraphTheory.Editor.UIElements
 
         public TabElement(string tabName, TabContentElement content)
         {
-            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/TabGroup/TabElement"));
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/TabGroup/TabElement");
+            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/TabGroup/TabElement"));
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/TabGroup/TabElement");
             xmlAsset.CloneTree(this);
             this.AddManipulator(new Clickable(OnClick));
             

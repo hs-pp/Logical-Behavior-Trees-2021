@@ -14,7 +14,7 @@ namespace GraphTheory.Editor.UIElements
         {
             Path = path;
 
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/Breadcrumbs/BreadcrumbElement");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/Breadcrumbs/BreadcrumbElement");
             xmlAsset.CloneTree(this);
 
             Label label = this.Q<Label>(BREADCRUMB_NAME_LABEL);
