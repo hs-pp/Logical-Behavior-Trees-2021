@@ -26,7 +26,7 @@ namespace GraphTheory.Editor
         private LibraryTabElement m_libraryTab = null;
         private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
-        private BreadcrumbsView m_breadcrumbs = null;
+        //private BreadcrumbsView m_breadcrumbs = null;
 
         private NodeGraph m_openedGraphInstance = null;
 
@@ -138,9 +138,9 @@ namespace GraphTheory.Editor
             m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
 
-            m_nodeGraphView.Add(m_breadcrumbs = new BreadcrumbsView());
+            //m_nodeGraphView.Add(m_breadcrumbs = new BreadcrumbsView());
             m_nodeGraphView.OnSelectionChanged += OnGraphElementsSelected;
-            m_breadcrumbs.OnBreadcrumbChanged += (path) => { SetGraphBreadcrumbPath(m_openedGraphInstance, path); };
+            //m_breadcrumbs.OnBreadcrumbChanged += (path) => { SetGraphBreadcrumbPath(m_openedGraphInstance, path); };
 
             rightPanel.Add(m_nodeGraphView);
         }
@@ -150,7 +150,9 @@ namespace GraphTheory.Editor
             m_graphWindowData.OpenGraphGUID = guid;
             m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
             m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance, guid);
-            if(string.IsNullOrEmpty(breadcrumb))
+            m_inspectorTab.SetOpenNodeGraph(m_openedGraphInstance);
+
+            if (string.IsNullOrEmpty(breadcrumb))
             {
                 breadcrumb = "base/";
             }
@@ -162,14 +164,14 @@ namespace GraphTheory.Editor
             m_graphWindowData.OpenGraphGUID = "";
             m_openedGraphInstance = null;
             m_libraryTab.SetOpenNodeGraph(null, null);
+            m_inspectorTab.SetOpenNodeGraph(null);
             SetGraphBreadcrumbPath(null, null);
         }
 
         private void SetGraphBreadcrumbPath(NodeGraph graph, string path)
         {
-            Debug.Log("New breadcrumb path is " + path);
             m_graphWindowData.GraphBreadcrumbPath = path;
-            m_breadcrumbs.SetBreadcrumbPath(path);
+            //m_breadcrumbs.SetBreadcrumbPath(path);
             m_nodeGraphView.SetNodeCollection(graph, path);
         }
 
@@ -196,8 +198,12 @@ namespace GraphTheory.Editor
             {
                 if(selectedElements[0] is NodeView)
                 {
-
+                    m_inspectorTab.SetNode((selectedElements[0] as NodeView).NodeId);
                 }
+            }
+            if(selectedElements.Count == 0)
+            {
+                m_inspectorTab.SetNode("");
             }
         }
     }

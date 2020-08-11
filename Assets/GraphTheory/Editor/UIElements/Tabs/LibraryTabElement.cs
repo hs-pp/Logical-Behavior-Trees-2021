@@ -237,7 +237,6 @@ namespace GraphTheory.Editor.UIElements
                 m_recentsFoldout.AddGraphByGUID("");
                 m_libraryTabData.RecentsGUIDs.Add("");
             }
-            Debug.Log("loaded recents count: " + m_libraryTabData.RecentsGUIDs.Count);
             m_recentsFoldout.SetToggle(m_libraryTabData.IsRecentsFoldoutOpen);
 
             m_searchField.value = m_libraryTabData.SearchQuery;

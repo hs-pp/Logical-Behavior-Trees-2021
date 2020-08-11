@@ -79,7 +79,7 @@ namespace GraphTheory
                 Debug.LogError("Error removing outport edge!");
                 return;
             }
-            m_outports[outportIndex] = null;
+            m_outports[outportIndex].SetInvalid();
         }
 #endif
     }

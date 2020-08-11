@@ -193,7 +193,6 @@ namespace GraphTheory.Editor.UIElements
 
         public void ApplySearchQuery(string query)
         {
-            Debug.Log("applying query " + query);
             bool atLeastOneFound = false;
             for (int i = 0; i < m_graphInstances.Count; i++)
             {

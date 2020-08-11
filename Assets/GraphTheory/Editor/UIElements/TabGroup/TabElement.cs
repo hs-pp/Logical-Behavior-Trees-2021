@@ -56,7 +56,7 @@ namespace GraphTheory.Editor.UIElements
                 this.RemoveFromClassList(SELECTED_DARK_STYLE);
                 this.AddToClassList(NEUTRAL_DARK_STYLE);
             }
-            Content.visible = IsSelected;
+            Content.style.display = isSelected ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         public string GetSerializedData()

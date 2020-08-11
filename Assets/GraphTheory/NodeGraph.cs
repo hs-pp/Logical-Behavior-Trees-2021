@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using GraphTheory.Internal.OdinSerializer;
 using GraphTheory.BuiltInNodes;
 using System;
 
 namespace GraphTheory
 {
-    public abstract class NodeGraph : SerializedScriptableObject
+    [Serializable]
+    public abstract class NodeGraph : ScriptableObject
     {
         [SerializeField]
         private NodeCollection m_nodeCollection;

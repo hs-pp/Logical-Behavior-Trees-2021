@@ -73,7 +73,7 @@ namespace GraphTheory.Editor.UIElements
             List<OutportEdge> edges = m_node.GetAllEdges();
             for (int k = 0; k < edges.Count; k++)
             {
-                if (edges[k] == null)
+                if (!edges[k].IsValid)
                 {
                     continue;
                 }
@@ -108,7 +108,7 @@ namespace GraphTheory.Editor.UIElements
 
         public bool OutportHasEdge(int outportIndex)
         {
-            return m_node.GetOutportEdge(outportIndex) != null;
+            return m_node.GetOutportEdge(outportIndex).IsValid;
         }
 
         public PortView GetOutport(int outportIndex)

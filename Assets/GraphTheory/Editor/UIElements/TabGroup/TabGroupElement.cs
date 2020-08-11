@@ -42,7 +42,7 @@ namespace GraphTheory.Editor.UIElements
             };
             m_tabArea.Add(tabElement);
             m_allTabs.Add(tabElement);
-            content.Item2.visible = false;
+            content.Item2.style.display = DisplayStyle.None;
             m_contentArea.Add(content.Item2);
         }
 

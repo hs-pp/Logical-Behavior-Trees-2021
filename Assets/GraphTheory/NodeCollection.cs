@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace GraphTheory
 {
-    //[System.Serializable]
+    [System.Serializable]
     public class NodeCollection
     {
-        [SerializeField]
-        private Dictionary<string, ANode> m_nodes = new Dictionary<string, ANode>();
+        [SerializeReference]
+        private List<ANode> m_nodes = new List<ANode>();
         [SerializeField]
         private string m_entryNodeId = "";
 
@@ -66,7 +66,8 @@ namespace GraphTheory
 
         public ANode GetNodeById(string id)
         {
-            return m_nodes[id];
+            //TODO: DO A BINARY SEARCh
+            return m_nodes.Find(x => x.Id == id);
         }
 
 #if UNITY_EDITOR
@@ -76,26 +77,24 @@ namespace GraphTheory
         }
         public List<ANode> GetAllNodes()
         {
-            return m_nodes.Values.ToList();
+            return m_nodes;
+        }
+        public void AddNode(ANode node)
+        {
+            //TODO: SORT BY GUID
+            m_nodes.Add(node);
         }
         public ANode CreateNode(Type type, Vector2 pos)
         {
             ANode node = Activator.CreateInstance(type) as ANode;
             node.Position = pos;
-            m_nodes.Add(node.Id, node);
+            AddNode(node);
             return node;
         }
         public void RemoveNode(string nodeId)
         {
-            m_nodes.Remove(nodeId);
-        }
-        public void MakeConnection(ANode outportNode, int outportIndex, ANode inportNode, int inportIndex)
-        {
-
-        }
-        public void BreakConnection(ANode outportNode, int outportIndex, ANode inportNode, int inportIndex)
-        {
-
+            //TODO: MAKE THIS MORE EFFICIENT
+            m_nodes.Remove(m_nodes.Find(x => x.Id == nodeId));
         }
 #endif
     }
