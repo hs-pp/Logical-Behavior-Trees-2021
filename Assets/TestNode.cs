@@ -5,6 +5,7 @@ using GraphTheory;
 using System;
 using System.Runtime.Serialization;
 
+[Serializable]
 [SupportedGraphTypes(typeof(TestGraph))]
 public class TestNode : ANode
 {

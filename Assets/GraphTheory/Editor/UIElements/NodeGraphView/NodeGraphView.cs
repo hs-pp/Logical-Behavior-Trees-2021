@@ -237,24 +237,28 @@ namespace GraphTheory.Editor.UIElements
         public string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
         {
             GraphClipboardData data = new GraphClipboardData(m_nodeGraph, elements);
+            Debug.Log("Serialized: " + JsonUtility.ToJson(data, true));
             return JsonUtility.ToJson(data, true);
         }
         public bool CanUnserializeAndPaste(string data)
         {
             Debug.Log("checking can paste \n" + data);
+            GraphClipboardData clipboardData = null;
             try
             {
-                JsonUtility.FromJson<GraphClipboardData>(data);
+                clipboardData = JsonUtility.FromJson<GraphClipboardData>(data);
             }
             catch
             {
                 return false;
             }
-            return true;
+            return m_nodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName);
         }
         public void UnserializeAndPasteGraphElements(string operationName, string data)
         {
             Debug.Log("Operation " + operationName+ "\n" + data);
+            GraphClipboardData copiedData = JsonUtility.FromJson<GraphClipboardData>(data);
+            Debug.Log("Deserialized " + copiedData.GetGraphElements().Count);
             if(operationName == "Paste")
             {
 

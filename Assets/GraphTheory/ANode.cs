@@ -12,12 +12,11 @@ namespace GraphTheory
     {
         [SerializeField]
         private string m_id = "";
+        public string Id { get { return m_id; } }
         [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         protected NodeCollection ParentNodeCollection { get; private set; } = null;
-
-        public string Id { get { return m_id; } }
 
         public ANode()
         {

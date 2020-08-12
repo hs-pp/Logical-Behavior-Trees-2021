@@ -8,9 +8,9 @@ namespace GraphTheory.Editor.UIElements
     public class NodeView : Node
     {
         private NodeGraphView m_nodeGraphView = null;
+        public ANode Node { get; private set; } = null;
 
-        private ANode m_node = null;
-        public string NodeId { get { return m_node != null ? m_node.Id : string.Empty; } }
+        public string NodeId { get { return Node != null ? Node.Id : string.Empty; } }
         public PortView Inport { get; } = null;
         private List<PortView> m_outports = new List<PortView>();
         private List<EdgeView> m_edgeViews = new List<EdgeView>();
@@ -18,20 +18,20 @@ namespace GraphTheory.Editor.UIElements
 
         public NodeView(ANode node, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
         {
-            m_node = node;
+            Node = node;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
-            bool isEntryNode = m_node is BuiltInNodes.EntryNode;
-            if (m_node != null)
+            bool isEntryNode = Node is BuiltInNodes.EntryNode;
+            if (Node != null)
             {
-                title = m_node.Name;
+                title = Node.Name;
 
                 if (isEntryNode)
                 {
                     this.capabilities = this.capabilities & (~Capabilities.Deletable);
                 }
 
-                m_node.DrawNodeView(this);
+                Node.DrawNodeView(this);
 
                 if (!isEntryNode)
                 {
@@ -47,7 +47,7 @@ namespace GraphTheory.Editor.UIElements
                     inputContainer.Add(Inport);
                 }
 
-                for (int j = 0; j < m_node.NumOutports; j++)
+                for (int j = 0; j < Node.NumOutports; j++)
                 {
                     PortView newPort = new PortView(this,
                         Orientation.Horizontal,
@@ -63,7 +63,7 @@ namespace GraphTheory.Editor.UIElements
                 RefreshExpandedState();
                 RefreshPorts();
                 
-                SetPosition(new Rect(m_node.Position, m_node.Size));
+                SetPosition(new Rect(Node.Position, Node.Size));
 
                 //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
             }
@@ -71,7 +71,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnLoadView()
         {
-            List<OutportEdge> edges = m_node.GetAllEdges();
+            List<OutportEdge> edges = Node.GetAllEdges();
             for (int k = 0; k < edges.Count; k++)
             {
                 if (!edges[k].IsValid)
@@ -110,7 +110,7 @@ namespace GraphTheory.Editor.UIElements
 
         public bool OutportHasEdge(int outportIndex)
         {
-            return m_node.GetOutportEdge(outportIndex).IsValid;
+            return Node.GetOutportEdge(outportIndex).IsValid;
         }
 
         public PortView GetOutport(int outportIndex)
@@ -123,7 +123,7 @@ namespace GraphTheory.Editor.UIElements
             if (edgeView.FirstPort.Node == this)
             {
                 OutportEdge outportEdge = new OutportEdge() { ConnectedNodeId = edgeView.SecondPort.Node.NodeId };
-                m_node.AddOutportEdge(edgeView.FirstPort.PortIndex, outportEdge);
+                Node.AddOutportEdge(edgeView.FirstPort.PortIndex, outportEdge);
                 edgeView.OutportEdge = outportEdge;
             }
             AddEdgeView(edgeView);
@@ -155,7 +155,7 @@ namespace GraphTheory.Editor.UIElements
                     (edgeView.parent as GraphView).RemoveElement(edgeView);
                 }
                 m_edgeViews.Remove(edgeView);
-                m_node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
+                Node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
             }
             else if(edgeView.SecondPort.Node == this)
             {
@@ -170,7 +170,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void UpdateNodeDataPosition()
         {
-            m_node.Position = this.GetPosition().position;
+            Node.Position = this.GetPosition().position;
         }
     }
 }
