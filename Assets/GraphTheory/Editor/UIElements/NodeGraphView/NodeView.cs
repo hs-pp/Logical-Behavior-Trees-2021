@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor.UIElements
 {
@@ -14,7 +15,7 @@ namespace GraphTheory.Editor.UIElements
         private List<PortView> m_outports = new List<PortView>();
         private List<EdgeView> m_edgeViews = new List<EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
-        
+
         public NodeView(ANode node, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
         {
             m_node = node;
@@ -79,6 +80,7 @@ namespace GraphTheory.Editor.UIElements
                 }
                 EdgeView edgeView = new EdgeView()
                 {
+                    OutportEdge = edges[k],
                     input = m_nodeGraphView.GetNodeViewById(edges[k].ConnectedNodeId).Inport,
                     output = m_outports[k],
                 };
@@ -120,7 +122,9 @@ namespace GraphTheory.Editor.UIElements
         {
             if (edgeView.FirstPort.Node == this)
             {
-                m_node.AddOutportEdge(edgeView.FirstPort.PortIndex, new OutportEdge() { ConnectedNodeId = edgeView.SecondPort.Node.NodeId });
+                OutportEdge outportEdge = new OutportEdge() { ConnectedNodeId = edgeView.SecondPort.Node.NodeId };
+                m_node.AddOutportEdge(edgeView.FirstPort.PortIndex, outportEdge);
+                edgeView.OutportEdge = outportEdge;
             }
             AddEdgeView(edgeView);
         }
@@ -157,6 +161,11 @@ namespace GraphTheory.Editor.UIElements
             {
                 edgeView.SecondPort.Disconnect(edgeView);
             }
+        }
+
+        public EdgeView GetEdgeViewById(string id)
+        {
+            return m_edgeViews.Find(x => x.EdgeId == id);
         }
 
         public void UpdateNodeDataPosition()

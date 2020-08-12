@@ -1,5 +1,6 @@
 ﻿using GraphTheory.Editor.UIElements;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -81,7 +82,9 @@ namespace GraphTheory.Editor
             // Populate right panel
             m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
-            m_nodeGraphView.OnSelectionChanged += OnGraphElementsSelected;
+            m_nodeGraphView.OnSelectionAdded += OnGraphElementSelectionAdded;
+            m_nodeGraphView.OnSelectionRemoved += OnGraphElementSelectionRemoved;
+            m_nodeGraphView.OnSelectionCleared += OnGraphElementSelectionCleared;
             mainPanelRight.Add(m_nodeGraphView);
             
             // Populate left panel
@@ -137,6 +140,11 @@ namespace GraphTheory.Editor
                 OpenGraph(m_graphWindowData.OpenGraphGUID);
             }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
+            
+            // Load graph element selection
+            List<string> selectedGraphElements = new List<string>(m_graphWindowData.SelectedGraphElements);
+            m_graphWindowData.SelectedGraphElements.Clear();
+            m_nodeGraphView.SetSelection(selectedGraphElements);
         }
 
         /// <summary>
@@ -208,19 +216,46 @@ namespace GraphTheory.Editor
         /// <summary>
         /// Callback to call when an element is selected in the GraphView.
         /// </summary>
-        private void OnGraphElementsSelected(List<ISelectable> selectedElements)
+        private void OnGraphElementSelectionAdded(ISelectable addedElement)
         {
-            if(selectedElements.Count == 1)
+            if(m_nodeGraphView.selection.Count == 1)
             {
-                if(selectedElements[0] is NodeView)
+                if(addedElement is NodeView)
                 {
-                    m_inspectorTab.SetNode((selectedElements[0] as NodeView).NodeId);
+                    m_inspectorTab.SetNode((addedElement as NodeView).NodeId);
                 }
             }
-            if(selectedElements.Count == 0)
+            else
             {
                 m_inspectorTab.SetNode("");
             }
+
+            if(addedElement is NodeView)
+            {
+                m_graphWindowData.SelectedGraphElements.Add((addedElement as NodeView).NodeId);
+            }
+            if(addedElement is EdgeView)
+            {
+                m_graphWindowData.SelectedGraphElements.Add((addedElement as EdgeView).EdgeId);
+            }
+        }
+
+        private void OnGraphElementSelectionRemoved(ISelectable removedElement)
+        {
+            if (removedElement is NodeView)
+            {
+                m_graphWindowData.SelectedGraphElements.Remove((removedElement as NodeView).NodeId);
+            }
+            if (removedElement is EdgeView)
+            {
+                m_graphWindowData.SelectedGraphElements.Remove((removedElement as EdgeView).EdgeId);
+            }
+        }
+
+        private void OnGraphElementSelectionCleared()
+        {
+            m_graphWindowData.SelectedGraphElements.Clear();
+            m_inspectorTab.SetNode("");
         }
     }
 }

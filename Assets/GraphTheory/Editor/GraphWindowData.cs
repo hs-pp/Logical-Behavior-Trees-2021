@@ -1,4 +1,5 @@
 ﻿using GraphTheory.Editor.UIElements;
+using System.Collections.Generic;
 
 namespace GraphTheory.Editor
 {
@@ -10,6 +11,6 @@ namespace GraphTheory.Editor
         public TabGroupData MainTabGroup = new TabGroupData();
 
         public string OpenGraphGUID = "";
-        public string GraphBreadcrumbPath = "";
+        public List<string> SelectedGraphElements = new List<string>();
     }
 }

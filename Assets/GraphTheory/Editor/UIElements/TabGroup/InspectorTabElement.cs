@@ -20,7 +20,6 @@ namespace GraphTheory.Editor.UIElements
         private SerializedObject m_nodeGraphSO = null;
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
-        private string m_selectedNodeId = "";
         private SerializedProperty m_selectedNodeProperty = null;
 
         public InspectorTabElement()
@@ -36,7 +35,6 @@ namespace GraphTheory.Editor.UIElements
 
         public void SetOpenNodeGraph(NodeGraph nodeGraph)
         {
-            Debug.Log("setting nodegraph " + (nodeGraph != null));
             if(nodeGraph == null)
             {
                 Reset();
@@ -56,7 +54,6 @@ namespace GraphTheory.Editor.UIElements
 
         private void UnselectNode()
         {
-            m_selectedNodeId = "";
             m_selectedNodeProperty = null;
             if (m_imguiContainer != null)
             {
@@ -89,7 +86,6 @@ namespace GraphTheory.Editor.UIElements
                 if(nodeId == nodes.GetArrayElementAtIndex(i).FindPropertyRelative("m_id").stringValue)
                 {
                     m_selectedNodeProperty = nodes.GetArrayElementAtIndex(i);
-                    m_selectedNodeId = nodeId;
                     break;
                 }
             }
@@ -131,15 +127,11 @@ namespace GraphTheory.Editor.UIElements
 
         public override void DeserializeData(string data)
         {
-            if (!string.IsNullOrEmpty(data))
-            {
-                SetNode(data);
-            }
         }
 
         public override string GetSerializedData()
         {
-            return m_selectedNodeId;
+            return ""; 
         }
     }
 }

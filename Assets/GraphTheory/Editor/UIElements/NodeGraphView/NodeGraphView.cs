@@ -17,7 +17,9 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraph m_nodeGraph = null;
         private NodeCollection m_nodeCollection = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
-        public Action<List<ISelectable>> OnSelectionChanged = null;
+        public Action<ISelectable> OnSelectionAdded = null;
+        public Action<ISelectable> OnSelectionRemoved = null;
+        public Action OnSelectionCleared = null;
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
@@ -50,6 +52,9 @@ namespace GraphTheory.Editor.UIElements
             graphViewChanged += OnGraphViewChanged;
 
             m_edgeConectorListener = new EdgeConnectorListener(this);
+            serializeGraphElements += CopyAndSerializeGraphElements;
+            unserializeAndPaste += UnserializeAndPasteGraphElements;
+            canPasteSerializedData += CanUnserializeAndPaste;
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -94,7 +99,21 @@ namespace GraphTheory.Editor.UIElements
 
         public NodeView GetNodeViewById(string id)
         {
-            return m_nodeViews[id];
+            return m_nodeViews.ContainsKey(id) ? m_nodeViews[id] : null;
+        }
+
+        public EdgeView GetEdgeViewById(string id)
+        {
+            EdgeView edgeView = null;
+            foreach(NodeView nodeView in m_nodeViews.Values)
+            {
+                edgeView = nodeView.GetEdgeViewById(id);
+                if(edgeView != null)
+                {
+                    return edgeView;
+                }
+            }
+            return null;
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -178,7 +197,72 @@ namespace GraphTheory.Editor.UIElements
         public override void AddToSelection(ISelectable selectable)
         {
             base.AddToSelection(selectable);
-            OnSelectionChanged?.Invoke(selection);
+            OnSelectionAdded?.Invoke(selectable);
+        }
+
+        public override void RemoveFromSelection(ISelectable selectable)
+        {
+            base.RemoveFromSelection(selectable);
+            OnSelectionRemoved?.Invoke(selectable);
+        }
+
+        public override void ClearSelection()
+        {
+            base.ClearSelection();
+            OnSelectionCleared?.Invoke();
+        }
+
+        public void SetSelection(List<string> graphElementIds)
+        {
+            for (int i = 0; i < graphElementIds.Count; i++)
+            {
+                NodeView nodeView = GetNodeViewById(graphElementIds[i]);
+                if (nodeView != null)
+                {
+                    AddToSelection(nodeView);
+                }
+                else
+                {
+                    //its an edge
+                    EdgeView edgeView = GetEdgeViewById(graphElementIds[i]);
+                    if(edgeView != null)
+                    {
+                        AddToSelection(edgeView);
+                        edgeView.RetainSelected = true; // Bandaid to Unity bug. See EdgeView.cs
+                    }
+                }
+            }
+        }
+
+        public string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
+        {
+            GraphClipboardData data = new GraphClipboardData(m_nodeGraph, elements);
+            return JsonUtility.ToJson(data, true);
+        }
+        public bool CanUnserializeAndPaste(string data)
+        {
+            Debug.Log("checking can paste \n" + data);
+            try
+            {
+                JsonUtility.FromJson<GraphClipboardData>(data);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        public void UnserializeAndPasteGraphElements(string operationName, string data)
+        {
+            Debug.Log("Operation " + operationName+ "\n" + data);
+            if(operationName == "Paste")
+            {
+
+            }
+            else if(operationName == "Duplicate")
+            {
+
+            }
         }
     }
 }
