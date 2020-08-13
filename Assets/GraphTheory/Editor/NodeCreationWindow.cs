@@ -26,7 +26,8 @@ public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
         {
             m_validNodeTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(ANode).IsAssignableFrom(x)
                 && !x.IsAbstract
-                && x.GetCustomAttribute<SupportedGraphTypesAttribute>() != null));
+                && x.GetCustomAttribute<SupportedGraphTypesAttribute>() != null
+                && x.GetCustomAttribute<SupportedGraphTypesAttribute>().SupportedTypes.Contains(m_nodeGraphView.GraphType)));
             //TODO SORT THEM!
         }
 

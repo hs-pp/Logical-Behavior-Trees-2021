@@ -127,7 +127,8 @@ namespace GraphTheory.Editor.UIElements
                 m_foldout.Add(newInstance.DisplayField);
                 m_graphInstances.Add(newInstance);
             }
-            
+
+            style.display = DisplayStyle.Flex;
             SetFoldoutName(m_foldoutName);
 
             return true;
@@ -160,6 +161,7 @@ namespace GraphTheory.Editor.UIElements
                 m_foldout.Remove(m_graphInstances[index].DisplayField);
                 m_graphInstances.RemoveAt(index);
             }
+            HideFoldoutIfNecessary();
             SetFoldoutName(m_foldoutName);
             return (index != -1);
         }
@@ -180,6 +182,8 @@ namespace GraphTheory.Editor.UIElements
             m_foldout.Insert(0, newInstance.DisplayField);
             m_graphInstances.Insert(0, newInstance);
 
+            style.display = DisplayStyle.Flex;
+
             return true;
         }
 
@@ -188,19 +192,31 @@ namespace GraphTheory.Editor.UIElements
             m_foldout.Remove(m_graphInstances[index].DisplayField);
             m_graphInstances.RemoveAt(index);
 
+            HideFoldoutIfNecessary();
             SetFoldoutName(m_foldoutName);
+        }
+
+        private void HideFoldoutIfNecessary()
+        {
+            for (int i = 0; i < m_graphInstances.Count; i++)
+            {
+                if (m_graphInstances[i].DisplayField.style.display == DisplayStyle.Flex)
+                {
+                    style.display = DisplayStyle.Flex;
+                    return;
+                }
+            }
+            style.display = DisplayStyle.None;
         }
 
         public void ApplySearchQuery(string query)
         {
-            bool atLeastOneFound = false;
             for (int i = 0; i < m_graphInstances.Count; i++)
             {
                 bool searchHit = NameContainsSearchQuery(m_graphInstances[i].Name, query);
-                atLeastOneFound |= searchHit;
                 m_graphInstances[i].DisplayField.style.display = searchHit ? DisplayStyle.Flex: DisplayStyle.None;
             }
-            style.display = atLeastOneFound ? DisplayStyle.Flex : DisplayStyle.None;
+            HideFoldoutIfNecessary();
         }
 
         private bool NameContainsSearchQuery(string name, string query)
@@ -211,11 +227,6 @@ namespace GraphTheory.Editor.UIElements
             }
 
             return name.Contains(query);
-        }
-
-        public void FilterByQuery(string searchQuery)
-        {
-
         }
 
         private void SetFoldoutName(string name)

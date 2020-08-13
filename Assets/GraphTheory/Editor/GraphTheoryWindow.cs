@@ -169,12 +169,10 @@ namespace GraphTheory.Editor
         /// </summary>
         public void OpenGraph(string guid)
         {
+            CloseCurrentGraph();
+
             m_openedGraphInstance = AssetDatabase.LoadAssetAtPath<NodeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-            if (m_openedGraphInstance == null)   // If we couldn't find graph, set guid to null and default to loading no graph.
-            {
-                CloseCurrentGraph();
-            }
-            else
+            if (m_openedGraphInstance != null)
             {
                 m_graphWindowData.OpenGraphGUID = guid;
                 m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance, guid);

@@ -146,7 +146,8 @@ namespace GraphTheory.Editor.UIElements
                 m_recentsFoldout.AddByIndex(NUM_RECENT - 1, "");
             }
             m_favoritesFoldout.RemoveGraphByGUID(guid);
-            m_allGraphsFoldouts[graph.GetType()]?.RemoveGraphByGUID(guid);
+            m_allGraphsFoldouts[graph.GetType()].RemoveGraphByGUID(guid);
+
         }
 
         private void RegisterNewRecentGraph(string oldGUID, string newGUID)
