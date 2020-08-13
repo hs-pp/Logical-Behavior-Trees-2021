@@ -17,6 +17,7 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraph m_nodeGraph = null;
         private NodeCollection m_nodeCollection = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
+        private Vector2 m_mousePosition = Vector2.zero;
         public Action<ISelectable> OnSelectionAdded = null;
         public Action<ISelectable> OnSelectionRemoved = null;
         public Action OnSelectionCleared = null;
@@ -55,6 +56,8 @@ namespace GraphTheory.Editor.UIElements
             serializeGraphElements += CopyAndSerializeGraphElements;
             unserializeAndPaste += UnserializeAndPasteGraphElements;
             canPasteSerializedData += CanUnserializeAndPaste;
+            
+            RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -194,6 +197,20 @@ namespace GraphTheory.Editor.UIElements
             m_nodeCollection.RemoveNode(nodeView.NodeId);
         }
 
+        private void LoadSanitizedClipboardNodes(List<ANode> nodes)
+        {
+            List<NodeView> newNodeViews = new List<NodeView>();
+            for(int i = 0; i < nodes.Count; i++)
+            {
+                m_nodeCollection.AddNode(nodes[i]);
+                newNodeViews.Add(CreateNodeView(nodes[i]));
+            }
+            for(int i = 0; i < newNodeViews.Count; i++)
+            {
+                newNodeViews[i].OnLoadView();
+            }
+        }
+
         public override void AddToSelection(ISelectable selectable)
         {
             base.AddToSelection(selectable);
@@ -234,15 +251,16 @@ namespace GraphTheory.Editor.UIElements
             }
         }
 
-        public string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
+        private string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
         {
             GraphClipboardData data = new GraphClipboardData(m_nodeGraph, elements);
-            Debug.Log("Serialized: " + JsonUtility.ToJson(data, true));
+            //Debug.Log("Serialized: " + JsonUtility.ToJson(data, true));
             return JsonUtility.ToJson(data, true);
         }
-        public bool CanUnserializeAndPaste(string data)
+        
+        private bool CanUnserializeAndPaste(string data)
         {
-            Debug.Log("checking can paste \n" + data);
+            //Debug.Log("checking can paste \n" + data);
             GraphClipboardData clipboardData = null;
             try
             {
@@ -254,19 +272,43 @@ namespace GraphTheory.Editor.UIElements
             }
             return m_nodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName);
         }
-        public void UnserializeAndPasteGraphElements(string operationName, string data)
+
+        private void UnserializeAndPasteGraphElements(string operationName, string data)
         {
             Debug.Log("Operation " + operationName+ "\n" + data);
             GraphClipboardData copiedData = JsonUtility.FromJson<GraphClipboardData>(data);
-            Debug.Log("Deserialized " + copiedData.GetGraphElements().Count);
-            if(operationName == "Paste")
-            {
 
-            }
-            else if(operationName == "Duplicate")
+            if(operationName == "Paste" || operationName == "Duplicate")
             {
-
+                Vector2 pos = m_mousePosition - new Vector2(contentViewContainer.transform.position.x, contentViewContainer.transform.position.y);
+                List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), pos);
+                LoadSanitizedClipboardNodes(clipboardNodes);
             }
+        }
+
+        private List<ANode> SanitizeClipboardElements(List<ANode> clipboardElements, Vector2 newCenter)
+        {
+            // Reposition all elements around the new center
+            Vector2 centerPos = Vector2.zero;
+            for(int i = 0; i < clipboardElements.Count; i++)
+            {
+                centerPos += clipboardElements[i].Position;
+            }
+            centerPos /= clipboardElements.Count;
+
+            // Generate new id's
+            Dictionary<string, string> oldToNewIdList = new Dictionary<string, string>();
+            for (int i = 0; i < clipboardElements.Count; i++)
+            {
+                oldToNewIdList.Add(clipboardElements[i].Id, Guid.NewGuid().ToString());
+            }
+            for (int i = 0; i < clipboardElements.Count; i++)
+            {
+                clipboardElements[i].SanitizeNodeCopy(oldToNewIdList[clipboardElements[i].Id],
+                    clipboardElements[i].Position += newCenter - centerPos,
+                    oldToNewIdList);
+            }
+            return clipboardElements;
         }
     }
 }

@@ -30,10 +30,12 @@ namespace GraphTheory
 
             m_nodeCollection.StartExecution();
         }
+
         public void UpdateGraph()
         {
             m_nodeCollection.UpdateExecution();
         }
+
         public void StopGraph()
         {
             m_nodeCollection.StopExecution();

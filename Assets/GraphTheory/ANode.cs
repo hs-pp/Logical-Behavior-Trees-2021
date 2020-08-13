@@ -45,6 +45,24 @@ namespace GraphTheory
 
         public virtual void DrawNodeView(Node nodeView){}
 
+        public void SanitizeNodeCopy(string newId, Vector2 position, Dictionary<string, string> oldToNewIdList)
+        {
+            m_id = newId;
+            m_position = position;
+            for(int i = m_outports.Count - 1; i >= 0 ; i--)
+            {
+                m_outports[i].Id = Guid.NewGuid().ToString();
+                if (oldToNewIdList.TryGetValue(m_outports[i].ConnectedNodeId, out string foundId))
+                {
+                    m_outports[i].ConnectedNodeId = foundId;
+                }
+                else
+                {
+                    m_outports[i].SetInvalid();
+                }
+            }
+        }
+
         public int CreateOutport()
         {
             m_outports.Add(null);

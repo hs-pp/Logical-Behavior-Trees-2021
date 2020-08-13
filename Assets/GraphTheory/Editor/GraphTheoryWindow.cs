@@ -69,9 +69,14 @@ namespace GraphTheory.Editor
                     AssetDatabase.SaveAssets();
                 }
             });
-            saveGraphButton.text = "Save";
-            
+            saveGraphButton.text = "Save";            
             m_toolbar.Add(saveGraphButton);
+
+            var anythingButton = new ToolbarButton(() =>
+            {
+            });
+            anythingButton.text = "test";
+            m_toolbar.Add(anythingButton);
             //=========================================================================================//
 
             //====================================Register Panels======================================//
