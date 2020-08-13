@@ -135,6 +135,7 @@ namespace GraphTheory.Editor.UIElements
             if (!string.IsNullOrEmpty(guid))
             {
                 m_allGraphsFoldouts[graph.GetType()].AddGraphByGUID(guid);
+                Debug.Log("I think it was registered?");
             }
         }
 
