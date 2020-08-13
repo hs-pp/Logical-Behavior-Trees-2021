@@ -44,7 +44,10 @@ namespace GraphTheory.Editor
                 NodeView nodeView = element as NodeView;
                 if (nodeView != null)
                 {
-                    m_serializedGraphElements.Add(new ClipboardElement(nodeView.Node));
+                    if(!(typeof(BuiltInNodes.EntryNode).IsAssignableFrom(nodeView.Node.GetType())))
+                    {
+                        m_serializedGraphElements.Add(new ClipboardElement(nodeView.Node));
+                    }
                 }
                 //Edge data is in the nodes so we don't need to serialize edge views.
             }
