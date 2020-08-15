@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 #if UNITY_EDITOR
 using UnityEditor.Experimental.GraphView;
 #endif
@@ -10,10 +12,10 @@ namespace GraphTheory
     [Serializable]
     public abstract class ANode
     {
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private string m_id = "";
         public string Id { get { return m_id; } }
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         protected NodeCollection ParentNodeCollection { get; private set; } = null;
@@ -32,8 +34,10 @@ namespace GraphTheory
             return m_outports[index];
         }
 
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private Vector2 m_position;
+        [SerializeField, HideInInspector]
+        private string m_comment;
 #if UNITY_EDITOR
         public abstract string Name { get; }
         public int NumOutports { get { return m_outports.Count; } }
@@ -43,7 +47,9 @@ namespace GraphTheory
         public virtual Vector2 Size { get { return new Vector2(600, 300); } }
         public virtual Color NodeColor { get { return Color.gray; } }
 
-        public virtual void DrawNodeView(Node nodeView){}
+        public virtual void DrawNodeView(Node nodeView)
+        {
+        }
 
         public void SanitizeNodeCopy(string newId, Vector2 position, Dictionary<string, string> oldToNewIdList)
         {
@@ -63,10 +69,9 @@ namespace GraphTheory
             }
         }
 
-        public int CreateOutport()
+        public void CreateOutport()
         {
-            m_outports.Add(null);
-            return m_outports.Count - 1;
+            m_outports.Add(new OutportEdge());
         }
 
         public void DestroyOutport(int index)

@@ -4,6 +4,8 @@ using UnityEngine;
 using GraphTheory;
 using System;
 using System.Runtime.Serialization;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 
 [Serializable]
 [SupportedGraphTypes(typeof(DialogueGraph))]
@@ -39,6 +41,18 @@ public class DialogueNode : ANode
     public DialogueNode() : base()
     {
         CreateOutport();
+    }
+
+    public override void DrawNodeView(Node nodeView)
+    {
+        base.DrawNodeView(nodeView);
+        nodeView.contentContainer.Add(new Label("content"));
+        nodeView.titleContainer.Add(new Label("title"));
+        nodeView.inputContainer.Add(new Label("input"));
+        nodeView.outputContainer.Add(new Label("output"));
+        nodeView.extensionContainer.Add(new Label("extension"));
+        nodeView.mainContainer.Add(new Label("main"));
+        nodeView.RefreshExpandedState();
     }
 #endif
 }

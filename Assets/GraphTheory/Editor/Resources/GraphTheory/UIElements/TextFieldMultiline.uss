@@ -1,0 +1,13 @@
+﻿#messageText {
+    flex-direction: column;
+    height: 100;
+    -unity-word-wrap: true;
+}
+ 
+#messageText TextInput {
+    -unity-text-align: upper-left;  
+    -unity-word-wrap: true;
+    -unity-clipping: clip;
+    overflow: visible;
+    white-space: normal;
+}
