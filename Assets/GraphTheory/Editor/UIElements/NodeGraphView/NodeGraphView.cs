@@ -62,7 +62,7 @@ namespace GraphTheory.Editor.UIElements
             canPasteSerializedData += CanUnserializeAndPaste;
             
             RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
-            Undo.undoRedoPerformed += ValidateView;
+            Undo.undoRedoPerformed += () => { SetNodeCollection(m_nodeGraph); };
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -93,53 +93,6 @@ namespace GraphTheory.Editor.UIElements
                 m_nodeViews[nodeData[j].Id].OnLoadView();
             }
             RefreshSerializedNodeReferences();
-        }
-
-        private void ValidateView()
-        {
-            Debug.Log("Validating");
-            m_nodeListProp.serializedObject.Update();
-            m_nodeListProp.serializedObject.ApplyModifiedProperties();
-            List<ANode> allNodes = m_nodeCollection.GetAllNodes();
-            List<ANode> extraNodes = new List<ANode>();
-            List<NodeView> extraNodeViews = new List<NodeView>();
-
-            HashSet<string> unionSet = new HashSet<string>();
-            for(int i = 0; i < allNodes.Count; i++)
-            {
-                if(m_nodeViews.ContainsKey(allNodes[i].Id))
-                {
-                    unionSet.Add(allNodes[i].Id);
-                }
-                else
-                {
-                    extraNodes.Add(allNodes[i]);
-                }
-            }
-            foreach(string id in m_nodeViews.Keys)
-            {
-                if(!unionSet.Contains(id))
-                {
-                    extraNodeViews.Add(m_nodeViews[id]);
-                }
-            }
-
-            for(int i = 0; i < extraNodes.Count; i++)
-            {
-                Debug.Log("Restored deleted node");
-                CreateNodeView(extraNodes[i]);
-            }
-            for(int i = 0; i < extraNodeViews.Count; i++)
-            {
-                Debug.Log("Deleted extra node view " + extraNodeViews[i].NodeId);
-                extraNodeViews[i].parent.Remove(extraNodeViews[i]);
-                extraNodeViews[i].OnUnloadView();
-                m_nodeViews.Remove(extraNodeViews[i].NodeId);
-            }
-            foreach (NodeView nodeView in m_nodeViews.Values)
-            {
-                nodeView.ValidateEdgeViews();
-            }
         }
 
         private void Reset()
@@ -197,6 +150,7 @@ namespace GraphTheory.Editor.UIElements
         {
             if (graphViewChange.elementsToRemove != null)
             {
+                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Deleted Graph Elements");
                 for (int i = graphViewChange.elementsToRemove.Count - 1; i >= 0; i--)
                 {
                     if (graphViewChange.elementsToRemove[i] is NodeView)
@@ -210,8 +164,9 @@ namespace GraphTheory.Editor.UIElements
                     }
                 }
             }
-            if (graphViewChange.movedElements != null)
+            else if (graphViewChange.movedElements != null)
             {
+                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Moved Graph Elements");
                 for (int k = 0; k < graphViewChange.movedElements.Count; k++)
                 {
                     if (graphViewChange.movedElements[k] is NodeView)
@@ -261,7 +216,6 @@ namespace GraphTheory.Editor.UIElements
 
         private void DeleteNode(NodeView nodeView)
         {
-            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Deleted Node");
             OnRemoveNode?.Invoke(nodeView);
             nodeView.OnDeleteNode();
             m_nodeViews.Remove(nodeView.NodeId);
@@ -359,6 +313,8 @@ namespace GraphTheory.Editor.UIElements
 
             if(operationName == "Paste" || operationName == "Duplicate")
             {
+                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Paste Graph Elements");
+
                 Vector2 pos = m_mousePosition - new Vector2(contentViewContainer.transform.position.x, contentViewContainer.transform.position.y);
                 List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), pos);
                 LoadSanitizedClipboardNodes(clipboardNodes);
