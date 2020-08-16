@@ -87,15 +87,16 @@ namespace GraphTheory.Editor
             // Populate right panel
             m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
-            m_nodeGraphView.OnSelectionAdded += OnGraphElementSelectionAdded;
-            m_nodeGraphView.OnSelectionRemoved += OnGraphElementSelectionRemoved;
-            m_nodeGraphView.OnSelectionCleared += OnGraphElementSelectionCleared;
+            m_nodeGraphView.OnAddToSelection += OnGraphElementSelectionAdded;
+            m_nodeGraphView.OnRemoveFromSelection += OnGraphElementSelectionRemoved;
+            m_nodeGraphView.OnClearSelection += OnGraphElementSelectionCleared;
             mainPanelRight.Add(m_nodeGraphView);
             
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
             tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement()));
+            m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();
             mainPanelLeft.Add(m_mainTabGroup);
@@ -223,14 +224,15 @@ namespace GraphTheory.Editor
         {
             if(m_nodeGraphView.selection.Count == 1)
             {
-                if(addedElement is NodeView)
+                NodeView nodeView = (addedElement as NodeView);
+                if (nodeView != null)
                 {
-                    m_inspectorTab.SetNode((addedElement as NodeView).NodeId);
+                    m_inspectorTab.SetNode(nodeView.Node, nodeView.SerializedNode);
                 }
             }
             else
             {
-                m_inspectorTab.SetNode("");
+                m_inspectorTab.SetNode(null, null);
             }
 
             if(addedElement is NodeView)
@@ -258,7 +260,7 @@ namespace GraphTheory.Editor
         private void OnGraphElementSelectionCleared()
         {
             m_graphWindowData.SelectedGraphElements.Clear();
-            m_inspectorTab.SetNode("");
+            m_inspectorTab.SetNode(null, null);
         }
     }
 }

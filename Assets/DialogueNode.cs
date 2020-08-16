@@ -7,6 +7,10 @@ using System.Runtime.Serialization;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [Serializable]
 [SupportedGraphTypes(typeof(DialogueGraph))]
 public class DialogueNode : ANode
@@ -43,11 +47,11 @@ public class DialogueNode : ANode
         CreateOutport();
     }
 
-    public override void DrawNodeView(Node nodeView)
+    public override void DrawNodeView(Node nodeView, SerializedProperty serializedNode)
     {
-        base.DrawNodeView(nodeView);
+        base.DrawNodeView(nodeView, serializedNode);
         nodeView.contentContainer.Add(new Label("content"));
-        nodeView.titleContainer.Add(new Label("title"));
+        nodeView.titleContainer.Add(new Label(serializedNode.FindPropertyRelative("m_id").stringValue));
         nodeView.inputContainer.Add(new Label("input"));
         nodeView.outputContainer.Add(new Label("output"));
         nodeView.extensionContainer.Add(new Label("extension"));

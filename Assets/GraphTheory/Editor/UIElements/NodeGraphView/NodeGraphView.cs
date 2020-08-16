@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using System;
 using System.Linq;
+using UnityEditor;
 
 namespace GraphTheory.Editor.UIElements
 {
@@ -16,11 +17,14 @@ namespace GraphTheory.Editor.UIElements
 
         private NodeGraph m_nodeGraph = null;
         private NodeCollection m_nodeCollection = null;
+        private SerializedProperty m_nodeListProp = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
         private Vector2 m_mousePosition = Vector2.zero;
-        public Action<ISelectable> OnSelectionAdded = null;
-        public Action<ISelectable> OnSelectionRemoved = null;
-        public Action OnSelectionCleared = null;
+
+        public Action<NodeView> OnRemoveNode = null;
+        public Action<ISelectable> OnAddToSelection = null;
+        public Action<ISelectable> OnRemoveFromSelection = null;
+        public Action OnClearSelection = null;
 
         public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
@@ -69,6 +73,7 @@ namespace GraphTheory.Editor.UIElements
             }
 
             NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph);
+            m_nodeListProp = new SerializedObject(nodeGraph).FindProperty("m_nodeCollection").FindPropertyRelative("m_nodes");
 
             if (nodeGraph == null || nodeCollection == null)
                 return;
@@ -80,12 +85,13 @@ namespace GraphTheory.Editor.UIElements
             List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
             {
-                CreateNodeView(nodeData[i]);
+                CreateNodeView(nodeData[i], m_nodeListProp.GetArrayElementAtIndex(i));
             }
             for(int j = 0; j < nodeData.Count; j++)
             {
                 m_nodeViews[nodeData[j].Id].OnLoadView();
             }
+            RefreshSerializedNodeReferences();
         }
 
         private void Reset()
@@ -180,12 +186,26 @@ namespace GraphTheory.Editor.UIElements
         public NodeView CreateNode(Type nodeType, Vector2 pos)
         {
             ANode node = m_nodeCollection.CreateNode(nodeType, pos);
-            return CreateNodeView(node);
+            m_nodeListProp.serializedObject.Update();
+            NodeView nodeView = CreateNodeView(node);
+            RefreshSerializedNodeReferences();
+            return nodeView;
         }
 
-        private NodeView CreateNodeView(ANode node)
+        private NodeView CreateNodeView(ANode node, SerializedProperty serializedNode = null)
         {
-            NodeView nodeView = new NodeView(node, this, m_edgeConectorListener);
+            //TODO: get the serialized node here
+            if(serializedNode == null)
+            {
+                int index = m_nodeGraph.NodeCollection.GetNodeIndex(node);
+                if(index == -1)
+                {
+                    Debug.Log("wtf ");
+                }
+                serializedNode = m_nodeListProp.GetArrayElementAtIndex(index);
+            }
+
+            NodeView nodeView = new NodeView(node, serializedNode, this, m_edgeConectorListener);
             AddElement(nodeView);
             m_nodeViews.Add(node.Id, nodeView);
             return nodeView;
@@ -193,8 +213,10 @@ namespace GraphTheory.Editor.UIElements
 
         private void DeleteNode(NodeView nodeView)
         {
+            OnRemoveNode?.Invoke(nodeView);
             nodeView.OnDeleteNode();
             m_nodeCollection.RemoveNode(nodeView.NodeId);
+            RefreshSerializedNodeReferences();
         }
 
         private void LoadSanitizedClipboardNodes(List<ANode> nodes)
@@ -203,6 +225,7 @@ namespace GraphTheory.Editor.UIElements
             for(int i = 0; i < nodes.Count; i++)
             {
                 m_nodeCollection.AddNode(nodes[i]);
+                m_nodeListProp.serializedObject.Update();
                 newNodeViews.Add(CreateNodeView(nodes[i]));
             }
             for(int i = 0; i < newNodeViews.Count; i++)
@@ -211,22 +234,31 @@ namespace GraphTheory.Editor.UIElements
             }
         }
 
+        private void RefreshSerializedNodeReferences()
+        {
+            List<ANode> allNodes = m_nodeCollection.GetAllNodes();
+            for(int i = 0; i < allNodes.Count; i++)
+            {
+                m_nodeViews[allNodes[i].Id].SerializedNode = m_nodeListProp.GetArrayElementAtIndex(i);
+            }
+        }
+
         public override void AddToSelection(ISelectable selectable)
         {
             base.AddToSelection(selectable);
-            OnSelectionAdded?.Invoke(selectable);
+            OnAddToSelection?.Invoke(selectable);
         }
 
         public override void RemoveFromSelection(ISelectable selectable)
         {
             base.RemoveFromSelection(selectable);
-            OnSelectionRemoved?.Invoke(selectable);
+            OnRemoveFromSelection?.Invoke(selectable);
         }
 
         public override void ClearSelection()
         {
             base.ClearSelection();
-            OnSelectionCleared?.Invoke();
+            OnClearSelection?.Invoke();
         }
 
         public void SetSelection(List<string> graphElementIds)

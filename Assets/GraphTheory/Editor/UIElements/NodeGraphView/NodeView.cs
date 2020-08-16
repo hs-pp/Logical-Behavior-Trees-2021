@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor.UIElements
 {
@@ -9,6 +9,7 @@ namespace GraphTheory.Editor.UIElements
     {
         private NodeGraphView m_nodeGraphView = null;
         public ANode Node { get; private set; } = null;
+        public SerializedProperty SerializedNode { get; set; } = null;
 
         public string NodeId { get { return Node != null ? Node.Id : string.Empty; } }
         public PortView Inport { get; } = null;
@@ -16,9 +17,10 @@ namespace GraphTheory.Editor.UIElements
         private List<EdgeView> m_edgeViews = new List<EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
 
-        public NodeView(ANode node, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
+        public NodeView(ANode node, SerializedProperty serializedNode, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
         {
             Node = node;
+            SerializedNode = serializedNode;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
             bool isEntryNode = Node is BuiltInNodes.EntryNode;
@@ -31,7 +33,7 @@ namespace GraphTheory.Editor.UIElements
                     this.capabilities = this.capabilities & (~Capabilities.Deletable);
                 }
 
-                Node.DrawNodeView(this);
+                Node.DrawNodeView(this, SerializedNode);
 
                 if (!isEntryNode)
                 {

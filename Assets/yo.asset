@@ -15,6 +15,8 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
+    - id: 2
     m_entryNodeId: e506fe13-f0c0-472d-9799-6a0112c662e1
   waitTime: 4
   references:
@@ -24,6 +26,27 @@ MonoBehaviour:
       data:
         m_id: e506fe13-f0c0-472d-9799-6a0112c662e1
         m_outports:
-        - Id: 927cd267-8aaf-4885-9a6c-9959a560428f
+        - Id: 60f956f4-b054-4ee5-968a-a153a1522728
+          ConnectedNodeId: 214d6a09-4770-45aa-ac80-e4cdf8212fbe
+        m_position: {x: -47, y: 6}
+        m_comment: 
+    00000001:
+      type: {class: DialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 214d6a09-4770-45aa-ac80-e4cdf8212fbe
+        m_outports:
+        - Id: a98c04de-561d-4427-a56a-a0fd81928aef
+          ConnectedNodeId: d712eead-cffb-4b2c-be94-7b59a5b2ecba
+        m_position: {x: 151, y: 87}
+        m_comment: dfdsfsdds
+        m_dialogue: 
+    00000002:
+      type: {class: DialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: d712eead-cffb-4b2c-be94-7b59a5b2ecba
+        m_outports:
+        - Id: 221fa1c1-e2c4-4268-8e9e-0b9f0b49457d
           ConnectedNodeId: 
-        m_position: {x: 0, y: 0}
+        m_position: {x: 188, y: 227}
+        m_comment: 
+        m_dialogue: 

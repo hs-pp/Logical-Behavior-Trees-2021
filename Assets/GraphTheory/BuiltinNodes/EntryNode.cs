@@ -35,7 +35,7 @@ namespace GraphTheory.BuiltInNodes
             CreateOutport();
         }
 
-        public override void DrawNodeView(Node nodeView)
+        public override void DrawNodeView(Node nodeView, UnityEditor.SerializedProperty serializedNode)
         {
             nodeView.mainContainer.Add(new Label(Position.ToString()));
         }

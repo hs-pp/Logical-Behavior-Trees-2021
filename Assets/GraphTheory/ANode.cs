@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 #if UNITY_EDITOR
 using UnityEditor.Experimental.GraphView;
+using UnityEditor;
 #endif
 
 namespace GraphTheory
@@ -47,7 +46,7 @@ namespace GraphTheory
         public virtual Vector2 Size { get { return new Vector2(600, 300); } }
         public virtual Color NodeColor { get { return Color.gray; } }
 
-        public virtual void DrawNodeView(Node nodeView)
+        public virtual void DrawNodeView(Node nodeView, SerializedProperty serializedNode)
         {
         }
 

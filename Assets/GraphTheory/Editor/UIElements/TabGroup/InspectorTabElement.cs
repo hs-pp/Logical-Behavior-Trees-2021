@@ -17,7 +17,6 @@ namespace GraphTheory.Editor.UIElements
     public class InspectorTabElement : TabContentElement
     {
         private NodeGraph m_nodeGraph = null;
-        private SerializedObject m_nodeGraphSO = null;
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
         private SerializedProperty m_selectedNodeProperty = null;
@@ -39,11 +38,11 @@ namespace GraphTheory.Editor.UIElements
             Add(m_propertyField);
 
             m_nodeTitleContainer = new VisualElement();
-            m_nodeNameLabel = new Label("INdpectedsr");
+            m_nodeNameLabel = new Label("name");
             m_nodeNameLabel.style.fontSize = 40;
             m_nodeTitleContainer.Add(m_nodeNameLabel);
             Add(m_nodeTitleContainer);
-            m_nodeIdLabel = new Label("983687938434");
+            m_nodeIdLabel = new Label("id");
             m_nodeTitleContainer.Add(m_nodeIdLabel);
 
             m_nodeCommentField = new TextField();
@@ -65,13 +64,11 @@ namespace GraphTheory.Editor.UIElements
             }
 
             m_nodeGraph = nodeGraph;
-            m_nodeGraphSO = new SerializedObject(m_nodeGraph);
         }
 
         private void Reset()
         {
             m_nodeGraph = null;
-            m_nodeGraphSO = null;
             UnselectNode();
         }
 
@@ -86,37 +83,24 @@ namespace GraphTheory.Editor.UIElements
             {
                 m_propertyField.style.display = DisplayStyle.None;
             }
+            m_nodeTitleContainer.style.display = DisplayStyle.None;
         }
 
-        public void SetNode(string nodeId)
+        public void SetNode(ANode node, SerializedProperty serializedNode)
         {
-            if(m_nodeGraphSO == null)
-            {
-                Debug.LogError("NodeGraph not set!");
-                return;
-            }
-
             UnselectNode();
-            if (string.IsNullOrEmpty(nodeId))
+            if (node == null || serializedNode == null)
             {
                 return;
-            }
-            
-            SerializedProperty nodeCollection = m_nodeGraphSO.FindProperty("m_nodeCollection");
-            SerializedProperty nodes = nodeCollection.FindPropertyRelative("m_nodes");
-            for(int i = 0; i < nodes.arraySize; i++) //TODO: Make this more efficient!!
-            {
-                if(nodeId == nodes.GetArrayElementAtIndex(i).FindPropertyRelative("m_id").stringValue)
-                {
-                    m_selectedNodeProperty = nodes.GetArrayElementAtIndex(i);
-                    break;
-                }
             }
 
-            if(m_selectedNodeProperty == null)
-            {
-                return;
-            }
+            m_selectedNodeProperty = serializedNode;
+            
+            m_nodeTitleContainer.style.display = DisplayStyle.Flex;
+            m_nodeNameLabel.text = node.Name;
+            m_nodeIdLabel.text = node.Id;
+            m_nodeCommentField.bindingPath = serializedNode.FindPropertyRelative("m_comment").propertyPath;
+            m_nodeCommentField.Bind(serializedNode.serializedObject);
 
             bool useIMGUI = false;
             if(useIMGUI)
@@ -130,7 +114,7 @@ namespace GraphTheory.Editor.UIElements
                     Remove(m_propertyField);
                 }
                 m_propertyField = new PropertyField(m_selectedNodeProperty);
-                m_propertyField.Bind(m_nodeGraphSO);
+                m_propertyField.Bind(m_selectedNodeProperty.serializedObject);
                 m_propertyField.style.display = DisplayStyle.Flex;
                 Add(m_propertyField);
             }
@@ -141,7 +125,7 @@ namespace GraphTheory.Editor.UIElements
             if (m_selectedNodeProperty == null)
                 return;
 
-            m_nodeGraphSO.Update();
+            m_selectedNodeProperty.serializedObject.Update();
 
             GUILayout.BeginVertical();
             EditorGUILayout.PropertyField(m_selectedNodeProperty, true);
