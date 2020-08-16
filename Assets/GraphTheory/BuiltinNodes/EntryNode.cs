@@ -13,7 +13,7 @@ namespace GraphTheory.BuiltInNodes
         {
             Debug.Log("EntryNode Enter");
             base.OnNodeEnter(nodeCollection);
-            nodeCollection.ChangeNode(this, GetOutportEdge(0));
+            TraverseEdge(0);
         }
 
         public override void OnNodeUpdate()

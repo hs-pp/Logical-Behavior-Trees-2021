@@ -14,7 +14,7 @@ namespace GraphTheory.Editor.UIElements
         public string NodeId { get { return Node != null ? Node.Id : string.Empty; } }
         public PortView Inport { get; } = null;
         private List<PortView> m_outports = new List<PortView>();
-        private List<EdgeView> m_edgeViews = new List<EdgeView>();
+        private Dictionary<string, EdgeView> m_edgeViews = new Dictionary<string, EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
 
         public NodeView(ANode node, SerializedProperty serializedNode, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
@@ -93,26 +93,53 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnUnloadView()
         {
-            for(int i = m_edgeViews.Count - 1; i >= 0; i--)
+            foreach(EdgeView edgeView in m_edgeViews.Values)
             {
-                if (m_nodeGraphView.Contains(m_edgeViews[i]))
+                if (m_nodeGraphView.Contains(edgeView))
                 {
-                    m_nodeGraphView.RemoveElement(m_edgeViews[i]);
+                    m_nodeGraphView.RemoveElement(edgeView);
                 }
             }
+            m_edgeViews.Clear();
         }
         
         public void OnDeleteNode()
         {
-            for (int i = m_edgeViews.Count - 1; i >= 0; i--)
+            List<EdgeView> edgeViewsCopy = new List<EdgeView>(m_edgeViews.Values);
+            for (int i = 0; i < edgeViewsCopy.Count; i++)
             {
-                RemoveEdge(m_edgeViews[i]);
+                RemoveEdge(edgeViewsCopy[i]);
+            }
+        }
+
+        public void ValidateEdgeViews()
+        {
+            List<OutportEdge> edges = Node.GetAllEdges();
+            for (int i = 0; i < edges.Count; i++)
+            {
+                Debug.Log("edge " + edges[i].Id + " is " + edges[i].ConnectedNodeId);
+                Debug.Log("but is actually " + SerializedNode.FindPropertyRelative("m_outports").GetArrayElementAtIndex(0).FindPropertyRelative("ConnectedNodeId").stringValue);
+                if(edges[i].IsValid && !m_edgeViews.ContainsKey(edges[i].Id))
+                {
+                    EdgeView edgeView = new EdgeView()
+                    {
+                        OutportEdge = edges[i],
+                        input = m_nodeGraphView.GetNodeViewById(edges[i].ConnectedNodeId).Inport,
+                        output = m_outports[i],
+                    };
+                    edgeView.Setup();
+                    AddEdgeView(edgeView);
+                }
+                else if(!edges[i].IsValid && m_edgeViews.ContainsKey(edges[i].Id))
+                {
+                    m_nodeGraphView.RemoveElement(m_edgeViews[edges[i].Id]);
+                }
             }
         }
 
         public bool OutportHasEdge(int outportIndex)
         {
-            return Node.GetOutportEdge(outportIndex).IsValid;
+            return Node.OutportEdgeIsValid(outportIndex);
         }
 
         public PortView GetOutport(int outportIndex)
@@ -124,7 +151,11 @@ namespace GraphTheory.Editor.UIElements
         {
             if (edgeView.FirstPort.Node == this)
             {
-                OutportEdge outportEdge = new OutportEdge() { ConnectedNodeId = edgeView.SecondPort.Node.NodeId };
+                OutportEdge outportEdge = new OutportEdge()
+                {
+                    SourceNodeId = edgeView.FirstPort.Node.NodeId,
+                    ConnectedNodeId = edgeView.SecondPort.Node.NodeId
+                };
                 Node.AddOutportEdge(edgeView.FirstPort.PortIndex, outportEdge);
                 edgeView.OutportEdge = outportEdge;
             }
@@ -135,7 +166,7 @@ namespace GraphTheory.Editor.UIElements
         {
             if (edgeView.FirstPort.Node == this)
             {
-                m_edgeViews.Add(edgeView);
+                m_edgeViews.Add(edgeView.EdgeId, edgeView);
                 edgeView.FirstPort.Connect(edgeView);
                 edgeView.SecondPort.Node.AddEdgeView(edgeView);
                 m_nodeGraphView.Add(edgeView);
@@ -156,7 +187,7 @@ namespace GraphTheory.Editor.UIElements
                 {
                     (edgeView.parent as GraphView).RemoveElement(edgeView);
                 }
-                m_edgeViews.Remove(edgeView);
+                m_edgeViews.Remove(edgeView.EdgeId);
                 Node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
             }
             else if(edgeView.SecondPort.Node == this)
@@ -167,7 +198,7 @@ namespace GraphTheory.Editor.UIElements
 
         public EdgeView GetEdgeViewById(string id)
         {
-            return m_edgeViews.Find(x => x.EdgeId == id);
+            return m_edgeViews[id];
         }
 
         public void UpdateNodeDataPosition()

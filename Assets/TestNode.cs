@@ -40,7 +40,7 @@ public class TestNode : ANode
 
         if (elapsedTime > m_maxTime)
         {
-            ParentNodeCollection.ChangeNode(this, GetOutportEdge(0));
+            TraverseEdge(0);
         }
     }
 

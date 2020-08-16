@@ -43,9 +43,9 @@ namespace GraphTheory
             Debug.Log("Stopping graphdata");
         }
 
-        public void ChangeNode(ANode source, OutportEdge edge)
+        public void TraverseEdge(OutportEdge edge)
         {
-            if (CurrentNode != source)
+            if (CurrentNode.Id != edge.SourceNodeId)
             {
                 Debug.LogError("Source is not the currently running node!");
                 return;
@@ -55,7 +55,6 @@ namespace GraphTheory
 
             if (edge == null)
             {
-                CurrentNode = null;
                 StopExecution();
                 return;
             }
@@ -103,7 +102,11 @@ namespace GraphTheory
         public void RemoveNode(string nodeId)
         {
             //TODO: MAKE THIS MORE EFFICIENT
-            m_nodes.Remove(m_nodes.Find(x => x.Id == nodeId));
+            ANode node = m_nodes.Find(x => x.Id == nodeId);
+            if (node != null)
+            {
+                m_nodes.Remove(node);
+            }
         }
 #endif
     }

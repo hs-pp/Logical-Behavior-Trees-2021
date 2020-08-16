@@ -14,7 +14,7 @@ namespace GraphTheory
         [SerializeField, HideInInspector]
         private string m_id = "";
         public string Id { get { return m_id; } }
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         protected NodeCollection ParentNodeCollection { get; private set; } = null;
@@ -28,9 +28,31 @@ namespace GraphTheory
         public virtual void OnNodeUpdate() { }
         public virtual void OnNodeExit() { }
 
-        public OutportEdge GetOutportEdge(int index)
+        private OutportEdge GetOutportEdge(int index)
         {
             return m_outports[index];
+        }
+
+        public bool OutportEdgeIsValid(int index)
+        {
+            if (index >= m_outports.Count || index < 0)
+            {
+                return false;
+            }
+            return m_outports[index].IsValid;
+        }
+
+        protected void TraverseEdge(int index)
+        {
+            if(index >= m_outports.Count || index < 0)
+            {
+                Debug.LogError("edge index out of range");
+                return;
+            }
+            else
+            {
+                ParentNodeCollection.TraverseEdge(GetOutportEdge(index));
+            }
         }
 
         [SerializeField, HideInInspector]
@@ -70,7 +92,7 @@ namespace GraphTheory
 
         public void CreateOutport()
         {
-            m_outports.Add(new OutportEdge());
+            m_outports.Add(new OutportEdge() { SourceNodeId = Id });
         }
 
         public void DestroyOutport(int index)

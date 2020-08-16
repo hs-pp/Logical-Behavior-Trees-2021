@@ -62,6 +62,7 @@ namespace GraphTheory.Editor.UIElements
             canPasteSerializedData += CanUnserializeAndPaste;
             
             RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
+            Undo.undoRedoPerformed += ValidateView;
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -92,6 +93,53 @@ namespace GraphTheory.Editor.UIElements
                 m_nodeViews[nodeData[j].Id].OnLoadView();
             }
             RefreshSerializedNodeReferences();
+        }
+
+        private void ValidateView()
+        {
+            Debug.Log("Validating");
+            m_nodeListProp.serializedObject.Update();
+            m_nodeListProp.serializedObject.ApplyModifiedProperties();
+            List<ANode> allNodes = m_nodeCollection.GetAllNodes();
+            List<ANode> extraNodes = new List<ANode>();
+            List<NodeView> extraNodeViews = new List<NodeView>();
+
+            HashSet<string> unionSet = new HashSet<string>();
+            for(int i = 0; i < allNodes.Count; i++)
+            {
+                if(m_nodeViews.ContainsKey(allNodes[i].Id))
+                {
+                    unionSet.Add(allNodes[i].Id);
+                }
+                else
+                {
+                    extraNodes.Add(allNodes[i]);
+                }
+            }
+            foreach(string id in m_nodeViews.Keys)
+            {
+                if(!unionSet.Contains(id))
+                {
+                    extraNodeViews.Add(m_nodeViews[id]);
+                }
+            }
+
+            for(int i = 0; i < extraNodes.Count; i++)
+            {
+                Debug.Log("Restored deleted node");
+                CreateNodeView(extraNodes[i]);
+            }
+            for(int i = 0; i < extraNodeViews.Count; i++)
+            {
+                Debug.Log("Deleted extra node view " + extraNodeViews[i].NodeId);
+                extraNodeViews[i].parent.Remove(extraNodeViews[i]);
+                extraNodeViews[i].OnUnloadView();
+                m_nodeViews.Remove(extraNodeViews[i].NodeId);
+            }
+            foreach (NodeView nodeView in m_nodeViews.Values)
+            {
+                nodeView.ValidateEdgeViews();
+            }
         }
 
         private void Reset()
@@ -185,6 +233,7 @@ namespace GraphTheory.Editor.UIElements
         /// </summary>
         public NodeView CreateNode(Type nodeType, Vector2 pos)
         {
+            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Created Node");
             ANode node = m_nodeCollection.CreateNode(nodeType, pos);
             m_nodeListProp.serializedObject.Update();
             NodeView nodeView = CreateNodeView(node);
@@ -194,7 +243,6 @@ namespace GraphTheory.Editor.UIElements
 
         private NodeView CreateNodeView(ANode node, SerializedProperty serializedNode = null)
         {
-            //TODO: get the serialized node here
             if(serializedNode == null)
             {
                 int index = m_nodeGraph.NodeCollection.GetNodeIndex(node);
@@ -213,8 +261,10 @@ namespace GraphTheory.Editor.UIElements
 
         private void DeleteNode(NodeView nodeView)
         {
+            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Deleted Node");
             OnRemoveNode?.Invoke(nodeView);
             nodeView.OnDeleteNode();
+            m_nodeViews.Remove(nodeView.NodeId);
             m_nodeCollection.RemoveNode(nodeView.NodeId);
             RefreshSerializedNodeReferences();
         }
@@ -286,13 +336,11 @@ namespace GraphTheory.Editor.UIElements
         private string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
         {
             GraphClipboardData data = new GraphClipboardData(m_nodeGraph, elements);
-            //Debug.Log("Serialized: " + JsonUtility.ToJson(data, true));
             return JsonUtility.ToJson(data, true);
         }
         
         private bool CanUnserializeAndPaste(string data)
         {
-            //Debug.Log("checking can paste \n" + data);
             GraphClipboardData clipboardData = null;
             try
             {
@@ -307,7 +355,6 @@ namespace GraphTheory.Editor.UIElements
 
         private void UnserializeAndPasteGraphElements(string operationName, string data)
         {
-            Debug.Log("Operation " + operationName+ "\n" + data);
             GraphClipboardData copiedData = JsonUtility.FromJson<GraphClipboardData>(data);
 
             if(operationName == "Paste" || operationName == "Duplicate")
@@ -315,6 +362,10 @@ namespace GraphTheory.Editor.UIElements
                 Vector2 pos = m_mousePosition - new Vector2(contentViewContainer.transform.position.x, contentViewContainer.transform.position.y);
                 List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), pos);
                 LoadSanitizedClipboardNodes(clipboardNodes);
+            }
+            else
+            {
+                Debug.Log("OTHER Operation " + operationName + "\n" + data);
             }
         }
 
