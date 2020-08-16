@@ -112,31 +112,6 @@ namespace GraphTheory.Editor.UIElements
             }
         }
 
-        public void ValidateEdgeViews()
-        {
-            List<OutportEdge> edges = Node.GetAllEdges();
-            for (int i = 0; i < edges.Count; i++)
-            {
-                Debug.Log("edge " + edges[i].Id + " is " + edges[i].ConnectedNodeId);
-                Debug.Log("but is actually " + SerializedNode.FindPropertyRelative("m_outports").GetArrayElementAtIndex(0).FindPropertyRelative("ConnectedNodeId").stringValue);
-                if(edges[i].IsValid && !m_edgeViews.ContainsKey(edges[i].Id))
-                {
-                    EdgeView edgeView = new EdgeView()
-                    {
-                        OutportEdge = edges[i],
-                        input = m_nodeGraphView.GetNodeViewById(edges[i].ConnectedNodeId).Inport,
-                        output = m_outports[i],
-                    };
-                    edgeView.Setup();
-                    AddEdgeView(edgeView);
-                }
-                else if(!edges[i].IsValid && m_edgeViews.ContainsKey(edges[i].Id))
-                {
-                    m_nodeGraphView.RemoveElement(m_edgeViews[edges[i].Id]);
-                }
-            }
-        }
-
         public bool OutportHasEdge(int outportIndex)
         {
             return Node.OutportEdgeIsValid(outportIndex);
