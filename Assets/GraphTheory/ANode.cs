@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 #if UNITY_EDITOR
-using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 #endif
 
@@ -12,19 +12,14 @@ namespace GraphTheory
     public abstract class ANode
     {
         [SerializeField, HideInInspector]
-        private string m_id = "";
+        private string m_id = Guid.NewGuid().ToString();
         public string Id { get { return m_id; } }
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         protected NodeCollection ParentNodeCollection { get; private set; } = null;
 
-        public ANode()
-        {
-            m_id = Guid.NewGuid().ToString();
-        }
-
-        public virtual void OnNodeEnter(NodeCollection nodeCollection) { ParentNodeCollection = nodeCollection; }
+        public virtual void OnNodeEnter(NodeCollection nodeCollection) { ParentNodeCollection = nodeCollection; }//TODO: auto set parent node collections before node enter
         public virtual void OnNodeUpdate() { }
         public virtual void OnNodeExit() { }
 
@@ -59,17 +54,13 @@ namespace GraphTheory
         private Vector2 m_position;
         [SerializeField, HideInInspector]
         private string m_comment;
+
 #if UNITY_EDITOR
-        public abstract string Name { get; }
-        public int NumOutports { get { return m_outports.Count; } }
-        public abstract List<Type> CompatibleGraphs { get; }//Returning null = compatible to all. Returning empty list = compatible to none.
-
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
-        public virtual Vector2 Size { get { return new Vector2(600, 300); } }
-        public virtual Color NodeColor { get { return Color.gray; } }
 
-        public virtual void DrawNodeView(Node nodeView, SerializedProperty serializedNode)
+        public ANode()
         {
+            CreateOutport();    //Create an outport be default.
         }
 
         public void SanitizeNodeCopy(string newId, Vector2 position, Dictionary<string, string> oldToNewIdList)

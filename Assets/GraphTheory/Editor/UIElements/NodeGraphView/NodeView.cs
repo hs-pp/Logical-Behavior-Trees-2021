@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -10,65 +11,85 @@ namespace GraphTheory.Editor.UIElements
         private NodeGraphView m_nodeGraphView = null;
         public ANode Node { get; private set; } = null;
         public SerializedProperty SerializedNode { get; set; } = null;
-
         public string NodeId { get { return Node != null ? Node.Id : string.Empty; } }
-        public PortView Inport { get; } = null;
+
+        private NodeDisplayContainers m_nodeDisplayContainers = null;
+        private PortView m_inport = null;
         private List<PortView> m_outports = new List<PortView>();
         private Dictionary<string, EdgeView> m_edgeViews = new Dictionary<string, EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
+        private NodeDrawer m_nodeDrawer = null;
 
-        public NodeView(ANode node, SerializedProperty serializedNode, NodeGraphView nodeGraphView, IEdgeConnectorListener edgeConnectorListener) : base()
+        public NodeView(ANode node, 
+            SerializedProperty serializedNode, 
+            NodeGraphView nodeGraphView, 
+            IEdgeConnectorListener edgeConnectorListener,
+            NodeDrawer nodeDrawer) : base()
         {
+            if (node == null)
+                return;
+
             Node = node;
             SerializedNode = serializedNode;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
+            m_nodeDrawer = nodeDrawer;
+            m_nodeDrawer.SetNodeView(this, SerializedNode);
+
+            title = m_nodeDrawer.DisplayName;
+            m_nodeDisplayContainers = new NodeDisplayContainers(this);
+
             bool isEntryNode = Node is BuiltInNodes.EntryNode;
-            if (Node != null)
+            if (isEntryNode)
             {
-                title = Node.Name;
-
-                if (isEntryNode)
-                {
-                    this.capabilities = this.capabilities & (~Capabilities.Deletable);
-                }
-
-                Node.DrawNodeView(this, SerializedNode);
-
-                if (!isEntryNode)
-                {
-                    //Add ports
-                    Inport = new PortView(this,
-                        Orientation.Horizontal,
-                        Direction.Input,
-                        Port.Capacity.Single,
-                        typeof(bool),
-                        0,
-                        m_edgeConnectorListener);
-                    Inport.portName = "";
-                    inputContainer.Add(Inport);
-                }
-
-                for (int j = 0; j < Node.NumOutports; j++)
-                {
-                    PortView newPort = new PortView(this,
-                        Orientation.Horizontal,
-                        Direction.Output,
-                        Port.Capacity.Single,
-                        typeof(bool),
-                        j,
-                        m_edgeConnectorListener);
-                    newPort.portName = $"Outport {m_outports.Count}";
-                    m_outports.Add(newPort);
-                    outputContainer.Add(newPort);
-                }
-                RefreshExpandedState();
-                RefreshPorts();
-                
-                SetPosition(new Rect(Node.Position, Node.Size));
-
-                //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
+                this.capabilities = this.capabilities & (~Capabilities.Deletable);
             }
+
+            if (!isEntryNode)
+            {
+                //Add ports
+                m_inport = new PortView(this,
+                    Orientation.Horizontal,
+                    Direction.Input,
+                    Port.Capacity.Single,
+                    typeof(bool),
+                    0,
+                    m_edgeConnectorListener);
+                m_inport.portName = "";
+                m_nodeDisplayContainers.SetInport(m_inport);
+            }
+
+            for (int j = 0; j < serializedNode.FindPropertyRelative("m_outports").arraySize; j++)
+            {
+                PortView newPort = new PortView(this,
+                    Orientation.Horizontal,
+                    Direction.Output,
+                    Port.Capacity.Single,
+                    typeof(bool),
+                    j,
+                    m_edgeConnectorListener);
+                newPort.portName = "";
+                m_outports.Add(newPort);
+                m_nodeDisplayContainers.AddNewOutport(newPort);
+            }
+
+            // Draw node
+            m_nodeDrawer.OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
+            m_nodeDrawer.OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
+            m_nodeDrawer.OnDrawInport(m_nodeDisplayContainers.InportContainer);
+            for(int i = 0; i < m_outports.Count; i++)
+            {
+                m_nodeDrawer.OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
+            }
+            m_nodeDrawer.OnDrawBody(m_nodeDisplayContainers.BodyContainer);
+            m_nodeDrawer.OnDrawFooter(m_nodeDisplayContainers.FooterContainer);
+
+            RefreshExpandedState();
+            RefreshPorts();
+
+            SetPosition(new Rect(Node.Position, Vector2.zero));
+
+            //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
         }
 
         public void OnLoadView()
@@ -83,7 +104,7 @@ namespace GraphTheory.Editor.UIElements
                 EdgeView edgeView = new EdgeView()
                 {
                     OutportEdge = edges[k],
-                    input = m_nodeGraphView.GetNodeViewById(edges[k].ConnectedNodeId).Inport,
+                    input = m_nodeGraphView.GetNodeViewById(edges[k].ConnectedNodeId).m_inport,
                     output = m_outports[k],
                 };
                 edgeView.Setup();
@@ -93,7 +114,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnUnloadView()
         {
-            foreach(EdgeView edgeView in m_edgeViews.Values)
+            foreach (EdgeView edgeView in m_edgeViews.Values)
             {
                 if (m_nodeGraphView.Contains(edgeView))
                 {
@@ -102,7 +123,7 @@ namespace GraphTheory.Editor.UIElements
             }
             m_edgeViews.Clear();
         }
-        
+
         public void OnDeleteNode()
         {
             List<EdgeView> edgeViewsCopy = new List<EdgeView>(m_edgeViews.Values);
@@ -146,7 +167,7 @@ namespace GraphTheory.Editor.UIElements
                 edgeView.SecondPort.Node.AddEdgeView(edgeView);
                 m_nodeGraphView.Add(edgeView);
             }
-            else if(edgeView.SecondPort.Node == this)
+            else if (edgeView.SecondPort.Node == this)
             {
                 edgeView.SecondPort.Connect(edgeView);
             }
@@ -154,7 +175,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void RemoveEdge(EdgeView edgeView)
         {
-            if(edgeView.FirstPort.Node == this)
+            if (edgeView.FirstPort.Node == this)
             {
                 edgeView.FirstPort.Disconnect(edgeView);
                 edgeView.SecondPort.Node.RemoveEdge(edgeView);
@@ -165,7 +186,7 @@ namespace GraphTheory.Editor.UIElements
                 m_edgeViews.Remove(edgeView.EdgeId);
                 Node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
             }
-            else if(edgeView.SecondPort.Node == this)
+            else if (edgeView.SecondPort.Node == this)
             {
                 edgeView.SecondPort.Disconnect(edgeView);
             }

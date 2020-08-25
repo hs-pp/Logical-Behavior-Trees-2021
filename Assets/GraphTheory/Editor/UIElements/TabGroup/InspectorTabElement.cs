@@ -97,7 +97,7 @@ namespace GraphTheory.Editor.UIElements
             m_selectedNodeProperty = serializedNode;
             
             m_nodeTitleContainer.style.display = DisplayStyle.Flex;
-            m_nodeNameLabel.text = node.Name;
+            m_nodeNameLabel.text = node.GetType().Name;
             m_nodeIdLabel.text = node.Id;
             m_nodeCommentField.bindingPath = serializedNode.FindPropertyRelative("m_comment").propertyPath;
             m_nodeCommentField.Bind(serializedNode.serializedObject);

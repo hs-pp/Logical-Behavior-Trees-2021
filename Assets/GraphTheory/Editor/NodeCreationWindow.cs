@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using System.Reflection;
-using System.Linq;
-using GraphTheory;
 using GraphTheory.BuiltInNodes;
 using GraphTheory.Editor.UIElements;
 using UnityEngine.UIElements;
@@ -14,56 +11,33 @@ using UnityEditor;
 public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
 {
     private NodeGraphView m_nodeGraphView = null;
-    private List<Type> m_universalNodeTypes = null;
-    private List<Type> m_validNodeTypes = null;
+    private GraphTypeMetadata m_graphTypeMetadata = null;
 
-    public void Setup(NodeGraphView nodeGraphView)
+    public void Setup(NodeGraphView nodeGraphView, GraphTypeMetadata graphTypeMetadata)
     {
         m_nodeGraphView = nodeGraphView;
-        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        m_validNodeTypes = new List<Type>();
-        for (int i = 0; i < assemblies.Length; i++)
-        {
-            m_validNodeTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(ANode).IsAssignableFrom(x)
-                && !x.IsAbstract
-                && x.GetCustomAttribute<SupportedGraphTypesAttribute>() != null
-                && x.GetCustomAttribute<SupportedGraphTypesAttribute>().SupportedTypes.Contains(m_nodeGraphView.GraphType)));
-            //TODO SORT THEM!
-        }
-
-        if (m_universalNodeTypes == null)
-        {
-            m_universalNodeTypes = new List<Type>();
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                m_universalNodeTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(ANode).IsAssignableFrom(x)
-                    && !x.IsAbstract
-                    && x.GetCustomAttribute<SupportedGraphTypesAttribute>() == null));
-            }
-            //TODO SORT THEM!!
-        }
+        m_graphTypeMetadata = graphTypeMetadata;
     }
-
-    //private List<Type> m_allNodes
+    
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
     {
         List<SearchTreeEntry> tree = new List<SearchTreeEntry>();
         tree.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"), 0));
         tree.Add(new SearchTreeGroupEntry(new GUIContent("Universal Nodes"), 1));
-        for(int i = 0; i < m_universalNodeTypes.Count; i++)
+        for(int i = 0; i < m_graphTypeMetadata.UniversalNodeTypes.Count; i++)
         {
-            tree.Add(new SearchTreeEntry(new GUIContent(m_universalNodeTypes[i].Name))
+            tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.UniversalNodeTypes[i].Name))
             {
-                userData = m_universalNodeTypes[i],
+                userData = m_graphTypeMetadata.UniversalNodeTypes[i],
                 level = 2
             });
         }
-        tree.Add(new SearchTreeGroupEntry(new GUIContent(m_nodeGraphView.GraphType.Name + " Nodes"), 1));
-        for (int i = 0; i < m_validNodeTypes.Count; i++)
+        tree.Add(new SearchTreeGroupEntry(new GUIContent(m_graphTypeMetadata.GraphType.Name + " Nodes"), 1));
+        for (int i = 0; i < m_graphTypeMetadata.ValidNodeTypes.Count; i++)
         {
-            tree.Add(new SearchTreeEntry(new GUIContent(m_validNodeTypes[i].Name))
+            tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.ValidNodeTypes[i].Name))
             {
-                userData = m_validNodeTypes[i],
+                userData = m_graphTypeMetadata.ValidNodeTypes[i],
                 level = 2
             });
         }

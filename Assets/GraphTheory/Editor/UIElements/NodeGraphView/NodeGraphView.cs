@@ -16,6 +16,7 @@ namespace GraphTheory.Editor.UIElements
         private IEdgeConnectorListener m_edgeConectorListener = null;
 
         private NodeGraph m_nodeGraph = null;
+        private GraphTypeMetadata m_graphTypeMetadata = null;
         private NodeCollection m_nodeCollection = null;
         private SerializedProperty m_nodeListProp = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
@@ -25,8 +26,6 @@ namespace GraphTheory.Editor.UIElements
         public Action<ISelectable> OnAddToSelection = null;
         public Action<ISelectable> OnRemoveFromSelection = null;
         public Action OnClearSelection = null;
-
-        public Type GraphType { get { return m_nodeGraph.GetType(); } }
 
         public NodeGraphView() 
         {
@@ -48,7 +47,9 @@ namespace GraphTheory.Editor.UIElements
             this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent evt) => { m_miniMap.SetPosition(new Rect(evt.newRect.xMax - 210, evt.newRect.yMax - 210, 200, 200)); });
             Add(m_miniMap);
 
+            m_graphTypeMetadata = new GraphTypeMetadata();
             m_nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
+            m_nodeCreationWindow.Setup(this, m_graphTypeMetadata);
 
             nodeCreationRequest = context =>
             {
@@ -81,7 +82,7 @@ namespace GraphTheory.Editor.UIElements
 
             m_nodeGraph = nodeGraph;
             m_nodeCollection = nodeCollection;
-            m_nodeCreationWindow.Setup(this);
+            m_graphTypeMetadata.SetNewGraphType(m_nodeGraph.GetType());
 
             List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
@@ -208,7 +209,9 @@ namespace GraphTheory.Editor.UIElements
                 serializedNode = m_nodeListProp.GetArrayElementAtIndex(index);
             }
 
-            NodeView nodeView = new NodeView(node, serializedNode, this, m_edgeConectorListener);
+            NodeView nodeView = new NodeView(node, serializedNode, this, m_edgeConectorListener,
+                Activator.CreateInstance(m_graphTypeMetadata.GetNodeDrawerType(node.GetType())) as NodeDrawer);
+
             AddElement(nodeView);
             m_nodeViews.Add(node.Id, nodeView);
             return nodeView;

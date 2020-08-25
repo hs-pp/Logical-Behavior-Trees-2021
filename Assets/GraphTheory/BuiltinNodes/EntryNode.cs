@@ -25,20 +25,5 @@ namespace GraphTheory.BuiltInNodes
         {
             Debug.Log("EntryNode Exit");
         }
-
-#if UNITY_EDITOR
-        public override string Name => "Entry";
-        public override List<Type> CompatibleGraphs { get { return null; } }
-
-        public EntryNode() : base()
-        {
-            CreateOutport();
-        }
-
-        public override void DrawNodeView(Node nodeView, UnityEditor.SerializedProperty serializedNode)
-        {
-            nodeView.mainContainer.Add(new Label(Position.ToString()));
-        }
-#endif
     }
 }

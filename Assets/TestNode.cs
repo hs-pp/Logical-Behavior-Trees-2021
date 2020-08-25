@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 [SupportedGraphTypes(typeof(TestGraph))]
 public class TestNode : ANode
 {
-    public override string Name { get { return "TestNode"; } }
-    
     private float m_maxTime = 0;
     private float elapsedTime = 0;
 
@@ -50,8 +48,6 @@ public class TestNode : ANode
     }
 
 #if UNITY_EDITOR
-    public override List<Type> CompatibleGraphs { get { return new List<Type> { typeof(TestGraph) }; } }
-
     public TestNode() : base()
     {
         CreateOutport();

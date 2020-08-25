@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="outport-container" style="flex-grow: 0;">
+        <ui:VisualElement name="outport-header" style="flex-grow: 1; justify-content: center;" />
+        <ui:VisualElement name="outport-row" style="flex-direction: row-reverse;">
+            <ui:VisualElement name="outport-area" style="height: auto; width: auto; justify-content: center;" />
+            <ui:VisualElement name="outport-body" style="flex-grow: 1; justify-content: center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="outport-footer" style="flex-grow: 1; justify-content: center;" />
+    </ui:VisualElement>
+</ui:UXML>
