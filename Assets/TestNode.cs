@@ -46,11 +46,4 @@ public class TestNode : ANode
     {
         Debug.Log("TestNode Exit");
     }
-
-#if UNITY_EDITOR
-    public TestNode() : base()
-    {
-        CreateOutport();
-    }
-#endif
 }

@@ -1,4 +1,5 @@
 ﻿using DialogueSystem;
+using GraphTheory;
 using GraphTheory.Editor;
 using GraphTheory.Editor.UIElements;
 using System.Collections;
@@ -15,7 +16,7 @@ public class DialogueNodeDrawer : NodeDrawer
     public override void OnDrawHeader(VisualElement headerContainer)
     {
         base.OnDrawHeader(headerContainer);
-        headerContainer.Add(new Label("header"));
+        headerContainer.Add(new Label("Header"));
     }
 
     public override void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer)
@@ -44,13 +45,22 @@ public class DialogueNodeDrawer : NodeDrawer
     public override void OnDrawBody(VisualElement bodyContainer)
     {
         base.OnDrawBody(bodyContainer);
-        bodyContainer.Add(GetPlaceholderElement("body", 30));
+        VisualElement body = GetPlaceholderElement("Body", -1);
+        Button addOutportButton = new Button();
+        addOutportButton.text = "Add Outport";
+        addOutportButton.clickable.clicked += () => { NodeGraph.AddOutportToNode(TargetProperty); };
+        body.Add(addOutportButton);
+        Button removeOutportButton = new Button();
+        removeOutportButton.text = "Remove Outport";
+        removeOutportButton.clickable.clicked += () => { NodeGraph.RemoveOutportFromNode(TargetProperty, 0); };
+        body.Add(removeOutportButton);
+        bodyContainer.Add(body);
     }
 
     public override void OnDrawFooter(VisualElement footerContainer)
     {
         base.OnDrawFooter(footerContainer);
-        footerContainer.Add(new Label("footer"));
+        footerContainer.Add(new Label("Footer"));
     }
 
 
@@ -71,7 +81,10 @@ public class DialogueNodeDrawer : NodeDrawer
         placeholder.style.borderBottomRightRadius = 5;
 
         placeholder.style.justifyContent = Justify.Center;
-        placeholder.style.height = height;
+        if (height != -1)
+        {
+            placeholder.style.height = height;
+        }
 
         Label label = new Label(name);
         label.style.unityTextAlign = TextAnchor.MiddleCenter;

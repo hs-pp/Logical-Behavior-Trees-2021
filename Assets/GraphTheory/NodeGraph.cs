@@ -2,6 +2,10 @@
 using GraphTheory.BuiltInNodes;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace GraphTheory
 {
     [Serializable]
@@ -43,12 +47,53 @@ namespace GraphTheory
 
 #if UNITY_EDITOR
         public NodeCollection NodeCollection { get { return m_nodeCollection; } }
+        public Action<string> OnNodeOutportAdded = null;
+        public Action<string, int> OnNodeOutportRemoved = null;
 
         public NodeGraph()
         {
             m_nodeCollection = new NodeCollection();
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
+        }
+
+        public static void AddOutportToNode(SerializedProperty serializedNode)
+        {
+            (serializedNode.serializedObject.targetObject as NodeGraph).AddOutportToNode_Internal(serializedNode);
+        }
+
+        public static void RemoveOutportFromNode(SerializedProperty serializedNode, int index)
+        {
+            (serializedNode.serializedObject.targetObject as NodeGraph).RemoveOutportFromNode_Internal(serializedNode, index);
+        }
+
+
+        private void AddOutportToNode_Internal(SerializedProperty serializedNode)
+        {
+            string nodeId = serializedNode.FindPropertyRelative("m_id").stringValue;
+            string newOutportId = Guid.NewGuid().ToString();
+
+            Undo.RegisterCompleteObjectUndo(this, $"Added Outport to Node {nodeId}");
+
+            SerializedProperty outportsProperty = serializedNode.FindPropertyRelative("m_outports");
+            outportsProperty.InsertArrayElementAtIndex(outportsProperty.arraySize);
+
+            SerializedProperty newOutportProperty = outportsProperty.GetArrayElementAtIndex(outportsProperty.arraySize - 1);
+            newOutportProperty.FindPropertyRelative("Id").stringValue = newOutportId;
+            newOutportProperty.FindPropertyRelative("SourceNodeId").stringValue = nodeId;
+            newOutportProperty.FindPropertyRelative("ConnectedNodeId").stringValue = "";
+
+            serializedNode.serializedObject.ApplyModifiedProperties();
+            OnNodeOutportAdded?.Invoke(nodeId);
+        }
+
+        private void RemoveOutportFromNode_Internal(SerializedProperty serializedNode, int index)
+        {
+            string nodeId = serializedNode.FindPropertyRelative("m_id").stringValue;
+            Undo.RegisterCompleteObjectUndo(this, $"Removed Outport {index} from Node {nodeId}");
+            serializedNode.FindPropertyRelative("m_outports").DeleteArrayElementAtIndex(index);
+            serializedNode.serializedObject.ApplyModifiedProperties();
+            OnNodeOutportRemoved?.Invoke(nodeId, index);
         }
 #endif
     }

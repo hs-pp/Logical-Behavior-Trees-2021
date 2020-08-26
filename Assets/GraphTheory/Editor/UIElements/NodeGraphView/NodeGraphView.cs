@@ -84,6 +84,9 @@ namespace GraphTheory.Editor.UIElements
             m_nodeCollection = nodeCollection;
             m_graphTypeMetadata.SetNewGraphType(m_nodeGraph.GetType());
 
+            m_nodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
+            m_nodeGraph.OnNodeOutportRemoved += OnNodeOutportRemoved;
+
             List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
             {
@@ -98,6 +101,12 @@ namespace GraphTheory.Editor.UIElements
 
         private void Reset()
         {
+            if(m_nodeGraph != null)
+            {
+                m_nodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
+                m_nodeGraph.OnNodeOutportRemoved -= OnNodeOutportRemoved;
+            }
+
             m_nodeGraph = null;
             m_nodeCollection = null;
             foreach (string id in m_nodeViews.Keys)
@@ -224,6 +233,16 @@ namespace GraphTheory.Editor.UIElements
             m_nodeViews.Remove(nodeView.NodeId);
             m_nodeCollection.RemoveNode(nodeView.NodeId);
             RefreshSerializedNodeReferences();
+        }
+
+        private void OnNodeOutportAdded(string nodeId)
+        {
+            SetNodeCollection(m_nodeGraph); // Maybe make this more efficient one day.
+        }
+
+        private void OnNodeOutportRemoved(string nodeId, int index)
+        {
+            SetNodeCollection(m_nodeGraph); // Maybe make this more efficient one day.
         }
 
         private void LoadSanitizedClipboardNodes(List<ANode> nodes)

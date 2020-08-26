@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace GraphTheory
 {
     [Serializable]
@@ -39,7 +35,7 @@ namespace GraphTheory
 
         protected void TraverseEdge(int index)
         {
-            if(index >= m_outports.Count || index < 0)
+            if (index >= m_outports.Count || index < 0)
             {
                 Debug.LogError("edge index out of range");
                 return;
@@ -54,20 +50,25 @@ namespace GraphTheory
         private Vector2 m_position;
         [SerializeField, HideInInspector]
         private string m_comment;
+        public virtual int DefaultNumOutports { get { return 1; } }
 
 #if UNITY_EDITOR
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
 
         public ANode()
         {
-            CreateOutport();    //Create an outport be default.
+            // Instantiate the default number of ports
+            for (int i = 0; i < DefaultNumOutports; i++)
+            {
+                m_outports.Add(new OutportEdge() { SourceNodeId = Id });
+            }
         }
 
         public void SanitizeNodeCopy(string newId, Vector2 position, Dictionary<string, string> oldToNewIdList)
         {
             m_id = newId;
             m_position = position;
-            for(int i = m_outports.Count - 1; i >= 0 ; i--)
+            for (int i = m_outports.Count - 1; i >= 0; i--)
             {
                 m_outports[i].Id = Guid.NewGuid().ToString();
                 if (oldToNewIdList.TryGetValue(m_outports[i].ConnectedNodeId, out string foundId))
@@ -81,24 +82,14 @@ namespace GraphTheory
             }
         }
 
-        public void CreateOutport()
-        {
-            m_outports.Add(new OutportEdge() { SourceNodeId = Id });
-        }
-
-        public void DestroyOutport(int index)
-        {
-            m_outports.RemoveAt(index);
-        }
-
         public List<OutportEdge> GetAllEdges()
         {
             return m_outports;
         }
-        
+
         public void AddOutportEdge(int outportIndex, OutportEdge outportEdge)
         {
-            if(outportIndex > m_outports.Count - 1)
+            if (outportIndex > m_outports.Count - 1)
             {
                 Debug.LogError("Error adding outport edge!");
                 return;
