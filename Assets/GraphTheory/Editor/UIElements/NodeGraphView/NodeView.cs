@@ -148,15 +148,11 @@ namespace GraphTheory.Editor.UIElements
         {
             if (edgeView.FirstPort.Node == this)
             {
-                OutportEdge outportEdge = new OutportEdge()
-                {
-                    SourceNodeId = edgeView.FirstPort.Node.NodeId,
-                    ConnectedNodeId = edgeView.SecondPort.Node.NodeId
-                };
-                Node.AddOutportEdge(edgeView.FirstPort.PortIndex, outportEdge);
-                edgeView.OutportEdge = outportEdge;
+                Node.AddOutportEdge(edgeView.FirstPort.PortIndex, edgeView.SecondPort.Node.NodeId);
+                edgeView.OutportEdge = Node.GetOutportEdge(edgeView.FirstPort.PortIndex);
             }
             AddEdgeView(edgeView);
+            SerializedNode.serializedObject.Update();
         }
 
         public void AddEdgeView(EdgeView edgeView)
@@ -214,15 +210,14 @@ namespace GraphTheory.Editor.UIElements
             collectedElementSet.UnionWith(m_nodeDisplayContainers.GetAllPorts().SelectMany(c => c.connections)
                 .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
                 .Cast<GraphElement>());
+
+            // Base code:
+            //collectedElementSet.UnionWith(inputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
+            //    .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
+            //    .Cast<GraphElement>());
+            //collectedElementSet.UnionWith(outputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
+            //    .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
+            //    .Cast<GraphElement>());
         }
-        //private override void CollectConnectedEdges(HashSet<GraphElement> edgeSet)
-        //{
-        //    edgeSet.UnionWith(inputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
-        //        .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
-        //        .Cast<GraphElement>());
-        //    edgeSet.UnionWith(outputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
-        //        .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
-        //        .Cast<GraphElement>());
-        //}
     }
 }

@@ -52,7 +52,7 @@ public class DialogueNodeDrawer : NodeDrawer
         body.Add(addOutportButton);
         Button removeOutportButton = new Button();
         removeOutportButton.text = "Remove Outport";
-        removeOutportButton.clickable.clicked += () => { NodeGraph.RemoveOutportFromNode(TargetProperty, 0); };
+        removeOutportButton.clickable.clicked += () => { NodeGraph.RemoveOutportFromNode(TargetProperty); };
         body.Add(removeOutportButton);
         bodyContainer.Add(body);
     }

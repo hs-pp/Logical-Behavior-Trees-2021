@@ -14,7 +14,8 @@ namespace GraphTheory
 
         public OutportEdge()
         {
-            Id = Guid.NewGuid().ToString();
+            //UnityEngine.Debug.Log("Genereated Noew id");
+            //Id = Guid.NewGuid().ToString();
         }
 
         public void SetInvalid()

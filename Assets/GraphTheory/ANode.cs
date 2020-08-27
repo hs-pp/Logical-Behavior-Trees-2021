@@ -10,7 +10,7 @@ namespace GraphTheory
         [SerializeField, HideInInspector]
         private string m_id = Guid.NewGuid().ToString();
         public string Id { get { return m_id; } }
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         protected NodeCollection ParentNodeCollection { get; private set; } = null;
@@ -19,7 +19,7 @@ namespace GraphTheory
         public virtual void OnNodeUpdate() { }
         public virtual void OnNodeExit() { }
 
-        private OutportEdge GetOutportEdge(int index)
+        public OutportEdge GetOutportEdge(int index)
         {
             return m_outports[index];
         }
@@ -60,7 +60,7 @@ namespace GraphTheory
             // Instantiate the default number of ports
             for (int i = 0; i < DefaultNumOutports; i++)
             {
-                m_outports.Add(new OutportEdge() { SourceNodeId = Id });
+                m_outports.Add(new OutportEdge() { Id = Guid.NewGuid().ToString(), SourceNodeId = Id });
             }
         }
 
@@ -87,14 +87,14 @@ namespace GraphTheory
             return m_outports;
         }
 
-        public void AddOutportEdge(int outportIndex, OutportEdge outportEdge)
+        public void AddOutportEdge(int outportIndex, string connectedEdge)
         {
             if (outportIndex > m_outports.Count - 1)
             {
                 Debug.LogError("Error adding outport edge!");
                 return;
             }
-            m_outports[outportIndex] = outportEdge;
+            m_outports[outportIndex].ConnectedNodeId = connectedEdge;
         }
 
         public void RemoveOutportEdge(int outportIndex)

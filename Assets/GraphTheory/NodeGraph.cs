@@ -62,7 +62,7 @@ namespace GraphTheory
             (serializedNode.serializedObject.targetObject as NodeGraph).AddOutportToNode_Internal(serializedNode);
         }
 
-        public static void RemoveOutportFromNode(SerializedProperty serializedNode, int index)
+        public static void RemoveOutportFromNode(SerializedProperty serializedNode, int index = -1)
         {
             (serializedNode.serializedObject.targetObject as NodeGraph).RemoveOutportFromNode_Internal(serializedNode, index);
         }
@@ -77,7 +77,7 @@ namespace GraphTheory
 
             SerializedProperty outportsProperty = serializedNode.FindPropertyRelative("m_outports");
             outportsProperty.InsertArrayElementAtIndex(outportsProperty.arraySize);
-
+            Debug.Log("new id serializeddd");
             SerializedProperty newOutportProperty = outportsProperty.GetArrayElementAtIndex(outportsProperty.arraySize - 1);
             newOutportProperty.FindPropertyRelative("Id").stringValue = newOutportId;
             newOutportProperty.FindPropertyRelative("SourceNodeId").stringValue = nodeId;
@@ -89,6 +89,11 @@ namespace GraphTheory
 
         private void RemoveOutportFromNode_Internal(SerializedProperty serializedNode, int index)
         {
+            if(index == -1)
+            {
+                index = serializedNode.FindPropertyRelative("m_outports").arraySize - 1;
+            }
+
             string nodeId = serializedNode.FindPropertyRelative("m_id").stringValue;
             Undo.RegisterCompleteObjectUndo(this, $"Removed Outport {index} from Node {nodeId}");
             serializedNode.FindPropertyRelative("m_outports").DeleteArrayElementAtIndex(index);
