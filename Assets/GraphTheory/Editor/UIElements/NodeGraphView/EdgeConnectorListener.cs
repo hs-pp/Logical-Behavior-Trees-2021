@@ -14,22 +14,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnDrop(GraphView graphView, Edge edge)
         {
-            var edgeView = edge as EdgeView;
-            
-            if (edgeView?.input == null || edgeView?.output == null)
-                return;
-
-            edgeView.Setup();
-
-            // Outports can only have one edge connected to them.
-            if (edgeView.FirstPort.Node.OutportHasEdge(edgeView.FirstPort.PortIndex))
-            {
-
-                Debug.LogError("Outport already has edge.");
-                return;
-            }
-
-            edgeView.FirstPort.Node.AddEdge(edgeView);
+            m_graphView.CreateEdgeView(edge as EdgeView);
         }
 
         public void OnDropOutsidePort(Edge edge, Vector2 position)

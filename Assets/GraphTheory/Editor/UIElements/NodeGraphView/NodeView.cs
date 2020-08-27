@@ -152,7 +152,6 @@ namespace GraphTheory.Editor.UIElements
                 edgeView.OutportEdge = Node.GetOutportEdge(edgeView.FirstPort.PortIndex);
             }
             AddEdgeView(edgeView);
-            SerializedNode.serializedObject.Update();
         }
 
         public void AddEdgeView(EdgeView edgeView)

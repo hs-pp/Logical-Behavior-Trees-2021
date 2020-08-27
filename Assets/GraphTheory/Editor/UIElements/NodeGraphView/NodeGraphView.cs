@@ -245,6 +245,26 @@ namespace GraphTheory.Editor.UIElements
             SetNodeCollection(m_nodeGraph); // Maybe make this more efficient one day.
         }
 
+        public void CreateEdgeView(EdgeView edgeView)
+        {
+            if (edgeView?.input == null || edgeView?.output == null)
+                return;
+
+            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Created New Edge");
+            edgeView.Setup();
+
+            // Outports can only have one edge connected to them.
+            if (edgeView.FirstPort.Node.OutportHasEdge(edgeView.FirstPort.PortIndex))
+            {
+
+                Debug.LogError("Outport already has edge.");
+                return;
+            }
+
+            edgeView.FirstPort.Node.AddEdge(edgeView);
+            m_nodeListProp.serializedObject.Update();
+        }
+
         private void LoadSanitizedClipboardNodes(List<ANode> nodes)
         {
             List<NodeView> newNodeViews = new List<NodeView>();
