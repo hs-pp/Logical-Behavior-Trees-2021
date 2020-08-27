@@ -15,6 +15,8 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
+    - id: 2
     m_entryNodeId: 44b28065-2e6d-4d44-b26f-b583f23a4cbb
   references:
     version: 1
@@ -23,8 +25,30 @@ MonoBehaviour:
       data:
         m_id: 44b28065-2e6d-4d44-b26f-b583f23a4cbb
         m_outports:
-        - Id: 0a359b56-c460-4297-b565-86d7db4425aa
+        - Id: 62733e6f-dafe-457c-a385-bad8acff774d
           SourceNodeId: 44b28065-2e6d-4d44-b26f-b583f23a4cbb
-          ConnectedNodeId: 
+          ConnectedNodeId: a5edd6ae-05c9-4b0d-9e6d-93c4a318882e
         m_position: {x: 0, y: 0}
         m_comment: 
+    00000001:
+      type: {class: DialogueNode, ns: DialogueSystem, asm: Assembly-CSharp}
+      data:
+        m_id: a5edd6ae-05c9-4b0d-9e6d-93c4a318882e
+        m_outports:
+        - Id: bdf3e8bf-96e5-4e0a-aae1-8fc55c504271
+          SourceNodeId: a5edd6ae-05c9-4b0d-9e6d-93c4a318882e
+          ConnectedNodeId: 93a6c4c2-bfdf-4d52-b503-48159850684d
+        m_position: {x: 133, y: 78}
+        m_comment: 
+        m_dialogue: 
+    00000002:
+      type: {class: DialogueNode, ns: DialogueSystem, asm: Assembly-CSharp}
+      data:
+        m_id: 93a6c4c2-bfdf-4d52-b503-48159850684d
+        m_outports:
+        - Id: 90e08251-8817-4f10-b398-c9e20d9d76ee
+          SourceNodeId: 93a6c4c2-bfdf-4d52-b503-48159850684d
+          ConnectedNodeId: 
+        m_position: {x: 508, y: 216}
+        m_comment: 
+        m_dialogue: 

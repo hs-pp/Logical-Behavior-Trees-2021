@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -201,5 +202,27 @@ namespace GraphTheory.Editor.UIElements
         {
             Node.Position = this.GetPosition().position;
         }
+
+        /// <summary>
+        /// This method is used to get all child graph elements that need to be deleted when the node is deleted.
+        /// In our case, we must grab all the connected edges manually because the port elements are not where
+        /// they are expected to be and the base method is unable to find them.
+        /// This method does not exist in Unity 2019 which will make supporting older Unity versions very tough.
+        /// </summary>
+        public override void CollectElements(HashSet<GraphElement> collectedElementSet, Func<GraphElement, bool> conditionFunc)
+        {
+            collectedElementSet.UnionWith(m_nodeDisplayContainers.GetAllPorts().SelectMany(c => c.connections)
+                .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
+                .Cast<GraphElement>());
+        }
+        //private override void CollectConnectedEdges(HashSet<GraphElement> edgeSet)
+        //{
+        //    edgeSet.UnionWith(inputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
+        //        .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
+        //        .Cast<GraphElement>());
+        //    edgeSet.UnionWith(outputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
+        //        .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
+        //        .Cast<GraphElement>());
+        //}
     }
 }

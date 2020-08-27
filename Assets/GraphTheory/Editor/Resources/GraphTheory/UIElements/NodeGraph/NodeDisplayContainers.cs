@@ -56,6 +56,17 @@ namespace GraphTheory.Editor.UIElements
             NodeView.inputContainer.style.flexGrow = 0;
         }
 
+        public List<PortView> GetAllPorts()
+        {
+            List<PortView> portViews = new List<PortView>();
+            portViews.Add(InportContainer.PortView);
+            for (int i = 0; i < OutportContainers.Count; i++)
+            {
+                portViews.Add(OutportContainers[i].PortView);
+            }
+            return portViews;
+        }
+
         public void ClearDisplays()
         {
             HeaderContainer.Clear();
