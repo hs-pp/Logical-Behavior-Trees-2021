@@ -175,10 +175,7 @@ namespace GraphTheory.Editor.UIElements
             {
                 edgeView.FirstPort.Disconnect(edgeView);
                 edgeView.SecondPort.Node.RemoveEdge(edgeView);
-                if (edgeView.parent != null && edgeView.parent is GraphView)
-                {
-                    (edgeView.parent as GraphView).RemoveElement(edgeView);
-                }
+                m_nodeGraphView.RemoveElement(edgeView);
                 m_edgeViews.Remove(edgeView.EdgeId);
                 Node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
             }

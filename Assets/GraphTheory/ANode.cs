@@ -60,7 +60,7 @@ namespace GraphTheory
             // Instantiate the default number of ports
             for (int i = 0; i < DefaultNumOutports; i++)
             {
-                m_outports.Add(new OutportEdge() { Id = Guid.NewGuid().ToString(), SourceNodeId = Id });
+                m_outports.Add(new OutportEdge() { Id = Guid.NewGuid().ToString()});
             }
         }
 

@@ -45,12 +45,6 @@ namespace GraphTheory
 
         public void TraverseEdge(OutportEdge edge)
         {
-            if (CurrentNode.Id != edge.SourceNodeId)
-            {
-                Debug.LogError("Source is not the currently running node!");
-                return;
-            }
-
             CurrentNode?.OnNodeExit();
 
             if (edge == null)

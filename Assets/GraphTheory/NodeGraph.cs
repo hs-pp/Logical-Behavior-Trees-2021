@@ -79,7 +79,6 @@ namespace GraphTheory
             outportsProperty.InsertArrayElementAtIndex(outportsProperty.arraySize);
             SerializedProperty newOutportProperty = outportsProperty.GetArrayElementAtIndex(outportsProperty.arraySize - 1);
             newOutportProperty.FindPropertyRelative("Id").stringValue = newOutportId;
-            newOutportProperty.FindPropertyRelative("SourceNodeId").stringValue = nodeId;
             newOutportProperty.FindPropertyRelative("ConnectedNodeId").stringValue = "";
 
             serializedNode.serializedObject.ApplyModifiedProperties();
