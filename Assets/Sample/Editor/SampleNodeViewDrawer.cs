@@ -1,17 +1,15 @@
-﻿using DialogueSystem;
-using GraphTheory;
+﻿using GraphTheory;
 using GraphTheory.Editor;
 using GraphTheory.Editor.UIElements;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomNodeDrawer(typeof(DialogueNode))]
-public class DialogueNodeDrawer : NodeDrawer
+[CustomNodeDrawer(typeof(SampleNode))]
+public class SampleNodeViewDrawer : NodeViewDrawer
 {
-    public override string DisplayName { get { return "Dialogue"; } }
+    public override string DisplayName { get { return "Sample Node"; } }
 
     public override void OnDrawHeader(VisualElement headerContainer)
     {

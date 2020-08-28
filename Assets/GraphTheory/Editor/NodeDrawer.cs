@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor
 {
-    public class NodeDrawer
+    public class NodeViewDrawer
     {
         protected NodeView TargetView { get; private set; }
         protected ANode Target { get { return TargetView.Node; } }
@@ -23,9 +23,6 @@ namespace GraphTheory.Editor
         }
 
         public virtual void OnDrawHeader(VisualElement headerContainer) { }
-        /// <summary>
-        /// Important Note: The parent "title" VisualElement's height is locked to 36.
-        /// </summary>
         public virtual void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer) { }
         public virtual void OnDrawInport(InportContainer inportContainer) { }
         public virtual void OnDrawOutport(int outportIndex, OutportContainer outportContainer) { }

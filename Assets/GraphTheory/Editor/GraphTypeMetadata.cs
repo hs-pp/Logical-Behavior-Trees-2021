@@ -14,8 +14,8 @@ namespace GraphTheory.Editor
         public List<Type> ValidNodeTypes { get; private set; } = new List<Type>();
 
         private List<Type> m_allNodeDrawers = new List<Type>();
-        private Dictionary<Type, Type> m_universalNodeDrawers = new Dictionary<Type, Type>();
-        private Dictionary<Type, Type> m_validNodeDrawers = new Dictionary<Type, Type>();
+        private Dictionary<Type, Type> m_universalNodeViewDrawers = new Dictionary<Type, Type>();
+        private Dictionary<Type, Type> m_validNodeViewDrawers = new Dictionary<Type, Type>();
 
 
         public GraphTypeMetadata()
@@ -28,12 +28,12 @@ namespace GraphTheory.Editor
                     && !x.IsAbstract
                     && x.GetCustomAttribute<SupportedGraphTypesAttribute>() == null));
 
-                m_allNodeDrawers.AddRange(assemblies[i].GetTypes().Where(x => typeof(NodeDrawer).IsAssignableFrom(x)
+                m_allNodeDrawers.AddRange(assemblies[i].GetTypes().Where(x => typeof(NodeViewDrawer).IsAssignableFrom(x)
                     && !x.IsAbstract
                     && x.GetCustomAttribute<CustomNodeDrawerAttribute>() != null));
             }
 
-            FindNodeDrawerTypes(UniversalNodeTypes, m_universalNodeDrawers);
+            FindNodeDrawerTypes(UniversalNodeTypes, m_universalNodeViewDrawers);
             //TODO SORT THEM!!
         }
 
@@ -61,7 +61,7 @@ namespace GraphTheory.Editor
                 //TODO SORT THEM!
             }
 
-            FindNodeDrawerTypes(ValidNodeTypes, m_validNodeDrawers);
+            FindNodeDrawerTypes(ValidNodeTypes, m_validNodeViewDrawers);
         }
 
         private void FindNodeDrawerTypes(List<Type> nodeTypes, Dictionary<Type, Type> nodeDrawers)
@@ -77,18 +77,18 @@ namespace GraphTheory.Editor
             }
         }
 
-        public Type GetNodeDrawerType(Type nodeType)
+        public Type GetNodeViewDrawerType(Type nodeType)
         {
-            Type nodeDrawerType = typeof(NodeDrawer);
-            if(m_universalNodeDrawers.ContainsKey(nodeType))
+            Type nodeViewDrawerType = typeof(NodeViewDrawer);
+            if(m_universalNodeViewDrawers.ContainsKey(nodeType))
             {
-                nodeDrawerType = m_universalNodeDrawers[nodeType];
+                nodeViewDrawerType = m_universalNodeViewDrawers[nodeType];
             }
-            else if (m_validNodeDrawers.ContainsKey(nodeType))
+            else if (m_validNodeViewDrawers.ContainsKey(nodeType))
             {
-                nodeDrawerType = m_validNodeDrawers[nodeType];
+                nodeViewDrawerType = m_validNodeViewDrawers[nodeType];
             }
-            return nodeDrawerType;
+            return nodeViewDrawerType;
         }
     }
 }

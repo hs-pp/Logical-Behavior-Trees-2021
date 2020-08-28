@@ -2,7 +2,6 @@
 
 namespace GraphTheory
 {
-    //TODO: encapsulation!@@!@!@
     [System.Serializable]
     public class OutportEdge
     {

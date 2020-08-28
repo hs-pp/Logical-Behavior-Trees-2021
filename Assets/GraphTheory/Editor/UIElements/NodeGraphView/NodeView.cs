@@ -19,13 +19,13 @@ namespace GraphTheory.Editor.UIElements
         private List<PortView> m_outports = new List<PortView>();
         private Dictionary<string, EdgeView> m_edgeViews = new Dictionary<string, EdgeView>();
         private IEdgeConnectorListener m_edgeConnectorListener = null;
-        private NodeDrawer m_nodeDrawer = null;
+        private NodeViewDrawer m_nodeViewDrawer = null;
 
         public NodeView(ANode node, 
             SerializedProperty serializedNode, 
             NodeGraphView nodeGraphView, 
             IEdgeConnectorListener edgeConnectorListener,
-            NodeDrawer nodeDrawer) : base()
+            NodeViewDrawer nodeViewDrawer) : base()
         {
             if (node == null)
                 return;
@@ -34,10 +34,10 @@ namespace GraphTheory.Editor.UIElements
             SerializedNode = serializedNode;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
-            m_nodeDrawer = nodeDrawer;
-            m_nodeDrawer.SetNodeView(this, SerializedNode);
+            m_nodeViewDrawer = nodeViewDrawer;
+            m_nodeViewDrawer.SetNodeView(this, SerializedNode);
 
-            title = m_nodeDrawer.DisplayName;
+            title = m_nodeViewDrawer.DisplayName;
             m_nodeDisplayContainers = new NodeDisplayContainers(this);
 
             bool isEntryNode = Node is BuiltInNodes.EntryNode;
@@ -75,15 +75,15 @@ namespace GraphTheory.Editor.UIElements
             }
 
             // Draw node
-            m_nodeDrawer.OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
-            m_nodeDrawer.OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
-            m_nodeDrawer.OnDrawInport(m_nodeDisplayContainers.InportContainer);
+            m_nodeViewDrawer.OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
+            m_nodeViewDrawer.OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
+            m_nodeViewDrawer.OnDrawInport(m_nodeDisplayContainers.InportContainer);
             for(int i = 0; i < m_outports.Count; i++)
             {
-                m_nodeDrawer.OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
+                m_nodeViewDrawer.OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
             }
-            m_nodeDrawer.OnDrawBody(m_nodeDisplayContainers.BodyContainer);
-            m_nodeDrawer.OnDrawFooter(m_nodeDisplayContainers.FooterContainer);
+            m_nodeViewDrawer.OnDrawBody(m_nodeDisplayContainers.BodyContainer);
+            m_nodeViewDrawer.OnDrawFooter(m_nodeDisplayContainers.FooterContainer);
 
             RefreshExpandedState();
             RefreshPorts();

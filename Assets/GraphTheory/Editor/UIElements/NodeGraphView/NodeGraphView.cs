@@ -219,7 +219,7 @@ namespace GraphTheory.Editor.UIElements
             }
 
             NodeView nodeView = new NodeView(node, serializedNode, this, m_edgeConectorListener,
-                Activator.CreateInstance(m_graphTypeMetadata.GetNodeDrawerType(node.GetType())) as NodeDrawer);
+                Activator.CreateInstance(m_graphTypeMetadata.GetNodeViewDrawerType(node.GetType())) as NodeViewDrawer);
 
             AddElement(nodeView);
             m_nodeViews.Add(node.Id, nodeView);
