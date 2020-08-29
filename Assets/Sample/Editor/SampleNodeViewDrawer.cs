@@ -24,6 +24,12 @@ public class SampleNodeViewDrawer : NodeViewDrawer
         postTitleContainer.Add(GetPlaceholderElement("Post-Title", 36));
     }
 
+    public override void OnDrawPrimaryBody(VisualElement primaryBodyContainer)
+    {
+        base.OnDrawPrimaryBody(primaryBodyContainer);
+        primaryBodyContainer.Add(GetPlaceholderElement("Primary Body", 36));
+    }
+
     public override void OnDrawInport(InportContainer inportContainer)
     {
         base.OnDrawInport(inportContainer);
@@ -40,10 +46,10 @@ public class SampleNodeViewDrawer : NodeViewDrawer
         outportContainer.OutportFooter.Add(GetPlaceholderElement("Outport footer", 20));
     }
 
-    public override void OnDrawBody(VisualElement bodyContainer)
+    public override void OnDrawSecondaryBody(VisualElement secondaryBodyContainer)
     {
-        base.OnDrawBody(bodyContainer);
-        VisualElement body = GetPlaceholderElement("Body", -1);
+        base.OnDrawSecondaryBody(secondaryBodyContainer);
+        VisualElement body = GetPlaceholderElement("Secondary Body", -1);
         Button addOutportButton = new Button();
         addOutportButton.text = "Add Outport";
         addOutportButton.clickable.clicked += () => { NodeGraph.AddOutportToNode(TargetProperty); };
@@ -52,7 +58,7 @@ public class SampleNodeViewDrawer : NodeViewDrawer
         removeOutportButton.text = "Remove Outport";
         removeOutportButton.clickable.clicked += () => { NodeGraph.RemoveOutportFromNode(TargetProperty); };
         body.Add(removeOutportButton);
-        bodyContainer.Add(body);
+        secondaryBodyContainer.Add(body);
     }
 
     public override void OnDrawFooter(VisualElement footerContainer)
@@ -77,6 +83,10 @@ public class SampleNodeViewDrawer : NodeViewDrawer
         placeholder.style.borderTopRightRadius = 5;
         placeholder.style.borderBottomLeftRadius = 5;
         placeholder.style.borderBottomRightRadius = 5;
+        placeholder.style.marginLeft = 5;
+        placeholder.style.marginRight = 5;
+        placeholder.style.marginTop = 5;
+        placeholder.style.marginBottom = 5;
 
         placeholder.style.justifyContent = Justify.Center;
         if (height != -1)

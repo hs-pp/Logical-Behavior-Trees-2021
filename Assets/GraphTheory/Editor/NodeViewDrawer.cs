@@ -22,11 +22,28 @@ namespace GraphTheory.Editor
             TargetProperty = serializedNode;
         }
 
+        public void DrawNodeView(NodeDisplayContainers nodeDisplayContainers)
+        {
+            nodeDisplayContainers.ClearDisplays();
+
+            OnDrawHeader(nodeDisplayContainers.HeaderContainer);
+            OnDrawTitle(nodeDisplayContainers.PreTitleContainer, nodeDisplayContainers.PostTitleContainer);
+            OnDrawPrimaryBody(nodeDisplayContainers.PrimaryBodyContainer);
+            OnDrawInport(nodeDisplayContainers.InportContainer);
+            for (int i = 0; i < Target.NumOutports; i++)
+            {
+                OnDrawOutport(i, nodeDisplayContainers.OutportContainers[i]);
+            }
+            OnDrawSecondaryBody(nodeDisplayContainers.SecondaryBodyContainer);
+            OnDrawFooter(nodeDisplayContainers.FooterContainer);
+        }
+
         public virtual void OnDrawHeader(VisualElement headerContainer) { }
         public virtual void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer) { }
+        public virtual void OnDrawPrimaryBody(VisualElement primaryBodyContainer) { }
         public virtual void OnDrawInport(InportContainer inportContainer) { }
         public virtual void OnDrawOutport(int outportIndex, OutportContainer outportContainer) { }
-        public virtual void OnDrawBody(VisualElement bodyContainer) { }
+        public virtual void OnDrawSecondaryBody(VisualElement secondaryBodyContainer) { }
         public virtual void OnDrawFooter(VisualElement footerContainer) { }
     }
 }

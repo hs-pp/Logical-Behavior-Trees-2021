@@ -19,11 +19,6 @@ namespace GraphTheory
         public virtual void OnNodeUpdate() { }
         public virtual void OnNodeExit() { }
 
-        public OutportEdge GetOutportEdge(int index)
-        {
-            return m_outports[index];
-        }
-
         public bool OutportEdgeIsValid(int index)
         {
             if (index >= m_outports.Count || index < 0)
@@ -42,7 +37,7 @@ namespace GraphTheory
             }
             else
             {
-                ParentNodeCollection.TraverseEdge(GetOutportEdge(index));
+                ParentNodeCollection.TraverseEdge(m_outports[index]);
             }
         }
 
@@ -50,10 +45,11 @@ namespace GraphTheory
         private Vector2 m_position;
         [SerializeField, HideInInspector]
         private string m_comment;
-        public virtual int DefaultNumOutports { get { return 1; } }
+        public int NumOutports { get { return m_outports.Count; } }
 
 #if UNITY_EDITOR
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
+        public virtual int DefaultNumOutports { get { return 1; } }
 
         public ANode()
         {
@@ -82,9 +78,9 @@ namespace GraphTheory
             }
         }
 
-        public List<OutportEdge> GetAllEdges()
+        public OutportEdge GetOutportEdge(int index)
         {
-            return m_outports;
+            return m_outports[index];
         }
 
         public void AddOutportEdge(int outportIndex, string connectedEdge)

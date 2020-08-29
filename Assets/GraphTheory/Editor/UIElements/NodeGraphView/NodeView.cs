@@ -75,15 +75,7 @@ namespace GraphTheory.Editor.UIElements
             }
 
             // Draw node
-            m_nodeViewDrawer.OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
-            m_nodeViewDrawer.OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
-            m_nodeViewDrawer.OnDrawInport(m_nodeDisplayContainers.InportContainer);
-            for(int i = 0; i < m_outports.Count; i++)
-            {
-                m_nodeViewDrawer.OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
-            }
-            m_nodeViewDrawer.OnDrawBody(m_nodeDisplayContainers.BodyContainer);
-            m_nodeViewDrawer.OnDrawFooter(m_nodeDisplayContainers.FooterContainer);
+            m_nodeViewDrawer.DrawNodeView(m_nodeDisplayContainers);
 
             RefreshExpandedState();
             RefreshPorts();
@@ -95,17 +87,17 @@ namespace GraphTheory.Editor.UIElements
 
         public void OnLoadView()
         {
-            List<OutportEdge> edges = Node.GetAllEdges();
-            for (int k = 0; k < edges.Count; k++)
+            for (int k = 0; k < Node.NumOutports; k++)
             {
-                if (!edges[k].IsValid)
+                OutportEdge edge = Node.GetOutportEdge(k);
+                if (!edge.IsValid)
                 {
                     continue;
                 }
                 EdgeView edgeView = new EdgeView()
                 {
-                    OutportEdge = edges[k],
-                    input = m_nodeGraphView.GetNodeViewById(edges[k].ConnectedNodeId).m_inport,
+                    OutportEdge = edge,
+                    input = m_nodeGraphView.GetNodeViewById(edge.ConnectedNodeId).m_inport,
                     output = m_outports[k],
                 };
                 edgeView.Setup();

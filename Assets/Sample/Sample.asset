@@ -15,6 +15,7 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
     m_entryNodeId: 08d4881c-ad73-4118-b9d3-09cb986df6b7
   references:
     version: 1
@@ -24,6 +25,15 @@ MonoBehaviour:
         m_id: 08d4881c-ad73-4118-b9d3-09cb986df6b7
         m_outports:
         - Id: 4c26834f-2cea-42db-b8a1-0f4416bca315
-          ConnectedNodeId: 
+          ConnectedNodeId: 4a2882b3-43d0-4cb1-beb2-0eaf0605404b
         m_position: {x: 0, y: 0}
+        m_comment: 
+    00000001:
+      type: {class: SampleNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 4a2882b3-43d0-4cb1-beb2-0eaf0605404b
+        m_outports:
+        - Id: ce5e5187-5433-447a-b86d-62023a2491ef
+          ConnectedNodeId: 
+        m_position: {x: 139, y: 64}
         m_comment: 

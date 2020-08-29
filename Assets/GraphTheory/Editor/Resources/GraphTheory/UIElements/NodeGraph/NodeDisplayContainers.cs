@@ -11,9 +11,10 @@ namespace GraphTheory.Editor.UIElements
         public VisualElement HeaderContainer { get; private set; }
         public VisualElement PreTitleContainer { get; private set; }
         public VisualElement PostTitleContainer { get; private set; }
+        public VisualElement PrimaryBodyContainer { get; private set; }
         public InportContainer InportContainer { get; private set; }
         public List<OutportContainer> OutportContainers = new List<OutportContainer>();
-        public VisualElement BodyContainer { get; private set; }
+        public VisualElement SecondaryBodyContainer { get; private set; }
         public VisualElement FooterContainer { get; private set; }
 
         public NodeDisplayContainers(NodeView nodeView)
@@ -23,14 +24,22 @@ namespace GraphTheory.Editor.UIElements
             HeaderContainer = new VisualElement();
             HeaderContainer.name = "header-container";
             NodeView.Insert(0, HeaderContainer);
+
             PreTitleContainer = CreateBaseElement("pre-title-container");
             NodeView.titleContainer.Insert(0, PreTitleContainer);
+
             PostTitleContainer = CreateBaseElement("post-title-container");
             NodeView.titleContainer.Add(PostTitleContainer);
-            BodyContainer = CreateBaseElement("body-container");
-            NodeView.extensionContainer.Add(BodyContainer);
+
+            PrimaryBodyContainer = CreateBaseElement("upper-body-container");
+            NodeView.Q<VisualElement>("contents")?.Insert(1, PrimaryBodyContainer);
+
+            SecondaryBodyContainer = CreateBaseElement("body-container");
+            NodeView.extensionContainer.Add(SecondaryBodyContainer);
+
             FooterContainer = new VisualElement();
             FooterContainer.name = "footer-container";
+
             NodeView.Add(FooterContainer);
         }
 
@@ -38,7 +47,7 @@ namespace GraphTheory.Editor.UIElements
         {
             VisualElement baseEle = new VisualElement();
             baseEle.name = name;
-            baseEle.style.backgroundColor = new Color(0.234f, 0.234f, 0.234f);
+            baseEle.style.backgroundColor = new Color(0.15625f, 0.15625f, 0.15625f);
             return baseEle;
         }
 
@@ -72,12 +81,13 @@ namespace GraphTheory.Editor.UIElements
             HeaderContainer.Clear();
             PreTitleContainer.Clear();
             PostTitleContainer.Clear();
-            InportContainer.ClearContainers();
+            PrimaryBodyContainer.Clear();
+            InportContainer?.ClearContainers();
             for(int i = 0; i < OutportContainers.Count; i++)
             {
-                OutportContainers[i].ClearContainers();
+                OutportContainers[i]?.ClearContainers();
             }
-            BodyContainer.Clear();
+            SecondaryBodyContainer.Clear();
             FooterContainer.Clear();
         }
     }
