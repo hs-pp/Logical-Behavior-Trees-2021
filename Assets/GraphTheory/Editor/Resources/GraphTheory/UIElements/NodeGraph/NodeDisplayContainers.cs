@@ -90,6 +90,15 @@ namespace GraphTheory.Editor.UIElements
             SecondaryBodyContainer.Clear();
             FooterContainer.Clear();
         }
+
+        public void ResolveCollapsedPorts()
+        {
+            InportContainer.ResolveCollapsed();
+            for (int i = 0; i < OutportContainers.Count; i++)
+            {
+                OutportContainers[i].ResolveCollapsed();
+            }
+        }
     }
 
     public class OutportContainer : VisualElement
@@ -125,6 +134,11 @@ namespace GraphTheory.Editor.UIElements
             OutportFooter.Clear();
             OutportBody.Clear();
         }
+
+        public void ResolveCollapsed()
+        {
+            this.style.display = PortView.style.visibility == Visibility.Hidden ? DisplayStyle.None : DisplayStyle.Flex;
+        }
     }
 
     public class InportContainer : VisualElement
@@ -159,6 +173,12 @@ namespace GraphTheory.Editor.UIElements
             InportHeader.Clear();
             InportFooter.Clear();
             InportBody.Clear();
+        }
+
+        public void ResolveCollapsed()
+        {
+            this.style.display = PortView.style.visibility == Visibility.Hidden ? DisplayStyle.None : DisplayStyle.Flex;
+
         }
     }
 }

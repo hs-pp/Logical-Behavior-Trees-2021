@@ -84,6 +84,11 @@ namespace GraphTheory.Editor.UIElements
 
             //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
         }
+        protected override void ToggleCollapse()
+        {
+            base.ToggleCollapse();
+            m_nodeDisplayContainers.ResolveCollapsedPorts();
+        }
 
         public void OnLoadView()
         {
