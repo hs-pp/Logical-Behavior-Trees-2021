@@ -187,7 +187,11 @@ namespace GraphTheory.Editor.UIElements
 
         public EdgeView GetEdgeViewById(string id)
         {
-            return m_edgeViews[id];
+            if(m_edgeViews.ContainsKey(id))
+            {
+                return m_edgeViews[id];
+            }
+            return null;
         }
 
         public void UpdateNodeDataPosition()

@@ -309,6 +309,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void SetSelection(List<string> graphElementIds)
         {
+            ClearSelection();
             for (int i = 0; i < graphElementIds.Count; i++)
             {
                 NodeView nodeView = GetNodeViewById(graphElementIds[i]);

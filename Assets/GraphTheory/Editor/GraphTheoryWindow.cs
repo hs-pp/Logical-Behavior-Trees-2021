@@ -125,7 +125,7 @@ namespace GraphTheory.Editor
         /// <summary>
         /// Retrieves editor window state from EditorPrefs and loads it
         /// </summary>
-        private void DeserializeData()
+        private async void DeserializeData()
         {
             // Get the serialized data from EditorPrefs.
             string serializedData = EditorPrefs.GetString(DATA_STRING, "");
@@ -148,9 +148,10 @@ namespace GraphTheory.Editor
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
             
             // Load graph element selection
-            List<string> selectedGraphElements = new List<string>(m_graphWindowData.SelectedGraphElements);
-            m_graphWindowData.SelectedGraphElements.Clear();
-            m_nodeGraphView.SetSelection(selectedGraphElements);
+            // Super sad that I need to wait a frame before I can add things to the selection and there's no clean way to
+            // wait a frame. Otherwise, the elements will be technically selected but visually unselected.
+            await Task.Delay(1);
+            m_nodeGraphView.SetSelection(new List<string>(m_graphWindowData.SelectedGraphElements));
         }
 
         /// <summary>
