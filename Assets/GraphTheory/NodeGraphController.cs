@@ -1,35 +1,57 @@
 ﻿using GraphTheory;
 using UnityEngine;
 
-public class NodeGraphController : MonoBehaviour
+namespace GraphTheory
 {
-    [SerializeField]
-    protected NodeGraph m_nodeGraph;
-    [SerializeField]
-    protected bool m_startGraphOnStart = false;
-
-    public NodeGraph NodeGraph { get { return m_nodeGraph; } }
-    public bool GraphIsRunning { get; protected set; } = false;
-
-    protected virtual void Awake()
+    public class NodeGraphController : MonoBehaviour
     {
-        m_nodeGraph = Instantiate(m_nodeGraph);
-        m_nodeGraph.OnGraphStart += () => { GraphIsRunning = true; };
-        m_nodeGraph.OnGraphStop += () => { GraphIsRunning = false; };
-    }
+        [SerializeField]
+        private NodeGraph m_nodeGraph;
+        [SerializeReference]
+        private IGraphProperties m_overrideProperties = null;
+        [SerializeField]
+        private bool m_useOverrides = false;
+        [SerializeField]
+        private bool m_createGraphInstance = false;
 
-    protected virtual void Start()
-    {
-        if (m_startGraphOnStart)
+        private GraphRunner m_graphRunner = null;
+
+        public void Start()
         {
-            m_nodeGraph.StartGraph();
+            StartGraph();
         }
-    }
-    protected virtual void Update()
-    {
-        if(GraphIsRunning)
+
+        public void StartGraph()
         {
-            m_nodeGraph.UpdateGraph();
+            if(m_nodeGraph == null)
+            {
+                Debug.LogError("No node graph set!");
+                return;
+            }
+
+            if(m_createGraphInstance)
+            {
+                m_nodeGraph = Instantiate(m_nodeGraph);
+            }
+
+            m_graphRunner = new GraphRunner(m_nodeGraph, m_useOverrides
+                ? m_overrideProperties
+                : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as IGraphProperties);
+
+            m_graphRunner.OnGraphStart += () => { Debug.Log("Start"); };
+            m_graphRunner.OnGraphStop += () => { Debug.Log("Stop"); };
+
+            m_graphRunner.StartGraph();
+        }
+
+        public void Update()
+        {
+            m_graphRunner?.UpdateGraph();
+        }
+
+        public void StopGraph()
+        {
+            m_graphRunner?.StopGraph();
         }
     }
 }

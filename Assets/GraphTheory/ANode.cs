@@ -13,32 +13,18 @@ namespace GraphTheory
         [SerializeField]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
-        protected NodeCollection ParentNodeCollection { get; private set; } = null;
+        public virtual void OnNodeEnter(GraphRunner graphRunner) { }
+        public virtual void OnNodeUpdate(GraphRunner graphRunner) { }
+        public virtual void OnNodeExit(GraphRunner graphRunner) { }
 
-        public virtual void OnNodeEnter(NodeCollection nodeCollection) { ParentNodeCollection = nodeCollection; }//TODO: auto set parent node collections before node enter
-        public virtual void OnNodeUpdate() { }
-        public virtual void OnNodeExit() { }
-
-        public bool OutportEdgeIsValid(int index)
+        public OutportEdge GetOutportEdge(int index)
         {
-            if (index >= m_outports.Count || index < 0)
-            {
-                return false;
-            }
-            return m_outports[index].IsValid;
+            return m_outports[index];
         }
 
-        protected void TraverseEdge(int index)
+        public bool ContainsOutport(OutportEdge outportEdge)
         {
-            if (index >= m_outports.Count || index < 0)
-            {
-                Debug.LogError("edge index out of range");
-                return;
-            }
-            else
-            {
-                ParentNodeCollection.TraverseEdge(m_outports[index]);
-            }
+            return m_outports.Exists(x => x.Id == outportEdge.Id);
         }
 
         [SerializeField, HideInInspector]
@@ -53,7 +39,6 @@ namespace GraphTheory
 
         public ANode()
         {
-            // Instantiate the default number of ports
             for (int i = 0; i < DefaultNumOutports; i++)
             {
                 m_outports.Add(new OutportEdge() { Id = Guid.NewGuid().ToString()});
@@ -78,11 +63,6 @@ namespace GraphTheory
             }
         }
 
-        public OutportEdge GetOutportEdge(int index)
-        {
-            return m_outports[index];
-        }
-
         public void AddOutportEdge(int outportIndex, string connectedEdge)
         {
             if (outportIndex > m_outports.Count - 1)
@@ -101,6 +81,15 @@ namespace GraphTheory
                 return;
             }
             m_outports[outportIndex].SetInvalid();
+        }
+
+        public bool OutportEdgeIsValid(int index)
+        {
+            if (index >= m_outports.Count || index < 0)
+            {
+                return false;
+            }
+            return m_outports[index].IsValid;
         }
 #endif
     }

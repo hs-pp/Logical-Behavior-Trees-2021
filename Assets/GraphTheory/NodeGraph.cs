@@ -16,38 +16,11 @@ namespace GraphTheory
         [SerializeField]
         private NodeCollection m_nodeCollection;
         [SerializeReference]
-        private IGraphProperties m_defaultGraphProperties;
-
-        [NonSerialized]
-        public Action OnGraphStart = null;
-        [NonSerialized]
-        public Action OnGraphStop = null;
-        [NonSerialized]
-        public Action<ANode> OnNodeChange = null;
+        public IGraphProperties GraphProperties;
 
         public void Awake()
         {
             //TODO: Register to runtime tracker here
-        }
-
-        public void StartGraph()
-        {
-            m_nodeCollection.ParentNodeGraph = this;
-            m_nodeCollection.OnGraphStart += OnGraphStart;
-            m_nodeCollection.OnGraphStop += OnGraphStop;
-            m_nodeCollection.OnNodeChange += OnNodeChange;
-
-            m_nodeCollection.StartExecution();
-        }
-
-        public void UpdateGraph()
-        {
-            m_nodeCollection.UpdateExecution();
-        }
-
-        public void StopGraph()
-        {
-            m_nodeCollection.StopExecution();
         }
 
 #if UNITY_EDITOR
@@ -60,7 +33,7 @@ namespace GraphTheory
             m_nodeCollection = new NodeCollection();
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
-            m_defaultGraphProperties = Activator.CreateInstance(GraphPropertiesType) as IGraphProperties;
+            GraphProperties = Activator.CreateInstance(GraphPropertiesType) as IGraphProperties;
         }
 
         public static void AddOutportToNode(SerializedProperty serializedNode)

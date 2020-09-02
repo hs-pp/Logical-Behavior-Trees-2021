@@ -9,19 +9,18 @@ namespace GraphTheory.BuiltInNodes
     [Serializable]
     public class EntryNode : ANode
     {
-        public override void OnNodeEnter(NodeCollection nodeCollection)
+        public override void OnNodeEnter(GraphRunner graphRunner)
         {
             Debug.Log("EntryNode Enter");
-            base.OnNodeEnter(nodeCollection);
-            TraverseEdge(0);
+            graphRunner.TraverseEdge(GetOutportEdge(0));
         }
 
-        public override void OnNodeUpdate()
+        public override void OnNodeUpdate(GraphRunner graphRunner)
         {
             Debug.Log("EntryNode Update");
         }
 
-        public override void OnNodeExit()
+        public override void OnNodeExit(GraphRunner graphRunner)
         {
             Debug.Log("EntryNode Exit");
         }

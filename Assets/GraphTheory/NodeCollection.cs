@@ -12,51 +12,13 @@ namespace GraphTheory
         private List<ANode> m_nodes = new List<ANode>();
         [SerializeField]
         private string m_entryNodeId = "";
-
-        [NonSerialized]
-        public Action OnGraphStart = null;
-        [NonSerialized]
-        public Action OnGraphStop = null;
-        [NonSerialized]
-        public Action<ANode> OnNodeChange = null;
-        public ANode CurrentNode { get; private set; } = null;
         public NodeGraph ParentNodeGraph { get; set; } = null;
 
-        public void StartExecution()
+        public ANode GetEntryNode()
         {
-            Debug.Log("Starting graphdata");
-            OnGraphStart?.Invoke();
-
-            CurrentNode = GetNodeById(m_entryNodeId);
-            CurrentNode?.OnNodeEnter(this);
+            return GetNodeById(m_entryNodeId);
         }
-
-        public void UpdateExecution()
-        {
-            CurrentNode?.OnNodeUpdate();
-        }
-
-        public void StopExecution()
-        {
-            CurrentNode = null;
-            OnGraphStop?.Invoke();
-            Debug.Log("Stopping graphdata");
-        }
-
-        public void TraverseEdge(OutportEdge edge)
-        {
-            CurrentNode?.OnNodeExit();
-
-            if (edge == null)
-            {
-                StopExecution();
-                return;
-            }
-
-            CurrentNode = GetNodeById(edge.ConnectedNodeId);
-            CurrentNode?.OnNodeEnter(this);
-        }
-
+        
         public ANode GetNodeById(string id)
         {
             //TODO: DO A BINARY SEARCh

@@ -7,6 +7,6 @@ public class SampleNodeGraph : NodeGraph
 
     public class SampleNodeGraphProperties : IGraphProperties
     {
-
+        public int thisint = 6;
     }
 }

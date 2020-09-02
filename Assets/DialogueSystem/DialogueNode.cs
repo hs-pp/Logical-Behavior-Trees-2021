@@ -26,16 +26,15 @@ namespace DialogueSystem
 
         }
 
-        public override void OnNodeEnter(NodeCollection nodeCollection)
-        {
-            base.OnNodeEnter(nodeCollection);
-        }
-
-        public override void OnNodeUpdate()
+        public override void OnNodeEnter(GraphRunner graphRunner)
         {
         }
 
-        public override void OnNodeExit()
+        public override void OnNodeUpdate(GraphRunner graphRunner)
+        {
+        }
+
+        public override void OnNodeExit(GraphRunner graphRunner)
         {
         }
 
