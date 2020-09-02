@@ -96,7 +96,7 @@ namespace GraphTheory.Editor
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
             tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement()));
-            tabs.Add(("Library 2", new LibraryTabElement2()));
+            tabs.Add(("Library 2", new LibraryTabElement2((string guid) => { OpenGraph(guid); })));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();

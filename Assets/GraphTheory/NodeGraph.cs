@@ -11,15 +11,20 @@ namespace GraphTheory
     [Serializable]
     public abstract class NodeGraph : ScriptableObject
     {
+        public abstract Type GraphPropertiesType { get; }
+
         [SerializeField]
         private NodeCollection m_nodeCollection;
+        [SerializeReference]
+        private IGraphProperties m_defaultGraphProperties;
+
         [NonSerialized]
         public Action OnGraphStart = null;
         [NonSerialized]
         public Action OnGraphStop = null;
         [NonSerialized]
         public Action<ANode> OnNodeChange = null;
-        
+
         public void Awake()
         {
             //TODO: Register to runtime tracker here
@@ -55,6 +60,7 @@ namespace GraphTheory
             m_nodeCollection = new NodeCollection();
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
+            m_defaultGraphProperties = Activator.CreateInstance(GraphPropertiesType) as IGraphProperties;
         }
 
         public static void AddOutportToNode(SerializedProperty serializedNode)

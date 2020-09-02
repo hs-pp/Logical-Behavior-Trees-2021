@@ -10,30 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
-  m_Name: Sample
+  m_Name: asdd
   m_EditorClassIdentifier: 
   m_nodeCollection:
     m_nodes:
     - id: 0
-    - id: 1
-    m_entryNodeId: 08d4881c-ad73-4118-b9d3-09cb986df6b7
+    m_entryNodeId: 0ee1cd8b-28a3-4752-a7af-ed6ef932df90
+  m_defaultGraphProperties:
+    id: 1
   references:
     version: 1
     00000000:
       type: {class: EntryNode, ns: GraphTheory.BuiltInNodes, asm: Assembly-CSharp}
       data:
-        m_id: 08d4881c-ad73-4118-b9d3-09cb986df6b7
+        m_id: 0ee1cd8b-28a3-4752-a7af-ed6ef932df90
         m_outports:
-        - Id: 4c26834f-2cea-42db-b8a1-0f4416bca315
-          ConnectedNodeId: 4a2882b3-43d0-4cb1-beb2-0eaf0605404b
+        - Id: 9f4224e1-592c-4ee7-bfc4-6481e1f21cd8
+          ConnectedNodeId: 
         m_position: {x: 0, y: 0}
         m_comment: 
     00000001:
-      type: {class: SampleNode, ns: , asm: Assembly-CSharp}
-      data:
-        m_id: 4a2882b3-43d0-4cb1-beb2-0eaf0605404b
-        m_outports:
-        - Id: ce5e5187-5433-447a-b86d-62023a2491ef
-          ConnectedNodeId: 
-        m_position: {x: 139, y: 64}
-        m_comment: 
+      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
