@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor.UIElements
 {
@@ -194,6 +196,28 @@ namespace GraphTheory.Editor.UIElements
         public void UpdateNodeDataPosition()
         {
             Node.Position = this.GetPosition().position;
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+
+            // Add ability to open the node's script file
+            // This isn't very performant but is there a better way?
+            evt.menu.AppendAction("Open Script", (menuAction) => 
+            {
+                string nodeTypeName = Node.GetType().Name;
+                IEnumerable<string> scriptPaths = AssetDatabase.FindAssets($"t:script {nodeTypeName}").Select(AssetDatabase.GUIDToAssetPath);
+                foreach (string path in scriptPaths)
+                {
+                    if (Path.GetFileName(path) == $"{nodeTypeName}.cs")
+                    {
+                        UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(path, 0);
+                        return;
+                    }
+                }
+                Debug.LogError("Script not found. Is your node class in it's own script with its own name?");
+            });
         }
 
         /// <summary>
