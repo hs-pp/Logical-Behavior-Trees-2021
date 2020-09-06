@@ -206,7 +206,6 @@ namespace GraphTheory.Editor.UIElements
 
         public void HideFoldoutIfNecessary()
         {
-            Debug.Log(m_graphInstances.Count);
             for (int i = 0; i < m_graphInstances.Count; i++)
             {
                 if (m_graphInstances[i].DisplayField.style.display != DisplayStyle.None)

@@ -93,7 +93,7 @@ namespace GraphTheory.Editor.UIElements
 
         public void ResolveCollapsedPorts()
         {
-            InportContainer.ResolveCollapsed();
+            InportContainer?.ResolveCollapsed();
             for (int i = 0; i < OutportContainers.Count; i++)
             {
                 OutportContainers[i].ResolveCollapsed();
