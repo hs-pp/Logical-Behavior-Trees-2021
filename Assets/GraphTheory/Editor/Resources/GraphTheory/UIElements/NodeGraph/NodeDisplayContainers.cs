@@ -68,7 +68,10 @@ namespace GraphTheory.Editor.UIElements
         public List<PortView> GetAllPorts()
         {
             List<PortView> portViews = new List<PortView>();
-            portViews.Add(InportContainer.PortView);
+            if (InportContainer != null)
+            {
+                portViews.Add(InportContainer.PortView);
+            }
             for (int i = 0; i < OutportContainers.Count; i++)
             {
                 portViews.Add(OutportContainers[i].PortView);

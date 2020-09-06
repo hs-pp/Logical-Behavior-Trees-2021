@@ -31,11 +31,13 @@ namespace GraphTheory
         private Vector2 m_position;
         [SerializeField, HideInInspector]
         private string m_comment;
-        public int NumOutports { get { return m_outports.Count; } }
 
 #if UNITY_EDITOR
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
+        public int NumOutports { get { return m_outports.Count; } }
+
         public virtual int DefaultNumOutports { get { return 1; } }
+        public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
 
         public ANode()
         {

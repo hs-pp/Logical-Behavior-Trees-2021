@@ -6,7 +6,7 @@ namespace GraphTheory
     public class GraphRunner
     {
         private NodeCollection m_nodeCollection = null;
-        private IGraphProperties m_graphProperties = null;
+        public IGraphProperties GraphProperties { get; private set; }
 
         [NonSerialized]
         public Action OnGraphStart = null;
@@ -19,7 +19,7 @@ namespace GraphTheory
         public GraphRunner(NodeGraph nodeGraph, IGraphProperties graphProperties)
         {
             m_nodeCollection = nodeGraph.NodeCollection;
-            m_graphProperties = graphProperties;
+            GraphProperties = graphProperties;
             if(m_nodeCollection == null)
             {
                 Debug.LogError("No Graph attached to GraphRunner!");
@@ -29,7 +29,7 @@ namespace GraphTheory
         public GraphRunner(NodeCollection nodeCollection, IGraphProperties graphProperties)
         {
             m_nodeCollection = nodeCollection;
-            m_graphProperties = graphProperties;
+            GraphProperties = graphProperties;
             if (m_nodeCollection == null)
             {
                 Debug.LogError("No Graph attached to GraphRunner!");
