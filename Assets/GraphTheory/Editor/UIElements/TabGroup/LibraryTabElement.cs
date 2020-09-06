@@ -17,7 +17,7 @@ namespace GraphTheory.Editor.UIElements
         private const string FAVORITES_FOLDOUT = "favorites-foldout";
         private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string SEARCH_FIELD = "graphs-search-bar";
-        private const int NUM_RECENT = 3;
+        private const int NUM_RECENT = 6;
 
         private VisualElement m_allGraphsGroup = null;
         private ObjectDisplayField m_objectDisplayField = null;

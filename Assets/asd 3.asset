@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f71c17646588c0e4bbadefdda3ca4159, type: 3}
-  m_Name: asd
+  m_Name: asd 3
   m_EditorClassIdentifier: 
   m_nodeCollection:
     m_nodes:
     - id: 0
     m_entryNodeId: f988dcf2-536a-4a0e-ae70-ff6492164a5e
-  m_defaultGraphProperties:
+  GraphProperties:
     id: 1
   references:
     version: 1
@@ -31,3 +31,5 @@ MonoBehaviour:
         m_comment: 
     00000001:
       type: {class: DialogueGraph/DialogueGraphProperties, ns: DialogueSystem, asm: Assembly-CSharp}
+      data:
+        hey: 0

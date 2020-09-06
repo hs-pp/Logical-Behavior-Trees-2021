@@ -9,25 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
-  m_Name: asdd
+  m_Script: {fileID: 11500000, guid: f71c17646588c0e4bbadefdda3ca4159, type: 3}
+  m_Name: asd 6
   m_EditorClassIdentifier: 
   m_nodeCollection:
     m_nodes:
     - id: 0
-    m_entryNodeId: 0ee1cd8b-28a3-4752-a7af-ed6ef932df90
-  m_defaultGraphProperties:
+    m_entryNodeId: f988dcf2-536a-4a0e-ae70-ff6492164a5e
+  GraphProperties:
     id: 1
   references:
     version: 1
     00000000:
       type: {class: EntryNode, ns: GraphTheory.BuiltInNodes, asm: Assembly-CSharp}
       data:
-        m_id: 0ee1cd8b-28a3-4752-a7af-ed6ef932df90
+        m_id: f988dcf2-536a-4a0e-ae70-ff6492164a5e
         m_outports:
-        - Id: 9f4224e1-592c-4ee7-bfc4-6481e1f21cd8
+        - Id: a2e4b198-2700-4a72-ad21-a5cf22abd097
           ConnectedNodeId: 
         m_position: {x: 0, y: 0}
         m_comment: 
     00000001:
-      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
+      type: {class: DialogueGraph/DialogueGraphProperties, ns: DialogueSystem, asm: Assembly-CSharp}
+      data:
+        hey: 0

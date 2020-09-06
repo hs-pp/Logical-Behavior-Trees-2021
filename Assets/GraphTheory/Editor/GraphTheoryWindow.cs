@@ -23,7 +23,7 @@ namespace GraphTheory.Editor
         private Toolbar m_toolbar = null;
         private TwoPaneSplitView m_mainSplitView = null;
         private TabGroupElement m_mainTabGroup = null;
-        private LibraryTabElement m_libraryTab = null;
+        private LibraryTabElement2 m_libraryTab2 = null;
         private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
 
@@ -94,9 +94,8 @@ namespace GraphTheory.Editor
             
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
-            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement()));
-            tabs.Add(("Library 2", new LibraryTabElement2((string guid) => { OpenGraph(guid); })));
+            tabs.Add(("Library 2", m_libraryTab2 = new LibraryTabElement2((string guid) => { OpenGraph(guid); })));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();
@@ -178,7 +177,7 @@ namespace GraphTheory.Editor
             if (m_openedGraphInstance != null)
             {
                 m_graphWindowData.OpenGraphGUID = guid;
-                m_libraryTab.SetOpenNodeGraph(m_openedGraphInstance, guid);
+                m_libraryTab2.SetCurrentNodeGraph(m_openedGraphInstance, guid);
                 m_inspectorTab.SetOpenNodeGraph(m_openedGraphInstance);
                 m_nodeGraphView.SetNodeCollection(m_openedGraphInstance);
             }
@@ -191,7 +190,8 @@ namespace GraphTheory.Editor
         {
             m_graphWindowData.OpenGraphGUID = "";
             m_openedGraphInstance = null;
-            m_libraryTab.SetOpenNodeGraph(null, null);
+            //m_libraryTab.SetOpenNodeGraph(null, null);
+            //m_libraryTab2.SetCurrentNodeGraph(null, null);
             m_inspectorTab.SetOpenNodeGraph(null);
             m_nodeGraphView.SetNodeCollection(null);
         }
@@ -202,7 +202,7 @@ namespace GraphTheory.Editor
         private void OnNewGraphCreated(NodeGraph graph)
         {
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(graph, out string guid, out long localId);
-            m_libraryTab.RegisterNewlyCreatedGraph(graph, guid);
+            m_libraryTab2.OnGraphCreate(graph, guid);
             OpenGraph(guid);
         }
 
@@ -216,7 +216,7 @@ namespace GraphTheory.Editor
             {
                 CloseCurrentGraph();
             }
-            m_libraryTab.HandleDeletedGraph(graph, guid);
+            m_libraryTab2.OnGraphDelete(graph, guid);
         }
 
         /// <summary>

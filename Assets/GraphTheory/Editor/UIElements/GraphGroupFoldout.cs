@@ -75,6 +75,7 @@ namespace GraphTheory.Editor.UIElements
 
         public bool IsToggledOn { get { return m_foldout.value; } }
         public int NumElements { get { return m_graphInstances.Count; } }
+
         public GraphGroupFoldout()
         {
             m_foldout = new Foldout();
@@ -88,6 +89,15 @@ namespace GraphTheory.Editor.UIElements
             SetFoldoutName(name);
             m_sortRule = sortRule;
             m_onElementDoubleClick = onElementDoubleClick;
+        }
+
+        public string GetGraphGUIDAtIndex(int index)
+        {
+            if(index < 0 || index > m_graphInstances.Count - 1)
+            {
+                return "";
+            }
+            return m_graphInstances[index].GUID;
         }
 
         public bool AddGraphByGUID(string graphGUID)
@@ -161,7 +171,6 @@ namespace GraphTheory.Editor.UIElements
                 m_foldout.Remove(m_graphInstances[index].DisplayField);
                 m_graphInstances.RemoveAt(index);
             }
-            HideFoldoutIfNecessary();
             SetFoldoutName(m_foldoutName);
             return (index != -1);
         }
@@ -191,16 +200,16 @@ namespace GraphTheory.Editor.UIElements
         {
             m_foldout.Remove(m_graphInstances[index].DisplayField);
             m_graphInstances.RemoveAt(index);
-
-            HideFoldoutIfNecessary();
+            
             SetFoldoutName(m_foldoutName);
         }
 
-        private void HideFoldoutIfNecessary()
+        public void HideFoldoutIfNecessary()
         {
+            Debug.Log(m_graphInstances.Count);
             for (int i = 0; i < m_graphInstances.Count; i++)
             {
-                if (m_graphInstances[i].DisplayField.style.display == DisplayStyle.Flex)
+                if (m_graphInstances[i].DisplayField.style.display != DisplayStyle.None)
                 {
                     style.display = DisplayStyle.Flex;
                     return;
@@ -217,6 +226,11 @@ namespace GraphTheory.Editor.UIElements
                 m_graphInstances[i].DisplayField.style.display = searchHit ? DisplayStyle.Flex: DisplayStyle.None;
             }
             HideFoldoutIfNecessary();
+        }
+
+        public bool ContainsGraph(string graphGuid)
+        {
+            return m_graphInstances.Exists(x => x.GUID == graphGuid);
         }
 
         private bool NameContainsSearchQuery(string name, string query)

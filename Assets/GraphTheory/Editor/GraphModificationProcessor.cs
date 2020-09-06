@@ -3,6 +3,9 @@ using UnityEditor;
 
 namespace GraphTheory.Editor
 {
+    /// <summary>
+    /// Currently Unity does not provide a way to track graphs that are duplicated :(
+    /// </summary>
     public class GraphModificationProcessor : UnityEditor.AssetModificationProcessor
     {
         public static Action<NodeGraph> OnGraphCreated = null;

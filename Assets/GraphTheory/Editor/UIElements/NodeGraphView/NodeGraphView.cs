@@ -237,12 +237,12 @@ namespace GraphTheory.Editor.UIElements
 
         private void OnNodeOutportAdded(string nodeId)
         {
-            SetNodeCollection(m_nodeGraph); // Maybe make this more efficient one day.
+            SetNodeCollection(m_nodeGraph); // CBB
         }
 
         private void OnNodeOutportRemoved(string nodeId, int index)
         {
-            SetNodeCollection(m_nodeGraph); // Maybe make this more efficient one day.
+            SetNodeCollection(m_nodeGraph); // CBB
         }
 
         public void CreateEdgeView(EdgeView edgeView)
