@@ -15,9 +15,10 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
     m_entryNodeId: 11fd2b61-b0cf-4624-8ab0-c642b98b613b
   GraphProperties:
-    id: 1
+    id: 2
   references:
     version: 1
     00000000:
@@ -26,10 +27,19 @@ MonoBehaviour:
         m_id: 11fd2b61-b0cf-4624-8ab0-c642b98b613b
         m_outports:
         - Id: 2caa9cc3-e10d-46ea-b687-b2a1ba07f849
-          ConnectedNodeId: 
+          ConnectedNodeId: 5838dc49-2589-4991-9221-dbf945c083a0
         m_position: {x: 0, y: 0}
         m_comment: 
     00000001:
+      type: {class: SampleNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 5838dc49-2589-4991-9221-dbf945c083a0
+        m_outports:
+        - Id: bff8c8cc-d969-4a2c-9826-93d3db71eaea
+          ConnectedNodeId: 
+        m_position: {x: 198, y: 190}
+        m_comment: 
+    00000002:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6

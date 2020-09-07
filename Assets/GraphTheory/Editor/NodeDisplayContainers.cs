@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphTheory.Editor.UIElements
+namespace GraphTheory.Editor
 {
     public class NodeDisplayContainers
     {
@@ -119,7 +119,7 @@ namespace GraphTheory.Editor.UIElements
 
         public OutportContainer(PortView portView)
         {
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/NodeGraph/OutportContainer");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/NodeGraph/OutportContainer");
             xmlAsset.CloneTree(this);
 
             OutportHeader = this.Q<VisualElement>(OUTPORT_HEADER);
@@ -159,7 +159,7 @@ namespace GraphTheory.Editor.UIElements
 
         public InportContainer(PortView portView)
         {
-            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/NodeGraph/InportContainer");
+            var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/NodeGraph/InportContainer");
             xmlAsset.CloneTree(this);
 
             InportHeader = this.Q<VisualElement>(INPORT_HEADER);

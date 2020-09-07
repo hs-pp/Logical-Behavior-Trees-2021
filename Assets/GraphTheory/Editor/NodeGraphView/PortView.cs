@@ -2,7 +2,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace GraphTheory.Editor.UIElements
+namespace GraphTheory.Editor
 {
     public class PortView : Port
     {

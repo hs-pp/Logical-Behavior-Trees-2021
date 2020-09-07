@@ -1,10 +1,13 @@
 ﻿using System;
 
-public class CustomNodeDrawerAttribute : Attribute
+namespace GraphTheory.Editor
 {
-    public Type NodeType { get; private set; }
-    public CustomNodeDrawerAttribute(Type nodeType)
+    public class CustomNodeDrawerAttribute : Attribute
     {
-        NodeType = nodeType;
+        public Type NodeType { get; private set; }
+        public CustomNodeDrawerAttribute(Type nodeType)
+        {
+            NodeType = nodeType;
+        }
     }
 }

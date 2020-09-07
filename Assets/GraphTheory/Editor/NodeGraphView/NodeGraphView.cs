@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using UnityEditor;
 
-namespace GraphTheory.Editor.UIElements
+namespace GraphTheory.Editor
 {
     public class NodeGraphView : GraphView
     {
@@ -29,7 +29,7 @@ namespace GraphTheory.Editor.UIElements
 
         public NodeGraphView() 
         {
-            styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/NodeGraph/NodeGraphView"));
+            styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/NodeGraph/NodeGraphView"));
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             this.AddManipulator(new CustomContentDragger());

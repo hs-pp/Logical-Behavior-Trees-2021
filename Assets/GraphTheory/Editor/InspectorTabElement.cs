@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GraphTheory.Editor.UIElements
+namespace GraphTheory.Editor
 {
     public class InspectorTabElement : TabContentElement
     {

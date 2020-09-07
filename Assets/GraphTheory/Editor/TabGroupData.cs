@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-namespace GraphTheory.Editor.UIElements
+namespace GraphTheory.Editor
 {
     /// <summary>
     /// Serialized data for the tab group.
