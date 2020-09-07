@@ -1,6 +1,4 @@
 ﻿using GraphTheory.Editor.UIElements;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,16 +9,15 @@ namespace GraphTheory.Editor
     public class InspectorTabElement : TabContentElement
     {
         private NodeGraph m_nodeGraph = null;
-
+        private bool m_nodeIsSelected = false;
         private NodeInspector m_nodeInspector = null;
+        private GraphInspector m_graphInspector = null;
 
         public InspectorTabElement()
         {
-            style.flexGrow = 1;
-
-            m_nodeInspector = new NodeInspector();
-            Add(m_nodeInspector);
-            m_nodeInspector.StretchToParentSize();
+            Add(m_graphInspector = new GraphInspector());
+            Add(m_nodeInspector = new NodeInspector());
+            m_nodeInspector.SetVisible(false);
         }
 
         public void SetOpenNodeGraph(NodeGraph nodeGraph)
@@ -32,17 +29,24 @@ namespace GraphTheory.Editor
             }
 
             m_nodeGraph = nodeGraph;
+            m_graphInspector.SetNodeGraph(nodeGraph);
         }
 
         private void Reset()
         {
             m_nodeGraph = null;
             m_nodeInspector.Reset();
+            m_graphInspector.Reset();
         }
 
         public void SetNode(ANode node, SerializedProperty serializedNode)
         {
-            m_nodeInspector.SetNode(node, serializedNode);
+            m_graphInspector.SetVisible(node == null);
+            m_nodeInspector.SetVisible(node != null);
+            if (node != null)
+            {
+                m_nodeInspector.SetNode(node, serializedNode);
+            }
         }
 
 
@@ -55,13 +59,7 @@ namespace GraphTheory.Editor
         {
             return ""; 
         }
-
-        /// <summary>
-        /// TODO:
-        /// 1. IMGUI/UIElements switch bool
-        /// 2. Bind() should be renamed
-        /// 3.
-        /// </summary>
+        
         public class NodeInspector : VisualElement
         {
             private PropertyField m_propertyField = null;
@@ -75,6 +73,7 @@ namespace GraphTheory.Editor
 
             public NodeInspector()
             {
+                // This can probably be broken out into its own uxml
                 m_imguiContainer = new IMGUIContainer();
                 m_imguiContainer.onGUIHandler += OnIMGUIDraw;
                 m_imguiContainer.style.display = DisplayStyle.None;
@@ -102,18 +101,9 @@ namespace GraphTheory.Editor
                 m_nodeTitleContainer.Add(m_nodeCommentField);
             }
 
-            private void UnselectNode()
+            public void SetVisible(bool visible)
             {
-                m_selectedNodeProperty = null;
-                if (m_imguiContainer != null)
-                {
-                    m_imguiContainer.style.display = DisplayStyle.None;
-                }
-                if (m_propertyField != null)
-                {
-                    m_propertyField.style.display = DisplayStyle.None;
-                }
-                m_nodeTitleContainer.style.display = DisplayStyle.None;
+                style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
             }
 
             public void SetNode(ANode node, SerializedProperty serializedNode)
@@ -131,9 +121,8 @@ namespace GraphTheory.Editor
                 m_nodeIdLabel.text = node.Id;
                 m_nodeCommentField.bindingPath = serializedNode.FindPropertyRelative("m_comment").propertyPath;
                 m_nodeCommentField.Bind(serializedNode.serializedObject);
-
-                bool useIMGUI = false;
-                if (useIMGUI)
+                
+                if (node.UseIMGUIPropertyDrawer)
                 {
                     m_imguiContainer.style.display = DisplayStyle.Flex;
                 }
@@ -162,6 +151,20 @@ namespace GraphTheory.Editor
                 GUILayout.EndVertical();
             }
 
+            private void UnselectNode()
+            {
+                m_selectedNodeProperty = null;
+                if (m_imguiContainer != null)
+                {
+                    m_imguiContainer.style.display = DisplayStyle.None;
+                }
+                if (m_propertyField != null)
+                {
+                    m_propertyField.style.display = DisplayStyle.None;
+                }
+                m_nodeTitleContainer.style.display = DisplayStyle.None;
+            }
+
             public void Reset()
             {
                 UnselectNode();
@@ -171,7 +174,40 @@ namespace GraphTheory.Editor
 
         public class GraphInspector : VisualElement
         {
+            private PropertyField m_propertyField = null;
 
+            public GraphInspector()
+            {
+                m_propertyField = new PropertyField();
+            }
+
+            public void SetNodeGraph(NodeGraph nodeGraph)
+            {
+                Reset();
+
+                if (nodeGraph == null)
+                    return;
+
+                SerializedObject nodeGraphSO = new SerializedObject(nodeGraph);
+                m_propertyField = new PropertyField(nodeGraphSO.FindProperty("GraphProperties"));
+                m_propertyField.Bind(nodeGraphSO);
+                Add(m_propertyField);
+            }
+
+            public void Reset()
+            {
+                if (m_propertyField.parent == this)
+                {
+                    Remove(m_propertyField);
+                    m_propertyField.Bind(null);
+                    m_propertyField = null;
+                }
+            }
+
+            public void SetVisible(bool visible)
+            {
+                style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            }
         }
     }
 }

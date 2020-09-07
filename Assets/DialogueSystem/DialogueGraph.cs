@@ -1,5 +1,6 @@
 ﻿using GraphTheory;
 using System;
+using UnityEngine;
 
 namespace DialogueSystem
 {
@@ -10,6 +11,8 @@ namespace DialogueSystem
         public class DialogueGraphProperties : IGraphProperties
         {
             public bool hey;
+            [SerializeField]
+            private int heeee;
         }
     }
 }

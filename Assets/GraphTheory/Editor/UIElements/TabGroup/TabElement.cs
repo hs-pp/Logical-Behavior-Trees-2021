@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +28,7 @@ namespace GraphTheory.Editor.UIElements
             
             Name = tabName;
             Content = content;
+            Content.style.flexGrow = 1;
             SetIsSelected(false);
             
             Label tabNameLabel = this.Q<Label>(TAB_NAME_LABEL);
