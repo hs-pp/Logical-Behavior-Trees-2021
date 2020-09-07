@@ -1,5 +1,5 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:VisualElement name="Tab" class="a" style="height: 100%;">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Tab" class="a" style="height: 100%; flex-grow: 1;">
         <Style src="TabElement.uss" />
         <ui:Label text="Label" name="TabName" style="-unity-text-align: middle-center; -unity-font-style: bold; width: 100%; height: 100%;" />
     </ui:VisualElement>
