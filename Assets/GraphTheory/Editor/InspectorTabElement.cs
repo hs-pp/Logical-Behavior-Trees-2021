@@ -9,7 +9,6 @@ namespace GraphTheory.Editor
     public class InspectorTabElement : TabContentElement
     {
         private NodeGraph m_nodeGraph = null;
-        private bool m_nodeIsSelected = false;
         private NodeInspector m_nodeInspector = null;
         private GraphInspector m_graphInspector = null;
 
@@ -74,14 +73,6 @@ namespace GraphTheory.Editor
             public NodeInspector()
             {
                 // This can probably be broken out into its own uxml
-                m_imguiContainer = new IMGUIContainer();
-                m_imguiContainer.onGUIHandler += OnIMGUIDraw;
-                m_imguiContainer.style.display = DisplayStyle.None;
-                m_imguiContainer.StretchToParentSize();
-                Add(m_imguiContainer);
-                m_propertyField = new PropertyField();
-                m_propertyField.style.display = DisplayStyle.None;
-                Add(m_propertyField);
 
                 m_nodeTitleContainer = new VisualElement();
                 m_nodeNameLabel = new Label("name");
@@ -99,6 +90,15 @@ namespace GraphTheory.Editor
                 textInput.style.overflow = Overflow.Visible;
                 textInput.style.whiteSpace = WhiteSpace.Normal;
                 m_nodeTitleContainer.Add(m_nodeCommentField);
+
+                m_imguiContainer = new IMGUIContainer();
+                m_imguiContainer.onGUIHandler += OnIMGUIDraw;
+                m_imguiContainer.style.display = DisplayStyle.None;
+                Add(m_imguiContainer);
+
+                m_propertyField = new PropertyField();
+                m_propertyField.style.display = DisplayStyle.None;
+                Add(m_propertyField);
             }
 
             public void SetVisible(bool visible)
@@ -125,6 +125,7 @@ namespace GraphTheory.Editor
                 if (node.UseIMGUIPropertyDrawer)
                 {
                     m_imguiContainer.style.display = DisplayStyle.Flex;
+
                 }
                 else
                 {
@@ -174,10 +175,15 @@ namespace GraphTheory.Editor
 
         public class GraphInspector : VisualElement
         {
+            private SerializedObject m_nodeGraphSO = null;
+            private SerializedProperty m_graphPropertiesProp = null;
             private PropertyField m_propertyField = null;
+            private IMGUIContainer m_imguiContainer = null;
 
             public GraphInspector()
             {
+                m_imguiContainer = new IMGUIContainer();
+                m_imguiContainer.onGUIHandler += OnIMGUIDraw;
                 m_propertyField = new PropertyField();
             }
 
@@ -188,20 +194,48 @@ namespace GraphTheory.Editor
                 if (nodeGraph == null)
                     return;
 
-                SerializedObject nodeGraphSO = new SerializedObject(nodeGraph);
-                m_propertyField = new PropertyField(nodeGraphSO.FindProperty("GraphProperties"));
-                m_propertyField.Bind(nodeGraphSO);
-                Add(m_propertyField);
+                m_nodeGraphSO = new SerializedObject(nodeGraph);
+                m_graphPropertiesProp = m_nodeGraphSO.FindProperty("GraphProperties");
+                if (nodeGraph.UseIMGUIPropertyDrawer)
+                {
+                    m_imguiContainer.Bind(m_nodeGraphSO);
+                    Add(m_imguiContainer);
+                }
+                else
+                {
+                    m_propertyField = new PropertyField(m_graphPropertiesProp);
+                    m_propertyField.Bind(m_nodeGraphSO);
+                    Add(m_propertyField);
+                }
             }
 
             public void Reset()
             {
-                if (m_propertyField.parent == this)
+                m_nodeGraphSO = null;
+                m_graphPropertiesProp = null;
+                if (m_propertyField != null && m_propertyField.parent == this)
                 {
                     Remove(m_propertyField);
                     m_propertyField.Bind(null);
                     m_propertyField = null;
                 }
+                if (m_imguiContainer.parent == this)
+                {
+                    Remove(m_imguiContainer);
+                    m_imguiContainer.Bind(null);
+                }
+            }
+
+            private void OnIMGUIDraw()
+            {
+                if (m_nodeGraphSO == null)
+                    return;
+
+                m_nodeGraphSO.Update();
+
+                GUILayout.BeginVertical();
+                EditorGUILayout.PropertyField(m_graphPropertiesProp);
+                GUILayout.EndVertical();
             }
 
             public void SetVisible(bool visible)

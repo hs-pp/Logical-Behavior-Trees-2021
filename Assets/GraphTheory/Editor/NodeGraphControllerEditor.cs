@@ -18,10 +18,10 @@ namespace GraphTheory.Editor
             EditorGUILayout.PropertyField(graphProp);
             if (EditorGUI.EndChangeCheck())
             {
-                IGraphProperties properties = (graphProp.objectReferenceValue as NodeGraph)?.GraphProperties;
+                AGraphProperties properties = (graphProp.objectReferenceValue as NodeGraph)?.GraphProperties;
                 if (properties != null)
                 {
-                    IGraphProperties copiedProps = JsonUtility.FromJson(JsonUtility.ToJson(properties), properties.GetType()) as IGraphProperties;
+                    AGraphProperties copiedProps = JsonUtility.FromJson(JsonUtility.ToJson(properties), properties.GetType()) as AGraphProperties;
                     overridePropertiesProp.managedReferenceValue = copiedProps;
                 }
                 else

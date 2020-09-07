@@ -6,7 +6,7 @@ namespace GraphTheory
     public class GraphRunner
     {
         private NodeCollection m_nodeCollection = null;
-        public IGraphProperties GraphProperties { get; private set; }
+        public AGraphProperties GraphProperties { get; private set; }
 
         [NonSerialized]
         public Action OnGraphStart = null;
@@ -16,7 +16,7 @@ namespace GraphTheory
         public Action<ANode> OnNodeChange = null;
         private ANode m_currentNode = null;
 
-        public GraphRunner(NodeGraph nodeGraph, IGraphProperties graphProperties)
+        public GraphRunner(NodeGraph nodeGraph, AGraphProperties graphProperties)
         {
             m_nodeCollection = nodeGraph.NodeCollection;
             GraphProperties = graphProperties;
@@ -26,7 +26,7 @@ namespace GraphTheory
             }
         }
 
-        public GraphRunner(NodeCollection nodeCollection, IGraphProperties graphProperties)
+        public GraphRunner(NodeCollection nodeCollection, AGraphProperties graphProperties)
         {
             m_nodeCollection = nodeCollection;
             GraphProperties = graphProperties;

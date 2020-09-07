@@ -8,7 +8,7 @@ namespace GraphTheory
         [SerializeField]
         private NodeGraph m_nodeGraph;
         [SerializeReference]
-        private IGraphProperties m_overrideProperties = null;
+        private AGraphProperties m_overrideProperties = null;
         [SerializeField]
         private bool m_useOverrides = false;
         [SerializeField]
@@ -36,7 +36,7 @@ namespace GraphTheory
 
             m_graphRunner = new GraphRunner(m_nodeGraph, m_useOverrides
                 ? m_overrideProperties
-                : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as IGraphProperties);
+                : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as AGraphProperties);
 
             m_graphRunner.OnGraphStart += () => { Debug.Log("Start"); };
             m_graphRunner.OnGraphStop += () => { Debug.Log("Stop"); };

@@ -12,11 +12,12 @@ namespace GraphTheory
     public abstract class NodeGraph : ScriptableObject
     {
         public abstract Type GraphPropertiesType { get; }
+        public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
 
         [SerializeField]
         private NodeCollection m_nodeCollection;
         [SerializeReference]
-        public IGraphProperties GraphProperties;
+        public AGraphProperties GraphProperties;
 
         public void Awake()
         {
@@ -33,7 +34,7 @@ namespace GraphTheory
             m_nodeCollection = new NodeCollection();
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
-            GraphProperties = Activator.CreateInstance(GraphPropertiesType) as IGraphProperties;
+            GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
         }
 
         public static void AddOutportToNode(SerializedProperty serializedNode)
