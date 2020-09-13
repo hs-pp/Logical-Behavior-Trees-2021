@@ -1,5 +1,10 @@
 ﻿using GraphTheory.Editor.UIElements;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,9 +17,9 @@ namespace GraphTheory.Editor
         private NodeInspector m_nodeInspector = null;
         private GraphInspector m_graphInspector = null;
 
-        public InspectorTabElement()
+        public InspectorTabElement(NodeGraphView nodeGraphView)
         {
-            Add(m_graphInspector = new GraphInspector());
+            Add(m_graphInspector = new GraphInspector(nodeGraphView));
             Add(m_nodeInspector = new NodeInspector());
             m_nodeInspector.SetVisible(false);
         }
@@ -179,12 +184,15 @@ namespace GraphTheory.Editor
             private SerializedProperty m_graphPropertiesProp = null;
             private PropertyField m_propertyField = null;
             private IMGUIContainer m_imguiContainer = null;
+            private BlackboardContainer m_blackboardContainer = null;
 
-            public GraphInspector()
+            public GraphInspector(NodeGraphView nodeGraphView)
             {
                 m_imguiContainer = new IMGUIContainer();
                 m_imguiContainer.onGUIHandler += OnIMGUIDraw;
                 m_propertyField = new PropertyField();
+                m_blackboardContainer = new BlackboardContainer(nodeGraphView);
+                Add(m_blackboardContainer);
             }
 
             public void SetNodeGraph(NodeGraph nodeGraph)
@@ -199,13 +207,13 @@ namespace GraphTheory.Editor
                 if (nodeGraph.UseIMGUIPropertyDrawer)
                 {
                     m_imguiContainer.Bind(m_nodeGraphSO);
-                    Add(m_imguiContainer);
+                    Insert(0, m_imguiContainer);
                 }
                 else
                 {
                     m_propertyField = new PropertyField(m_graphPropertiesProp);
                     m_propertyField.Bind(m_nodeGraphSO);
-                    Add(m_propertyField);
+                    Insert(0, m_propertyField);
                 }
             }
 
@@ -243,5 +251,75 @@ namespace GraphTheory.Editor
                 style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
             }
         }
+
+        public class BlackboardContainer : VisualElement
+        {
+            private Blackboard m_blackboard = null;
+            private BlackboardData m_blackboardData = new BlackboardData();
+            private Dictionary<Type, Type> m_blackboardElementLookup = new Dictionary<Type, Type>();
+            
+            public BlackboardContainer(NodeGraphView nodeGraphView)
+            {
+                name = "blackboardcontainer";
+                m_blackboard = new Blackboard();
+                m_blackboard.windowed = true;
+                m_blackboard.graphView = nodeGraphView;
+                m_blackboard.addItemRequested += OnAddClicked;
+                Add(m_blackboard);
+
+                List<Type> blackboardElementImps = new List<Type>();
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                for (int i = 0; i < assemblies.Length; i++)
+                {
+                    blackboardElementImps.AddRange(assemblies[i].GetTypes().Where(x 
+                        => typeof(BlackboardElement).IsAssignableFrom(x)
+                        && x != typeof(BlackboardElement)
+                        && !x.IsAbstract));
+                }
+
+                for(int i = 0; i < blackboardElementImps.Count; i++)
+                {
+                    BlackboardElementTypeAttribute attr = blackboardElementImps[i].GetCustomAttribute<BlackboardElementTypeAttribute>();
+
+                    if (attr == null)
+                        continue;
+
+                    Type elementType = attr.ElementType;
+                    if(!m_blackboardElementLookup.ContainsKey(elementType))
+                    {
+                        m_blackboardElementLookup.Add(elementType, blackboardElementImps[i]);
+                        Debug.Log(elementType.ToString() + " => " + blackboardElementImps[i].ToString());
+                    }
+                }
+            }
+
+            private void OnAddClicked(Blackboard blackboard)
+            {
+                GenericMenu menu = new GenericMenu();
+                foreach(Type supportedType in m_blackboardElementLookup.Keys)
+                {
+                    menu.AddItem(new GUIContent(supportedType.Name), false, () =>
+                    {
+                        AddNewElement(supportedType);
+                    });
+                }
+                menu.ShowAsContext();
+            }
+
+            private void AddNewElement(Type type)
+            {
+                BlackboardElement newElement = Activator.CreateInstance(m_blackboardElementLookup[type]) as BlackboardElement;
+                BlackboardField bf = new BlackboardField { text = newElement.Name, typeText = newElement.Type.Name };
+                VisualElement descRow = new VisualElement();
+                TextField propertyVal = new TextField("Value:");
+                propertyVal.value = "yo";
+                descRow.Add(propertyVal);
+                Button deleteButton = new Button { text = "Delete" };
+                descRow.Add(deleteButton);
+                BlackboardRow br = new BlackboardRow(bf, descRow);
+                m_blackboard.Add(br);
+            }
+        }
+
     }
 }

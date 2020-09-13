@@ -95,7 +95,7 @@ namespace GraphTheory.Editor
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
             tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
-            tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement()));
+            tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement(m_nodeGraphView)));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();
