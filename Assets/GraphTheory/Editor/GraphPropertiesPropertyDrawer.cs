@@ -12,7 +12,9 @@ namespace GraphTheory.Editor
         {
             VisualElement visualElement = new VisualElement();
             SerializedProperty currentProperty = property.Copy();
-            if (currentProperty.NextVisible(true))
+            int depth = currentProperty.depth + 1;
+
+            if (currentProperty.Next(true))
             {
                 do
                 {
@@ -20,7 +22,7 @@ namespace GraphTheory.Editor
                     prop.Bind(property.serializedObject);
                     visualElement.Add(prop);
                 }
-                while (currentProperty.NextVisible(false));
+                while (currentProperty.NextVisible(true) && currentProperty.depth == depth);
             }
 
             return visualElement;
@@ -28,15 +30,21 @@ namespace GraphTheory.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            EditorGUI.BeginProperty(position, label, property);
+
             SerializedProperty currentProperty = property.Copy();
-            if (currentProperty.NextVisible(true))
+            int depth = currentProperty.depth + 1;
+            if (currentProperty.Next(true))
             {
                 do
                 {
+                    Debug.Log(currentProperty.propertyPath);
                     EditorGUILayout.PropertyField(currentProperty, true);
                 }
-                while (currentProperty.NextVisible(false));
+                while (currentProperty.NextVisible(true) && currentProperty.depth == depth);
             }
+
+            EditorGUI.EndProperty();
         }
     }
 }

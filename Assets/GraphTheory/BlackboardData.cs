@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class BlackboardData
 {
-    [SerializeField]
+    [SerializeReference]
     private List<BlackboardElement> m_allElements = new List<BlackboardElement>();
 
     public BlackboardElement AddElement(BlackboardElement element)

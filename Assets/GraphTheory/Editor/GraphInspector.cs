@@ -21,7 +21,7 @@ namespace GraphTheory.Editor
         private SerializedProperty m_graphPropertiesProp = null;
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
-        private BlackboardContainer m_blackboardContainer = null;
+        private BlackboardView m_blackboardView = null;
 
         public GraphInspector(NodeGraphView nodeGraphView)
         {
@@ -34,8 +34,8 @@ namespace GraphTheory.Editor
             m_imguiContainer.onGUIHandler += OnIMGUIDraw;
 
             m_blackboardArea = this.Q<VisualElement>(BLACKBOARD_AREA);
-            m_blackboardContainer = new BlackboardContainer(nodeGraphView);
-            m_blackboardArea.Add(m_blackboardContainer);
+            m_blackboardView = new BlackboardView(nodeGraphView);
+            m_blackboardArea.Add(m_blackboardView);
         }
 
         public void SetNodeGraph(NodeGraph nodeGraph)
@@ -64,13 +64,13 @@ namespace GraphTheory.Editor
         {
             m_nodeGraphSO = null;
             m_graphPropertiesProp = null;
-            if (m_propertyField != null && m_propertyField.parent == this)
+            if (m_propertyField != null && m_propertyField.parent == m_graphPropertiesArea)
             {
                 m_graphPropertiesArea.Remove(m_propertyField);
                 m_propertyField.Bind(null);
                 m_propertyField = null;
             }
-            if (m_imguiContainer.parent == this)
+            if (m_imguiContainer.parent == m_graphPropertiesArea)
             {
                 m_graphPropertiesArea.Remove(m_imguiContainer);
                 m_imguiContainer.Bind(null);
@@ -95,20 +95,16 @@ namespace GraphTheory.Editor
         }
     }
 
-    public class BlackboardContainer : VisualElement
+    public class BlackboardView : Blackboard
     {
-        private Blackboard m_blackboard = null;
         private BlackboardData m_blackboardData = new BlackboardData();
         private Dictionary<Type, Type> m_blackboardElementLookup = new Dictionary<Type, Type>();
 
-        public BlackboardContainer(NodeGraphView nodeGraphView)
+        public BlackboardView(NodeGraphView nodeGraphView)
         {
-            name = "blackboardcontainer";
-            m_blackboard = new Blackboard();
-            m_blackboard.windowed = true;
-            m_blackboard.graphView = nodeGraphView;
-            m_blackboard.addItemRequested += OnAddClicked;
-            Add(m_blackboard);
+            windowed = true;
+            graphView = nodeGraphView;
+            addItemRequested += OnAddClicked;
 
             List<Type> blackboardElementImps = new List<Type>();
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -160,7 +156,7 @@ namespace GraphTheory.Editor
             Button deleteButton = new Button { text = "Delete" };
             descRow.Add(deleteButton);
             BlackboardRow br = new BlackboardRow(bf, descRow);
-            m_blackboard.Add(br);
+            Add(br);
         }
     }
 }

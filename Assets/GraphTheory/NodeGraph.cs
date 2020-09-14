@@ -16,8 +16,10 @@ namespace GraphTheory
 
         [SerializeField]
         private NodeCollection m_nodeCollection;
-        [SerializeReference]
+        [SerializeReference, HideInInspector]
         public AGraphProperties GraphProperties;
+        [SerializeField]
+        private BlackboardData m_blackboardData;
 
         public void Awake()
         {
@@ -35,6 +37,10 @@ namespace GraphTheory
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
             GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
+            m_blackboardData = new BlackboardData();
+            m_blackboardData.AddElement(new StringBlackboardElement());
+            m_blackboardData.AddElement(new BoolBlackboardElement());
+
         }
 
         public static void AddOutportToNode(SerializedProperty serializedNode)
