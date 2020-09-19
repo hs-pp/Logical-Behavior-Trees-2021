@@ -9,10 +9,14 @@ public class BlackboardData
     [SerializeReference]
     private List<BlackboardElement> m_allElements = new List<BlackboardElement>();
 
-    public BlackboardElement AddElement(BlackboardElement element)
+    public BlackboardElement GetElement(string name)
+    {
+        return m_allElements.Find(x => x.Name == name);
+    }
+
+    public void AddElement(BlackboardElement element)
     {
         m_allElements.Add(element);
-        return element;
     }
 
     public void RemoveElement(string guid)

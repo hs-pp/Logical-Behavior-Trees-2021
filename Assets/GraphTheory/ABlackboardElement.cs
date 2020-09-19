@@ -5,12 +5,25 @@ using UnityEngine;
 public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationCallbackReceiver
 {
     [Serializable]
-    private class SerializeWrapper
+    private class ValueWrapper
     {
         public T value;
     }
 
-    private SerializeWrapper m_serializeWrapper = null;
+    [SerializeField]
+    private ValueWrapper m_valueWrapper = null;
+
+    public override object Value
+    {
+        get
+        {
+            return m_valueWrapper.value;
+        }
+        set
+        {
+            m_valueWrapper.value = (T)value;
+        }
+    }
 
     public ABlackboardElement()
     {
@@ -20,27 +33,26 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
 
         m_serializedType = Type.AssemblyQualifiedName;
 
+        object newValue;
         if (Nullable.GetUnderlyingType(Type) != null)
         {
-            Value = (T)Activator.CreateInstance(Type);
+            newValue = (T)Activator.CreateInstance(Type);
         }
         else
         {
             T defaultT = default;
-            Value = defaultT;
+            newValue = defaultT;
         }
 
-        m_serializeWrapper = new SerializeWrapper() { value = (T)Value };
+        m_valueWrapper = new ValueWrapper() { value = (T)newValue };
     }
 
     public void OnBeforeSerialize()
     {
-        m_serializedValue = JsonUtility.ToJson(m_serializeWrapper);
     }
 
     public void OnAfterDeserialize()
     {
-        m_serializeWrapper = JsonUtility.FromJson<SerializeWrapper>(m_serializedValue);
-        Value = m_serializeWrapper.value;
+        Type = Type.GetType(m_serializedType);
     }
 }

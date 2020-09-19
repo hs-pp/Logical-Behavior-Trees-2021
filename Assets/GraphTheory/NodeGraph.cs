@@ -28,6 +28,7 @@ namespace GraphTheory
 
 #if UNITY_EDITOR
         public NodeCollection NodeCollection { get { return m_nodeCollection; } }
+        public BlackboardData BlackboardData { get { return m_blackboardData; } }
         public Action<string> OnNodeOutportAdded = null;
         public Action<string, int> OnNodeOutportRemoved = null;
 

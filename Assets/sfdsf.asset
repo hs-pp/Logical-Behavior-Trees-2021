@@ -22,6 +22,9 @@ MonoBehaviour:
     m_allElements:
     - id: 2
     - id: 3
+    - id: 4
+    - id: 5
+    - id: 6
   references:
     version: 1
     00000000:
@@ -49,6 +52,8 @@ MonoBehaviour:
         m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
         m_serializedValue: '{"value":""}'
+        m_serializeWrapper:
+          value: 
     00000003:
       type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
@@ -57,3 +62,35 @@ MonoBehaviour:
         m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
         m_serializedValue: '{"value":false}'
+        m_serializeWrapper:
+          value: 0
+    00000004:
+      type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: 5500f98f-d702-4c5f-a6fb-939747a84c20
+        m_name: new String
+        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_serializedValue: '{"value":""}'
+        m_serializeWrapper:
+          value: 
+    00000005:
+      type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: f267b96f-23f3-487a-ba95-1a42a1f740b6
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_serializedValue: '{"value":false}'
+        m_serializeWrapper:
+          value: 0
+    00000006:
+      type: {class: FloatBlackboardElement, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: 9e648989-6835-4e1c-8e2c-2e93621d464c
+        m_name: new Single
+        m_serializedType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_serializedValue: '{"value":0.0}'
+        m_serializeWrapper:
+          value: 0
