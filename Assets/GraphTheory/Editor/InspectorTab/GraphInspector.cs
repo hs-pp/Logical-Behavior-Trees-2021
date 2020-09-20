@@ -41,7 +41,7 @@ namespace GraphTheory.Editor
                 return;
 
             m_nodeGraphSO = new SerializedObject(nodeGraph);
-            m_graphPropertiesProp = m_nodeGraphSO.FindProperty("GraphProperties");
+            m_graphPropertiesProp = m_nodeGraphSO.FindProperty(NodeGraph.GraphProperties_VarName);
             if (nodeGraph.UseIMGUIPropertyDrawer)
             {
                 m_imguiContainer.Bind(m_nodeGraphSO);

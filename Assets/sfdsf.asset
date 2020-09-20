@@ -23,9 +23,6 @@ MonoBehaviour:
     - id: 2
     - id: 3
     - id: 4
-    - id: 5
-    - id: 6
-    - id: 7
   references:
     version: 1
     00000000:
@@ -46,37 +43,10 @@ MonoBehaviour:
           serializedInt: 2
           serializedString: 
     00000002:
-      type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: f72d7b96-0049-47f1-a7c2-8bc878b64955
-        m_name: new String
-        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_valueWrapper:
-          Value: 
-    00000003:
-      type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: b2a0f67b-bb09-414c-9388-d05da396b32c
-        m_name: new String
-        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_valueWrapper:
-          Value: 
-    00000004:
-      type: {class: FloatBlackboardElement, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: db3f0156-d760-4f72-8eb6-c1c1847c0b2e
-        m_name: new Single
-        m_serializedType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_valueWrapper:
-          Value: 0
-    00000005:
       type: {class: sccBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: e02c00d3-d03d-4446-8ece-8c86c8e59b57
-        m_name: new serializablecoolclass
+        m_name: Yes
         m_serializedType: serializablecoolclass, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
         m_valueWrapper:
@@ -88,7 +58,7 @@ MonoBehaviour:
               stringone: 
               boolone: 0
               floatone: 0
-    00000006:
+    00000003:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: 95a60e75-1a20-4425-891d-2cc88b8c133b
@@ -97,7 +67,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 
-    00000007:
+    00000004:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: 9d4bd75a-39b2-4132-95a9-3264187e3ba3

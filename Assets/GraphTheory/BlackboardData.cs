@@ -25,6 +25,7 @@ public class BlackboardData
     }
 
 #if UNITY_EDITOR
+    /// For SerializedProperties ///
     public static readonly string AllElements_VarName = "m_allElements";
 #endif
 }

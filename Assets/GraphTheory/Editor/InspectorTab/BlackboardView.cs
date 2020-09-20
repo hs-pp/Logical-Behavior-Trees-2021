@@ -72,10 +72,10 @@ namespace GraphTheory.Editor
             if (nodeGraph == null)
                 return;
 
-
             m_blackboardData = nodeGraph.BlackboardData;
             SerializedObject serializedGraph = new SerializedObject(nodeGraph);
-            m_serializedBlackboardDataElements = serializedGraph.FindProperty("m_blackboardData").FindPropertyRelative(BlackboardData.AllElements_VarName);
+            m_serializedBlackboardDataElements = serializedGraph.FindProperty(NodeGraph.BlackboardData_VarName)
+                .FindPropertyRelative(BlackboardData.AllElements_VarName);
             LoadElements();
         }
 
@@ -136,6 +136,7 @@ namespace GraphTheory.Editor
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
             ClearElements();
             LoadElements();
+            Debug.LogWarning("If you see an \"Unsupported type error\", you can ignore it! It's a Unity bug!\nClick into this log to read more!");
         }
 
         private void AddBlackboardRow(BlackboardElement blackboardEle, SerializedProperty serializedBlackboardEle, int index)

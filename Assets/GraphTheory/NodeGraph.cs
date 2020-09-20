@@ -21,11 +21,6 @@ namespace GraphTheory
         [SerializeField]
         private BlackboardData m_blackboardData;
 
-        public void Awake()
-        {
-            //TODO: Register to runtime tracker here
-        }
-
 #if UNITY_EDITOR
         public NodeCollection NodeCollection { get { return m_nodeCollection; } }
         public BlackboardData BlackboardData { get { return m_blackboardData; } }
@@ -41,7 +36,11 @@ namespace GraphTheory
             m_blackboardData = new BlackboardData();
             m_blackboardData.AddElement(new StringBlackboardElement());
             m_blackboardData.AddElement(new BoolBlackboardElement());
+        }
 
+        public void Awake()
+        {
+            //TODO: Register to runtime tracker here
         }
 
         public static void AddOutportToNode(SerializedProperty serializedNode)
@@ -85,6 +84,12 @@ namespace GraphTheory
             serializedNode.serializedObject.ApplyModifiedProperties();
             OnNodeOutportRemoved?.Invoke(nodeId, index);
         }
+
+        /// For SerializedProperties ///
+        public static readonly string NodeCollection_VarName = "m_nodeCollection";
+        public static readonly string GraphProperties_VarName = "GraphProperties";
+        public static readonly string BlackboardData_VarName = "m_blackboardData";
+
 #endif
     }
 }
