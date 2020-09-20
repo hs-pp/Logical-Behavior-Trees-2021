@@ -22,6 +22,7 @@ namespace GraphTheory.Editor
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
         private Vector2 m_mousePosition = Vector2.zero;
 
+        public Action OnMouseClick = null;
         public Action<NodeView> OnRemoveNode = null;
         public Action<ISelectable> OnAddToSelection = null;
         public Action<ISelectable> OnRemoveFromSelection = null;
@@ -63,6 +64,7 @@ namespace GraphTheory.Editor
             canPasteSerializedData += CanUnserializeAndPaste;
             
             RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
+            RegisterCallback<MouseUpEvent>(x => { OnMouseClick?.Invoke(); }); 
             Undo.undoRedoPerformed += () => { SetNodeCollection(m_nodeGraph); };
         }
 

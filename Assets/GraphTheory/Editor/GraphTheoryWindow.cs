@@ -99,6 +99,7 @@ namespace GraphTheory.Editor
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
             m_mainTabGroup.StretchToParentSize();
+            m_nodeGraphView.OnMouseClick += () => { m_mainTabGroup.SelectTab(m_inspectorTab); };
             mainPanelLeft.Add(m_mainTabGroup);
             //=========================================================================================//
 

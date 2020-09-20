@@ -15,7 +15,7 @@ namespace GraphTheory.Editor.UIElements
 
         private VisualElement m_tabArea = null;
         private VisualElement m_contentArea = null;
-        private List<TabElement> m_allTabs = new List<TabElement>();
+        private List<TabElement> m_allTabs = new List<TabElement>(); //TODO: Convert this into a dictionary for max performance
 
         private TabGroupData m_tabGroupData = new TabGroupData();
 
@@ -54,6 +54,16 @@ namespace GraphTheory.Editor.UIElements
                 {
                     m_allTabs[i].SetIsSelected(false);
                 }
+            }
+        }
+
+        public void SelectTab(TabContentElement tab)
+        {
+            TabElement foundEle = m_allTabs.Find(x => x.Content == tab);
+            if(foundEle != null && !foundEle.IsSelected)
+            {
+                DeselectSelectedTabs();
+                foundEle.SetIsSelected(true);
             }
         }
 

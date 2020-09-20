@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -136,7 +134,7 @@ namespace GraphTheory.Editor
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
             ClearElements();
             LoadElements();
-            Debug.LogWarning("If you see an \"Unsupported type error\", you can ignore it! It's a Unity bug!\nClick into this log to read more!");
+            Debug.LogWarning("If you see an \"Unsupported type\" error, you can ignore it. It's a Unity bug!\nClick into this log to read more!");
         }
 
         private void AddBlackboardRow(BlackboardElement blackboardEle, SerializedProperty serializedBlackboardEle, int index)
