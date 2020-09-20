@@ -15,14 +15,8 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
 
     public override object Value
     {
-        get
-        {
-            return m_valueWrapper.value;
-        }
-        set
-        {
-            m_valueWrapper.value = (T)value;
-        }
+        get { return m_valueWrapper.value; }
+        set { m_valueWrapper.value = (T)value; } 
     }
 
     public ABlackboardElement()
@@ -47,12 +41,38 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
         m_valueWrapper = new ValueWrapper() { value = (T)newValue };
     }
 
-    public void OnBeforeSerialize()
-    {
-    }
+    public void OnBeforeSerialize() { }
 
     public void OnAfterDeserialize()
     {
         Type = Type.GetType(m_serializedType);
     }
+}
+
+// Default element types
+[BlackboardElementType(typeof(string))]
+public class StringBlackboardElement : ABlackboardElement<string> { }
+[BlackboardElementType(typeof(bool))]
+public class BoolBlackboardElement : ABlackboardElement<bool> { }
+[BlackboardElementType(typeof(float))]
+public class FloatBlackboardElement : ABlackboardElement<float> { }
+[BlackboardElementType(typeof(serializablecoolclass))]
+public class sccBlackboardElement : ABlackboardElement<serializablecoolclass> { }
+
+[Serializable]
+public class serializablecoolclass
+{
+    public string stringone;
+    public bool boolone;
+    public float floatone;
+    public serializablekindacoolclass kindacool;
+}
+
+[Serializable]
+public class serializablekindacoolclass
+{
+    public string stringone;
+    public bool boolone;
+    public float floatone;
+
 }

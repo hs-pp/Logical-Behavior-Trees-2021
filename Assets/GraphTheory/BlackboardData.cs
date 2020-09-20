@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,10 +24,3 @@ public class BlackboardData
         m_allElements.Remove(element);
     }
 }
-
-[BlackboardElementType(typeof(string))]
-public class StringBlackboardElement : ABlackboardElement<string> { }
-[BlackboardElementType(typeof(bool))]
-public class BoolBlackboardElement : ABlackboardElement<bool> { }
-[BlackboardElementType(typeof(float))]
-public class FloatBlackboardElement : ABlackboardElement<float> { }
