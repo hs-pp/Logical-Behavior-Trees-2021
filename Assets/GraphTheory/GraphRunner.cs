@@ -7,6 +7,7 @@ namespace GraphTheory
     {
         private NodeCollection m_nodeCollection = null;
         public AGraphProperties GraphProperties { get; private set; }
+        public BlackboardData BlackboardData { get; private set; }
 
         [NonSerialized]
         public Action OnGraphStart = null;
@@ -16,24 +17,23 @@ namespace GraphTheory
         public Action<ANode> OnNodeChange = null;
         private ANode m_currentNode = null;
 
-        public GraphRunner(NodeGraph nodeGraph, AGraphProperties graphProperties)
+        public GraphRunner(NodeGraph nodeGraph, AGraphProperties graphProperties, BlackboardData blackboardData)
         {
             m_nodeCollection = nodeGraph.NodeCollection;
             GraphProperties = graphProperties;
-            if(m_nodeCollection == null)
+            BlackboardData = blackboardData;
+
+            if (m_nodeCollection == null)
             {
                 Debug.LogError("No Graph attached to GraphRunner!");
             }
         }
 
-        public GraphRunner(NodeCollection nodeCollection, AGraphProperties graphProperties)
+        public GraphRunner(NodeCollection nodeCollection, AGraphProperties graphProperties, BlackboardData blackboardData)
         {
             m_nodeCollection = nodeCollection;
             GraphProperties = graphProperties;
-            if (m_nodeCollection == null)
-            {
-                Debug.LogError("No Graph attached to GraphRunner!");
-            }
+            BlackboardData = blackboardData;
         }
 
         public void StartGraph()

@@ -36,9 +36,17 @@ namespace GraphTheory.Editor
                 EditorGUILayout.PropertyField(useOverrides);
                 if (useOverrides.boolValue)
                 {
+                    EditorGUILayout.BeginVertical("box");
                     EditorGUILayout.PropertyField(overridePropertiesProp, true);
+                    EditorGUILayout.EndVertical();
                 }
             }
+
+            GUILayout.Space(8);
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("OnGraphStart"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("OnGraphStop"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("OnNodeChange"));
 
             serializedObject.ApplyModifiedProperties();
         }

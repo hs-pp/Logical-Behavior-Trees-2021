@@ -1,5 +1,6 @@
-﻿using GraphTheory;
+﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GraphTheory
 {
@@ -14,7 +15,13 @@ namespace GraphTheory
         [SerializeField]
         private bool m_createGraphInstance = false;
 
-        private GraphRunner m_graphRunner = null;
+        public UnityEvent OnGraphStart = null;
+        public UnityEvent OnGraphStop = null;
+        public UnityEvent<ANode> OnNodeChange = null;
+
+        public GraphRunner GraphRunner { get; private set; }
+        public AGraphProperties GraphProperties { get { return GraphRunner.GraphProperties; } }
+        public BlackboardData BlackboardData { get { return GraphRunner.BlackboardData; } }
 
         public void Start()
         {
@@ -34,24 +41,29 @@ namespace GraphTheory
                 m_nodeGraph = Instantiate(m_nodeGraph);
             }
 
-            m_graphRunner = new GraphRunner(m_nodeGraph, m_useOverrides
+            GraphRunner = new GraphRunner(m_nodeGraph, m_useOverrides
                 ? m_overrideProperties
-                : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as AGraphProperties);
+                : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as AGraphProperties,
+                JsonUtility.FromJson<BlackboardData>(JsonUtility.ToJson(m_nodeGraph.BlackboardData)));
 
-            m_graphRunner.OnGraphStart += () => { Debug.Log("Start"); };
-            m_graphRunner.OnGraphStop += () => { Debug.Log("Stop"); };
+            GraphRunner.OnGraphStart += () => { Debug.Log("Start"); };
+            GraphRunner.OnGraphStop += () => { Debug.Log("Stop"); };
 
-            m_graphRunner.StartGraph();
+            GraphRunner.OnGraphStart += () => { OnGraphStart?.Invoke(); };
+            GraphRunner.OnGraphStop += () => { OnGraphStop?.Invoke(); };
+            GraphRunner.OnNodeChange += (Node) => { OnNodeChange?.Invoke(Node); };
+
+            GraphRunner.StartGraph();
         }
 
         public void Update()
         {
-            m_graphRunner?.UpdateGraph();
+            GraphRunner?.UpdateGraph();
         }
 
         public void StopGraph()
         {
-            m_graphRunner?.StopGraph();
+            GraphRunner?.StopGraph();
         }
     }
 }

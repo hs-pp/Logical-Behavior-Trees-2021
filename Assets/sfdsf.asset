@@ -32,7 +32,7 @@ MonoBehaviour:
         m_outports:
         - Id: da6fd8d8-5119-43ca-9b46-252c3ba09635
           ConnectedNodeId: 
-        m_position: {x: 0, y: 0}
+        m_position: {x: 220, y: 127}
         m_comment: 
     00000001:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
@@ -70,7 +70,7 @@ MonoBehaviour:
     00000004:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
-        m_guid: 9d4bd75a-39b2-4132-95a9-3264187e3ba3
+        m_guid: 956d34ca-2e99-4e68-bdea-f0f820d8494a
         m_name: new String
         m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
