@@ -123,6 +123,13 @@ namespace GraphTheory.Editor
             m_allElementRows.Clear();
         }
 
+        /// <summary>
+        /// Deleting an element while there's another element that is a serializable class throws an "Unsupported Type (type)" error.
+        /// This seems like a harmless error and is already tracked by Unity.
+        /// https://issuetracker.unity3d.com/issues/deleting-an-element-of-list-with-serializereference-attribute-causes-an-error
+        /// and its related issue https://issuetracker.unity3d.com/issues/serializereference-non-serialized-initialized-fields-lose-their-values-when-entering-play-mode
+        /// </summary>
+        /// <param name="index"></param>
         private void DeleteElement(int index)
         {
             m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
