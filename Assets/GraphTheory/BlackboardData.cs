@@ -23,4 +23,8 @@ public class BlackboardData
         BlackboardElement element = m_allElements.Find(x => x.GUID == guid);
         m_allElements.Remove(element);
     }
+
+#if UNITY_EDITOR
+    public static readonly string AllElements_VarName = "m_allElements";
+#endif
 }

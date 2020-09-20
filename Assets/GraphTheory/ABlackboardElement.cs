@@ -7,7 +7,7 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
     [Serializable]
     private class ValueWrapper
     {
-        public T value;
+        public T Value;
     }
 
     [SerializeField]
@@ -15,8 +15,8 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
 
     public override object Value
     {
-        get { return m_valueWrapper.value; }
-        set { m_valueWrapper.value = (T)value; } 
+        get { return m_valueWrapper.Value; }
+        set { m_valueWrapper.Value = (T)value; } 
     }
 
     public ABlackboardElement()
@@ -38,7 +38,7 @@ public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationC
             newValue = defaultT;
         }
 
-        m_valueWrapper = new ValueWrapper() { value = (T)newValue };
+        m_valueWrapper = new ValueWrapper() { Value = (T)newValue };
     }
 
     public void OnBeforeSerialize() { }

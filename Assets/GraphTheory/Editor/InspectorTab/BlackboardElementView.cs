@@ -27,7 +27,7 @@ namespace GraphTheory.Editor
 
         public void ChangeElementName(string newName)
         {
-            m_serializedBlackboardElement.FindPropertyRelative("m_name").stringValue = newName;
+            m_serializedBlackboardElement.FindPropertyRelative(BlackboardElement.Name_VarName).stringValue = newName;
             m_serializedBlackboardElement.serializedObject.ApplyModifiedProperties();
             text = newName;
         }

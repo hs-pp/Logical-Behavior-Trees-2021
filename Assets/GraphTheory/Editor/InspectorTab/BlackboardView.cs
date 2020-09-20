@@ -17,7 +17,7 @@ namespace GraphTheory.Editor
         private Dictionary<Type, Type> m_blackboardElementLookup = new Dictionary<Type, Type>();
 
         private BlackboardData m_blackboardData = null;
-        private SerializedProperty m_serializedBlackboardData = null;
+        private SerializedProperty m_serializedBlackboardDataElements = null;
         private List<BlackboardRow> m_allElementRows = new List<BlackboardRow>();
 
         public BlackboardView(NodeGraphView nodeGraphView)
@@ -28,9 +28,9 @@ namespace GraphTheory.Editor
             editTextRequested += EditBlackboardFieldName;
             Undo.undoRedoPerformed += () =>
             {
-                if (m_serializedBlackboardData != null)
+                if (m_serializedBlackboardDataElements != null)
                 {
-                    m_serializedBlackboardData.serializedObject.Update();
+                    m_serializedBlackboardDataElements.serializedObject.Update();
                 }
 
                 ClearElements();
@@ -75,20 +75,20 @@ namespace GraphTheory.Editor
 
             m_blackboardData = nodeGraph.BlackboardData;
             SerializedObject serializedGraph = new SerializedObject(nodeGraph);
-            m_serializedBlackboardData = serializedGraph.FindProperty("m_blackboardData");
+            m_serializedBlackboardDataElements = serializedGraph.FindProperty("m_blackboardData").FindPropertyRelative(BlackboardData.AllElements_VarName);
             LoadElements();
         }
 
         private void Reset()
         {
             m_blackboardData = null;
-            m_serializedBlackboardData = null;
+            m_serializedBlackboardDataElements = null;
             ClearElements();
         }
 
         private void OnAddClicked(Blackboard blackboard)
         {
-            if (m_serializedBlackboardData == null || m_blackboardData == null)
+            if (m_serializedBlackboardDataElements == null || m_blackboardData == null)
             {
                 return;
             }
@@ -106,12 +106,11 @@ namespace GraphTheory.Editor
 
         private void LoadElements()
         {
-            SerializedProperty allElements = m_serializedBlackboardData.FindPropertyRelative("m_allElements");
-            for (int i = 0; i < allElements.arraySize; i++)
+            for (int i = 0; i < m_serializedBlackboardDataElements.arraySize; i++)
             {
-                string name = allElements.GetArrayElementAtIndex(i).FindPropertyRelative("m_name").stringValue;
+                string name = m_serializedBlackboardDataElements.GetArrayElementAtIndex(i).FindPropertyRelative(BlackboardElement.Name_VarName).stringValue;
                 BlackboardElement ele = m_blackboardData.GetElement(name);
-                AddBlackboardRow(ele, allElements.GetArrayElementAtIndex(i), i);
+                AddBlackboardRow(ele, m_serializedBlackboardDataElements.GetArrayElementAtIndex(i), i);
             }
         }
 
@@ -126,8 +125,8 @@ namespace GraphTheory.Editor
 
         private void DeleteElement(int index)
         {
-            m_serializedBlackboardData.FindPropertyRelative("m_allElements").DeleteArrayElementAtIndex(index);
-            m_serializedBlackboardData.serializedObject.ApplyModifiedProperties();
+            m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
+            m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
             ClearElements();
             LoadElements();
         }
@@ -136,7 +135,9 @@ namespace GraphTheory.Editor
         {
             BlackboardElementView elementView = new BlackboardElementView(blackboardEle, serializedBlackboardEle, () => { DeleteElement(index); });
 
-            PropertyField propF = new PropertyField(serializedBlackboardEle.FindPropertyRelative("m_valueWrapper").FindPropertyRelative("value"));
+            PropertyField propF = new PropertyField(serializedBlackboardEle
+                .FindPropertyRelative(BlackboardElement.ValueWrapper_VarName)
+                .FindPropertyRelative(BlackboardElement.Value_VarName));
             propF.Bind(serializedBlackboardEle.serializedObject);
 
             BlackboardRow br = new BlackboardRow(elementView, propF);
@@ -149,12 +150,10 @@ namespace GraphTheory.Editor
             BlackboardElement newElement = Activator.CreateInstance(m_blackboardElementLookup[type]) as BlackboardElement;
             m_blackboardData.AddElement(newElement);
 
-            m_serializedBlackboardData.serializedObject.Update();
+            m_serializedBlackboardDataElements.serializedObject.Update();
 
-            int lastIndex = m_serializedBlackboardData.FindPropertyRelative("m_allElements").arraySize - 1;
-            SerializedProperty serializedBlackboardElement = m_serializedBlackboardData
-                .FindPropertyRelative("m_allElements")
-                .GetArrayElementAtIndex(lastIndex);
+            int lastIndex = m_serializedBlackboardDataElements.arraySize - 1;
+            SerializedProperty serializedBlackboardElement = m_serializedBlackboardDataElements.GetArrayElementAtIndex(lastIndex);
 
             AddBlackboardRow(newElement, serializedBlackboardElement, lastIndex);
         }
