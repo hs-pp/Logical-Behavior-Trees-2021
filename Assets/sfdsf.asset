@@ -15,14 +15,15 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
     m_entryNodeId: f6a5af57-3db2-4260-a83c-d8ff56e12c35
   GraphProperties:
-    id: 1
+    id: 2
   m_blackboardData:
     m_allElements:
-    - id: 2
     - id: 3
     - id: 4
+    - id: 5
   references:
     version: 1
     00000000:
@@ -31,10 +32,19 @@ MonoBehaviour:
         m_id: f6a5af57-3db2-4260-a83c-d8ff56e12c35
         m_outports:
         - Id: da6fd8d8-5119-43ca-9b46-252c3ba09635
-          ConnectedNodeId: 
+          ConnectedNodeId: 685408e9-c6f0-4a14-82a5-d32af5593cdb
         m_position: {x: 220, y: 127}
-        m_comment: 
+        m_comment: This is a comment
     00000001:
+      type: {class: SampleNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 685408e9-c6f0-4a14-82a5-d32af5593cdb
+        m_outports:
+        - Id: 7321dc7d-1095-4c2c-be5d-b2c03b62c348
+          ConnectedNodeId: 
+        m_position: {x: 370, y: 28}
+        m_comment: 
+    00000002:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6
@@ -42,7 +52,7 @@ MonoBehaviour:
         serializedClass:
           serializedInt: 2
           serializedString: 
-    00000002:
+    00000003:
       type: {class: sccBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: e02c00d3-d03d-4446-8ece-8c86c8e59b57
@@ -58,7 +68,7 @@ MonoBehaviour:
               stringone: 
               boolone: 0
               floatone: 0
-    00000003:
+    00000004:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: 95a60e75-1a20-4425-891d-2cc88b8c133b
@@ -67,7 +77,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 
-    00000004:
+    00000005:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
         m_guid: 956d34ca-2e99-4e68-bdea-f0f820d8494a

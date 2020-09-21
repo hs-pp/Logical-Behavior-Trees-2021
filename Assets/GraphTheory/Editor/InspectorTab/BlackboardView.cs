@@ -18,6 +18,9 @@ namespace GraphTheory.Editor
         private SerializedProperty m_serializedBlackboardDataElements = null;
         private List<BlackboardRow> m_allElementRows = new List<BlackboardRow>();
 
+        public Action<BlackboardElement> OnAddBlackboardElement = null;
+        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
+
         public BlackboardView(NodeGraphView nodeGraphView)
         {
             windowed = true;
@@ -130,6 +133,8 @@ namespace GraphTheory.Editor
         /// <param name="index"></param>
         private void DeleteElement(int index)
         {
+            OnRemoveBlackboardElement?.Invoke(m_blackboardData.GetElement(index));
+
             m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
             ClearElements();
@@ -162,6 +167,9 @@ namespace GraphTheory.Editor
             SerializedProperty serializedBlackboardElement = m_serializedBlackboardDataElements.GetArrayElementAtIndex(lastIndex);
 
             AddBlackboardRow(newElement, serializedBlackboardElement, lastIndex);
+
+            Debug.Log("should happen here");
+            OnAddBlackboardElement?.Invoke(newElement);
         }
 
         private void EditBlackboardFieldName(Blackboard blackboard, VisualElement blackboardElementView, string newName)

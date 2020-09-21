@@ -10,7 +10,7 @@ namespace GraphTheory
         [SerializeField, HideInInspector]
         private string m_id = Guid.NewGuid().ToString();
         public string Id { get { return m_id; } }
-        [SerializeField]
+        [SerializeField, HideInInspector]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
         public virtual void OnNodeEnter(GraphRunner graphRunner) { }

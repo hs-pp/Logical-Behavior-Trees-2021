@@ -13,6 +13,11 @@ public class BlackboardData
         return m_allElements.Find(x => x.Name == name);
     }
 
+    public BlackboardElement GetElement(int index)
+    {
+        return m_allElements[index];
+    }
+
     public void AddElement(BlackboardElement element)
     {
         m_allElements.Add(element);

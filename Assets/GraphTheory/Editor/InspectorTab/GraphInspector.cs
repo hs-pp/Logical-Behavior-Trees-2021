@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,6 +18,9 @@ namespace GraphTheory.Editor
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
         private BlackboardView m_blackboardView = null;
+
+        public Action<BlackboardElement> OnAddBlackboardElement { get { return m_blackboardView.OnAddBlackboardElement; } set { m_blackboardView.OnAddBlackboardElement = value; } }
+        public Action<BlackboardElement> OnRemoveBlackboardElement { get { return m_blackboardView.OnRemoveBlackboardElement; } set { m_blackboardView.OnRemoveBlackboardElement = value; } }
 
         public GraphInspector(NodeGraphView nodeGraphView)
         {

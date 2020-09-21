@@ -101,6 +101,10 @@ namespace GraphTheory.Editor
             m_mainTabGroup.StretchToParentSize();
             m_nodeGraphView.OnMouseClick += () => { m_mainTabGroup.SelectTab(m_inspectorTab); };
             mainPanelLeft.Add(m_mainTabGroup);
+
+            // Other setup
+            m_inspectorTab.GraphInspector.OnAddBlackboardElement += (addedEle) => { m_nodeGraphView.OnAddBlackboardElement?.Invoke(addedEle); };
+            m_inspectorTab.GraphInspector.OnRemoveBlackboardElement += (removedEle) => { m_nodeGraphView.OnRemoveBlackboardElement?.Invoke(removedEle); };
             //=========================================================================================//
 
             //==================================Callback Listeners=====================================//

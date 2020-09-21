@@ -27,9 +27,14 @@ namespace GraphTheory.Editor
         public Action<ISelectable> OnAddToSelection = null;
         public Action<ISelectable> OnRemoveFromSelection = null;
         public Action OnClearSelection = null;
+        public Action<BlackboardElement> OnAddBlackboardElement = null;
+        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
 
         public NodeGraphView() 
         {
+            OnAddBlackboardElement += (ele) => { Debug.Log("Added ele"); };
+            OnRemoveBlackboardElement += (ele) => { Debug.Log("Removed ele"); };
+
             styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/NodeGraph/NodeGraphView"));
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
