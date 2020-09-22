@@ -37,7 +37,9 @@ namespace GraphTheory.Editor
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
             m_nodeViewDrawer = nodeViewDrawer;
-            m_nodeViewDrawer.SetNodeView(this, SerializedNode);
+            m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph);
+            m_nodeGraphView.OnAddBlackboardElement += HandleOnAddBlackboardElement;
+            m_nodeGraphView.OnRemoveBlackboardElement += HandleOnRemoveBlackboardElement;
 
             title = m_nodeViewDrawer.DisplayName;
             m_nodeDisplayContainers = new NodeDisplayContainers(this);
@@ -86,6 +88,7 @@ namespace GraphTheory.Editor
 
             //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
         }
+
         protected override void ToggleCollapse()
         {
             base.ToggleCollapse();
@@ -114,6 +117,9 @@ namespace GraphTheory.Editor
 
         public void OnUnloadView()
         {
+            m_nodeGraphView.OnAddBlackboardElement -= HandleOnAddBlackboardElement;
+            m_nodeGraphView.OnRemoveBlackboardElement -= HandleOnRemoveBlackboardElement;
+
             foreach (EdgeView edgeView in m_edgeViews.Values)
             {
                 if (m_nodeGraphView.Contains(edgeView))
@@ -239,6 +245,16 @@ namespace GraphTheory.Editor
             //collectedElementSet.UnionWith(outputContainer.Children().OfType<Port>().SelectMany(c => c.connections)
             //    .Where(d => (d.capabilities & Capabilities.Deletable) != 0)
             //    .Cast<GraphElement>());
+        }
+
+        private void HandleOnAddBlackboardElement(BlackboardElement element)
+        {
+            m_nodeViewDrawer?.OnAddBlackboardElement?.Invoke(element);
+        }
+
+        private void HandleOnRemoveBlackboardElement(BlackboardElement element)
+        {
+            m_nodeViewDrawer?.OnRemoveBlackboardElement?.Invoke(element);
         }
     }
 }

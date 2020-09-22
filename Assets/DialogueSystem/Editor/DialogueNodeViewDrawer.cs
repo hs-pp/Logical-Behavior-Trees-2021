@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomNodeDrawer(typeof(DialogueNode))]
+[CustomNodeViewDrawer(typeof(DialogueNode))]
 public class DialogueNodeViewDrawer : NodeViewDrawer
 {
     

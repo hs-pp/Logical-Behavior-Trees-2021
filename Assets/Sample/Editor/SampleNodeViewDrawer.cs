@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomNodeDrawer(typeof(SampleNode))]
+[CustomNodeViewDrawer(typeof(SampleNode))]
 public class SampleNodeViewDrawer : NodeViewDrawer
 {
     public override string DisplayName { get { return "Sample Node"; } }

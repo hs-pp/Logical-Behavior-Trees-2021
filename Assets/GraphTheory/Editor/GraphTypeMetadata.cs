@@ -28,7 +28,7 @@ namespace GraphTheory.Editor
 
                 m_allNodeDrawers.AddRange(assemblies[i].GetTypes().Where(x => typeof(NodeViewDrawer).IsAssignableFrom(x)
                     && !x.IsAbstract
-                    && x.GetCustomAttribute<CustomNodeDrawerAttribute>() != null));
+                    && x.GetCustomAttribute<CustomNodeViewDrawerAttribute>() != null));
             }
 
             FindNodeDrawerTypes(UniversalNodeTypes, m_universalNodeViewDrawers);
@@ -67,7 +67,7 @@ namespace GraphTheory.Editor
             nodeDrawers.Clear();
             for(int i = 0; i < nodeTypes.Count; i++)
             {
-                Type nodeDrawer = m_allNodeDrawers.Find(x => x.GetCustomAttribute<CustomNodeDrawerAttribute>().NodeType == nodeTypes[i]);
+                Type nodeDrawer = m_allNodeDrawers.Find(x => x.GetCustomAttribute<CustomNodeViewDrawerAttribute>().NodeType == nodeTypes[i]);
                 if (nodeDrawer != null)
                 {
                     nodeDrawers.Add(nodeTypes[i], nodeDrawer);

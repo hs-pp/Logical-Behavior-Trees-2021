@@ -2,10 +2,10 @@
 
 namespace GraphTheory.Editor
 {
-    public class CustomNodeDrawerAttribute : Attribute
+    public class CustomNodeViewDrawerAttribute : Attribute
     {
         public Type NodeType { get; private set; }
-        public CustomNodeDrawerAttribute(Type nodeType)
+        public CustomNodeViewDrawerAttribute(Type nodeType)
         {
             NodeType = nodeType;
         }

@@ -1,4 +1,5 @@
 ﻿using GraphTheory.Editor.UIElements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -12,14 +13,22 @@ namespace GraphTheory.Editor
         protected NodeView TargetView { get; private set; }
         protected ANode Target { get { return TargetView.Node; } }
         protected SerializedProperty TargetProperty { get; private set; }
+        protected NodeGraph NodeGraph { get; private set; }
+        protected AGraphProperties GraphProperties { get { return NodeGraph.GraphProperties; } }
+        protected BlackboardData BlackboardData { get { return NodeGraph.BlackboardData; } }
+
+        public Action<BlackboardElement> OnAddBlackboardElement = null;
+        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
+
         public virtual string DisplayName { get { return Target.GetType().Name; } }
         public virtual Vector2 NodeSize { get { return new Vector2(600, 300); } }
         public virtual Color NodeColor { get { return Color.gray; } }
 
-        public void SetNodeView(NodeView nodeView, SerializedProperty serializedNode)
+        public void SetNodeView(NodeView nodeView, SerializedProperty serializedNode, NodeGraph nodeGraph)
         {
             TargetView = nodeView;
             TargetProperty = serializedNode;
+            NodeGraph = nodeGraph;
         }
 
         public void DrawNodeView(NodeDisplayContainers nodeDisplayContainers)

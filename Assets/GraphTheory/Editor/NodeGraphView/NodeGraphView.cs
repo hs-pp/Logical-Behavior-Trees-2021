@@ -16,6 +16,7 @@ namespace GraphTheory.Editor
         private IEdgeConnectorListener m_edgeConectorListener = null;
 
         private NodeGraph m_nodeGraph = null;
+        public NodeGraph NodeGraph { get { return m_nodeGraph; } }
         private GraphTypeMetadata m_graphTypeMetadata = null;
         private NodeCollection m_nodeCollection = null;
         private SerializedProperty m_nodeListProp = null;
