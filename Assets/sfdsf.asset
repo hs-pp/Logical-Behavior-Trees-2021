@@ -16,14 +16,16 @@ MonoBehaviour:
     m_nodes:
     - id: 0
     - id: 1
+    - id: 2
     m_entryNodeId: f6a5af57-3db2-4260-a83c-d8ff56e12c35
   GraphProperties:
-    id: 2
+    id: 3
   m_blackboardData:
     m_allElements:
-    - id: 3
     - id: 4
     - id: 5
+    - id: 6
+    - id: 7
   references:
     version: 1
     00000000:
@@ -45,6 +47,16 @@ MonoBehaviour:
         m_position: {x: 370, y: 28}
         m_comment: 
     00000002:
+      type: {class: BlackboardConditional, ns: GraphTheory.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 720fadbf-248f-49e0-b7d6-f3b25367e591
+        m_outports:
+        - Id: 718fd147-cdf6-4fdf-89fc-98d4e89e6a98
+          ConnectedNodeId: 
+        m_position: {x: 127, y: 314}
+        m_comment: dddd
+        m_blackboardElementId: c11431ad-fe49-4792-a858-048778a52b1c
+    00000003:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6
@@ -52,37 +64,39 @@ MonoBehaviour:
         serializedClass:
           serializedInt: 2
           serializedString: 
-    00000003:
-      type: {class: sccBlackboardElement, ns: , asm: Assembly-CSharp}
-      data:
-        m_guid: e02c00d3-d03d-4446-8ece-8c86c8e59b57
-        m_name: Yes
-        m_serializedType: serializablecoolclass, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_valueWrapper:
-          Value:
-            stringone: wowo wtf huge bug
-            boolone: 0
-            floatone: 0
-            kindacool:
-              stringone: 
-              boolone: 0
-              floatone: 0
     00000004:
-      type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
+      type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
-        m_guid: 95a60e75-1a20-4425-891d-2cc88b8c133b
-        m_name: new String
-        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        m_guid: bee9103f-0876-49d1-9c88-3c615013d52b
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
-          Value: 
+          Value: 0
     00000005:
-      type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
+      type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
-        m_guid: 956d34ca-2e99-4e68-bdea-f0f820d8494a
-        m_name: new String
-        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        m_guid: e7d2743e-55ad-41c4-996d-2adff78d3967
+        m_name: yesbool
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
-          Value: 
+          Value: 1
+    00000006:
+      type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: d8b77b6c-0b25-4627-9008-786ed9dd571a
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0
+    00000007:
+      type: {class: FloatBlackboardElement, ns: , asm: Assembly-CSharp}
+      data:
+        m_guid: c11431ad-fe49-4792-a858-048778a52b1c
+        m_name: new Single
+        m_serializedType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 24.3

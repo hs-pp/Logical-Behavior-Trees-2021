@@ -16,37 +16,41 @@ namespace GraphTheory.Editor
         protected NodeGraph NodeGraph { get; private set; }
         protected AGraphProperties GraphProperties { get { return NodeGraph.GraphProperties; } }
         protected BlackboardData BlackboardData { get { return NodeGraph.BlackboardData; } }
+        private NodeDisplayContainers m_nodeDisplayContainers = null;
 
-        public Action<BlackboardElement> OnAddBlackboardElement = null;
-        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
+        public Action OnBlackboardElementChanged = null;
 
         public virtual string DisplayName { get { return Target.GetType().Name; } }
         public virtual Vector2 NodeSize { get { return new Vector2(600, 300); } }
         public virtual Color NodeColor { get { return Color.gray; } }
 
-        public void SetNodeView(NodeView nodeView, SerializedProperty serializedNode, NodeGraph nodeGraph)
+        public void SetNodeView(NodeView nodeView, SerializedProperty serializedNode, NodeGraph nodeGraph, NodeDisplayContainers nodeDisplayContainers)
         {
             TargetView = nodeView;
             TargetProperty = serializedNode;
             NodeGraph = nodeGraph;
+            m_nodeDisplayContainers = nodeDisplayContainers;
         }
 
-        public void DrawNodeView(NodeDisplayContainers nodeDisplayContainers)
+        public void Repaint()
         {
-            nodeDisplayContainers.ClearDisplays();
+            OnRepaint();
 
-            OnDrawHeader(nodeDisplayContainers.HeaderContainer);
-            OnDrawTitle(nodeDisplayContainers.PreTitleContainer, nodeDisplayContainers.PostTitleContainer);
-            OnDrawPrimaryBody(nodeDisplayContainers.PrimaryBodyContainer);
-            OnDrawInport(nodeDisplayContainers.InportContainer);
+            m_nodeDisplayContainers.ClearDisplays();
+
+            OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
+            OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
+            OnDrawPrimaryBody(m_nodeDisplayContainers.PrimaryBodyContainer);
+            OnDrawInport(m_nodeDisplayContainers.InportContainer);
             for (int i = 0; i < Target.NumOutports; i++)
             {
-                OnDrawOutport(i, nodeDisplayContainers.OutportContainers[i]);
+                OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
             }
-            OnDrawSecondaryBody(nodeDisplayContainers.SecondaryBodyContainer);
-            OnDrawFooter(nodeDisplayContainers.FooterContainer);
+            OnDrawSecondaryBody(m_nodeDisplayContainers.SecondaryBodyContainer);
+            OnDrawFooter(m_nodeDisplayContainers.FooterContainer);
         }
 
+        public virtual void OnSetup() { }
         public virtual void OnDrawHeader(VisualElement headerContainer) { }
         public virtual void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer) { }
         public virtual void OnDrawPrimaryBody(VisualElement primaryBodyContainer) { }
@@ -54,5 +58,6 @@ namespace GraphTheory.Editor
         public virtual void OnDrawOutport(int outportIndex, OutportContainer outportContainer) { }
         public virtual void OnDrawSecondaryBody(VisualElement secondaryBodyContainer) { }
         public virtual void OnDrawFooter(VisualElement footerContainer) { }
+        public virtual void OnRepaint() { }
     }
 }

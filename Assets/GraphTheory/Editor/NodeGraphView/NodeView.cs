@@ -36,13 +36,16 @@ namespace GraphTheory.Editor
             SerializedNode = serializedNode;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
+
+            m_nodeDisplayContainers = new NodeDisplayContainers(this);
             m_nodeViewDrawer = nodeViewDrawer;
-            m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph);
+            m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph, m_nodeDisplayContainers);
+            m_nodeViewDrawer.OnSetup();
+
             m_nodeGraphView.OnAddBlackboardElement += HandleOnAddBlackboardElement;
             m_nodeGraphView.OnRemoveBlackboardElement += HandleOnRemoveBlackboardElement;
 
             title = m_nodeViewDrawer.DisplayName;
-            m_nodeDisplayContainers = new NodeDisplayContainers(this);
 
             bool isEntryNode = Node is BuiltInNodes.EntryNode;
             if (isEntryNode)
@@ -79,7 +82,7 @@ namespace GraphTheory.Editor
             }
 
             // Draw node
-            m_nodeViewDrawer.DrawNodeView(m_nodeDisplayContainers);
+            m_nodeViewDrawer.Repaint();
 
             RefreshExpandedState();
             RefreshPorts();
@@ -117,9 +120,6 @@ namespace GraphTheory.Editor
 
         public void OnUnloadView()
         {
-            m_nodeGraphView.OnAddBlackboardElement -= HandleOnAddBlackboardElement;
-            m_nodeGraphView.OnRemoveBlackboardElement -= HandleOnRemoveBlackboardElement;
-
             foreach (EdgeView edgeView in m_edgeViews.Values)
             {
                 if (m_nodeGraphView.Contains(edgeView))
@@ -128,6 +128,9 @@ namespace GraphTheory.Editor
                 }
             }
             m_edgeViews.Clear();
+
+            m_nodeGraphView.OnAddBlackboardElement -= HandleOnAddBlackboardElement;
+            m_nodeGraphView.OnRemoveBlackboardElement -= HandleOnRemoveBlackboardElement;
         }
 
         public void OnDeleteNode()
@@ -249,12 +252,12 @@ namespace GraphTheory.Editor
 
         private void HandleOnAddBlackboardElement(BlackboardElement element)
         {
-            m_nodeViewDrawer?.OnAddBlackboardElement?.Invoke(element);
+            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
         }
 
         private void HandleOnRemoveBlackboardElement(BlackboardElement element)
         {
-            m_nodeViewDrawer?.OnRemoveBlackboardElement?.Invoke(element);
+            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
         }
     }
 }

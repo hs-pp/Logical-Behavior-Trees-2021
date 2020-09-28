@@ -82,6 +82,13 @@ namespace GraphTheory.Editor
                 m_propertyField = new PropertyField(m_selectedNodeProperty);
                 m_propertyField.Bind(m_selectedNodeProperty.serializedObject);
                 m_propertyField.style.display = DisplayStyle.Flex;
+
+                // This requires Unity 2020.2 to work correctly https://forum.unity.com/threads/uielements-developer-guide.648043/#post-6073137
+                m_propertyField.RegisterCallback<SerializedPropertyChangeEvent>(x =>
+                {
+                    Debug.Log("Changes to SerializedProperty");
+                });
+
                 Add(m_propertyField);
             }
         }

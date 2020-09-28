@@ -29,6 +29,11 @@ public class BlackboardData
         m_allElements.Remove(element);
     }
 
+    public List<BlackboardElement> GetAllElements()
+    {
+        return m_allElements;
+    }
+
 #if UNITY_EDITOR
     /// For SerializedProperties ///
     public static readonly string AllElements_VarName = "m_allElements";

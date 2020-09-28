@@ -21,7 +21,7 @@ namespace GraphTheory.Editor
 
         private GraphWindowData m_graphWindowData = null;
         private Toolbar m_toolbar = null;
-        private TwoPaneSplitView m_mainSplitView = null;
+        private UIElements.TwoPaneSplitView m_mainSplitView = null;
         private TabGroupElement m_mainTabGroup = null;
         private LibraryTabElement m_libraryTab = null;
         private InspectorTabElement m_inspectorTab = null;
@@ -46,7 +46,7 @@ namespace GraphTheory.Editor
             //==================================Load Initial Data======================================//
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/GraphTheoryWindow");
             xmlAsset.CloneTree(rootVisualElement);
-            m_mainSplitView = rootVisualElement.Q<TwoPaneSplitView>(MAIN_SPLITVIEW);
+            m_mainSplitView = rootVisualElement.Q<UIElements.TwoPaneSplitView>(MAIN_SPLITVIEW);
             //=========================================================================================//
 
             //==================================Register Toolbar=======================================//
