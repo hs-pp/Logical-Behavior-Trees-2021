@@ -12,7 +12,7 @@ namespace GraphTheory.Editor
         public InspectorTabElement(NodeGraphView nodeGraphView)
         {
             Add(GraphInspector = new GraphInspector(nodeGraphView));
-            Add(NodeInspector = new NodeInspector());
+            Add(NodeInspector = new NodeInspector(nodeGraphView));
             NodeInspector.SetVisible(false);
         }
 

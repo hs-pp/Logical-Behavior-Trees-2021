@@ -7,6 +7,7 @@ namespace GraphTheory.Editor
 {
     public class NodeInspector : VisualElement
     {
+        private NodeGraphView m_nodeGraphView = null;
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
         private SerializedProperty m_selectedNodeProperty = null;
@@ -16,10 +17,10 @@ namespace GraphTheory.Editor
         private Label m_nodeIdLabel = null;
         private TextField m_nodeCommentField = null;
 
-        public NodeInspector()
+        public NodeInspector(NodeGraphView nodeGraphView)
         {
             // This can probably be broken out into its own uxml
-
+            m_nodeGraphView = nodeGraphView;
             m_nodeTitleContainer = new VisualElement();
             m_nodeNameLabel = new Label("name");
             m_nodeNameLabel.style.fontSize = 40;
@@ -86,7 +87,7 @@ namespace GraphTheory.Editor
                 // This requires Unity 2020.2 to work correctly https://forum.unity.com/threads/uielements-developer-guide.648043/#post-6073137
                 m_propertyField.RegisterCallback<SerializedPropertyChangeEvent>(x =>
                 {
-                    Debug.Log("Changes to SerializedProperty");
+                    m_nodeGraphView.GetNodeViewById(node.Id).HandleOnSerializedPropertyChanged();
                 });
 
                 Add(m_propertyField);

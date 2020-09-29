@@ -59,5 +59,6 @@ namespace GraphTheory.Editor
         public virtual void OnDrawSecondaryBody(VisualElement secondaryBodyContainer) { }
         public virtual void OnDrawFooter(VisualElement footerContainer) { }
         public virtual void OnRepaint() { }
+        public virtual void OnSerializedPropertyChanged() { }
     }
 }

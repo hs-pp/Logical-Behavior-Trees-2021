@@ -30,6 +30,7 @@ namespace GraphTheory.BuiltInNodes
                 return Element != null ? $"{Element.Name} ({Element.Type.Name})" : "NONE (NONE)";
             }
         }
+
         public override void OnRepaint()
         {
             List<BlackboardElementPopupEle> elements = new List<BlackboardElementPopupEle>();
@@ -50,6 +51,10 @@ namespace GraphTheory.BuiltInNodes
             primaryBodyContainer.Add(m_popupField);
         }
 
+        public override void OnSerializedPropertyChanged()
+        {
+            Repaint();
+        }
 
     }
 }
