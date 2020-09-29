@@ -400,6 +400,14 @@ namespace GraphTheory.Editor
             }
             return clipboardElements;
         }
+
+        public void CallAllNodeViewDrawerBlackboardElementChanged()
+        {
+            foreach(NodeView nodeView in m_nodeViews.Values)
+            {
+                nodeView.HandleOnBlackboardElementNameChanged();
+            }
+        }
     }
 }
 

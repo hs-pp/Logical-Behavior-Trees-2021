@@ -8,12 +8,16 @@ public class BlackboardData
     [SerializeReference]
     private List<BlackboardElement> m_allElements = new List<BlackboardElement>();
 
-    public BlackboardElement GetElement(string name)
+    public BlackboardElement GetElementByName(string name)
     {
         return m_allElements.Find(x => x.Name == name);
     }
+    public BlackboardElement GetElementById(string id)
+    {
+        return m_allElements.Find(x => x.GUID == id);
+    }
 
-    public BlackboardElement GetElement(int index)
+    public BlackboardElement GetElementAt(int index)
     {
         return m_allElements[index];
     }

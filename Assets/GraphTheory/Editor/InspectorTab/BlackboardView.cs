@@ -20,6 +20,7 @@ namespace GraphTheory.Editor
 
         public Action<BlackboardElement> OnAddBlackboardElement = null;
         public Action<BlackboardElement> OnRemoveBlackboardElement = null;
+        public Action OnBlackboardElementNameChanged = null;
 
         public BlackboardView(NodeGraphView nodeGraphView)
         {
@@ -110,7 +111,7 @@ namespace GraphTheory.Editor
             for (int i = 0; i < m_serializedBlackboardDataElements.arraySize; i++)
             {
                 string name = m_serializedBlackboardDataElements.GetArrayElementAtIndex(i).FindPropertyRelative(BlackboardElement.Name_VarName).stringValue;
-                BlackboardElement ele = m_blackboardData.GetElement(name);
+                BlackboardElement ele = m_blackboardData.GetElementByName(name);
                 AddBlackboardRow(ele, m_serializedBlackboardDataElements.GetArrayElementAtIndex(i), i);
             }
         }
@@ -133,7 +134,7 @@ namespace GraphTheory.Editor
         /// <param name="index"></param>
         private void DeleteElement(int index)
         {
-            OnRemoveBlackboardElement?.Invoke(m_blackboardData.GetElement(index));
+            OnRemoveBlackboardElement?.Invoke(m_blackboardData.GetElementAt(index));
 
             m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
@@ -175,6 +176,7 @@ namespace GraphTheory.Editor
         private void EditBlackboardFieldName(Blackboard blackboard, VisualElement blackboardElementView, string newName)
         {
             (blackboardElementView as BlackboardElementView).ChangeElementName(newName);
+            OnBlackboardElementNameChanged?.Invoke();
         }
     }
 }

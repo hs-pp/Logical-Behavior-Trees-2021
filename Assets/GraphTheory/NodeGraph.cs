@@ -56,6 +56,7 @@ namespace GraphTheory
 
         private void AddOutportToNode_Internal(SerializedProperty serializedNode)
         {
+            serializedNode.serializedObject.Update();
             string nodeId = serializedNode.FindPropertyRelative("m_id").stringValue;
             string newOutportId = Guid.NewGuid().ToString();
 

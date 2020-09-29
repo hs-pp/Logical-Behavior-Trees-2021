@@ -21,6 +21,7 @@ namespace GraphTheory.Editor
 
         public Action<BlackboardElement> OnAddBlackboardElement { get { return m_blackboardView.OnAddBlackboardElement; } set { m_blackboardView.OnAddBlackboardElement = value; } }
         public Action<BlackboardElement> OnRemoveBlackboardElement { get { return m_blackboardView.OnRemoveBlackboardElement; } set { m_blackboardView.OnRemoveBlackboardElement = value; } }
+        public Action OnBlackboardNameChanged { get { return m_blackboardView.OnBlackboardElementNameChanged; } set { m_blackboardView.OnBlackboardElementNameChanged = value; } }
 
         public GraphInspector(NodeGraphView nodeGraphView)
         {

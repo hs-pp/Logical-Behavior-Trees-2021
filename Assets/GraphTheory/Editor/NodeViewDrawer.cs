@@ -19,6 +19,8 @@ namespace GraphTheory.Editor
         private NodeDisplayContainers m_nodeDisplayContainers = null;
 
         public Action OnBlackboardElementChanged = null;
+        public Action OnRepaint = null;
+        public Action OnSerializedPropertyChanged = null;
 
         public virtual string DisplayName { get { return Target.GetType().Name; } }
         public virtual Vector2 NodeSize { get { return new Vector2(600, 300); } }
@@ -34,7 +36,7 @@ namespace GraphTheory.Editor
 
         public void Repaint()
         {
-            OnRepaint();
+            OnRepaint?.Invoke();
 
             m_nodeDisplayContainers.ClearDisplays();
 
@@ -58,7 +60,5 @@ namespace GraphTheory.Editor
         public virtual void OnDrawOutport(int outportIndex, OutportContainer outportContainer) { }
         public virtual void OnDrawSecondaryBody(VisualElement secondaryBodyContainer) { }
         public virtual void OnDrawFooter(VisualElement footerContainer) { }
-        public virtual void OnRepaint() { }
-        public virtual void OnSerializedPropertyChanged() { }
     }
 }

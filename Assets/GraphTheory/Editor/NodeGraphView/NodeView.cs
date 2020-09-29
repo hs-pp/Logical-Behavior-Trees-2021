@@ -260,9 +260,14 @@ namespace GraphTheory.Editor
             m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
         }
 
+        public void HandleOnBlackboardElementNameChanged()
+        {
+            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
+        }
+
         public void HandleOnSerializedPropertyChanged()
         {
-            m_nodeViewDrawer.OnSerializedPropertyChanged();
+            m_nodeViewDrawer.OnSerializedPropertyChanged?.Invoke();
         }
     }
 }

@@ -44,6 +44,7 @@ namespace GraphTheory.BuiltInNodes
             int selectedIndex = elements.FindIndex(x => x.GetId() == blackboardElementIdProp.stringValue);
             if(selectedIndex == -1) // Currently selected id is invalid.
             {
+                blackboardElementIdProp.serializedObject.Update();
                 selectedIndex = 0;
                 blackboardElementIdProp.stringValue = "";
                 blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
@@ -52,12 +53,13 @@ namespace GraphTheory.BuiltInNodes
             {
             }
 
-            PopupField<BlackboardElementPopupEle> popupField = new PopupField<BlackboardElementPopupEle>(elements, selectedIndex, 
+            PopupField<BlackboardElementPopupEle> popupField = new PopupField<BlackboardElementPopupEle>("BlackboardElement:", elements, selectedIndex, 
                 (ele) => { return ele.GetLabel(); }, 
                 (ele) => { return ele.GetLabelWithType(); });
 
             void OnBlackboardElementChanged(ChangeEvent<BlackboardElementPopupEle> evt)
             {
+                blackboardElementIdProp.serializedObject.Update();
                 blackboardElementIdProp.stringValue = evt.newValue.GetId();
                 blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
             }
@@ -66,8 +68,9 @@ namespace GraphTheory.BuiltInNodes
 
             ve.Add(popupField);
 
-            PropertyField propField = new PropertyField(blackboardElementIdProp);
+            PropertyField propField = new PropertyField(blackboardElementIdProp, " ");
             propField.Bind(property.serializedObject);
+            propField.SetEnabled(false);
 
             ve.Add(propField);
             return ve;
