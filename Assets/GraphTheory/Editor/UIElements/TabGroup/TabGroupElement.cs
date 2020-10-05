@@ -23,7 +23,7 @@ namespace GraphTheory.Editor.UIElements
         {
             var xmlAsset = Resources.Load<VisualTreeAsset>("GraphTheory/UIElements/TabGroup/TabGroupElement");
             xmlAsset.CloneTree(this);
-            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/TabGroup/TabGroupElement"));
+            this.styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/UIElements/TabGroup/TabGroupElementStyle"));
             m_tabArea = this.Q<VisualElement>(TAB_AREA);
             m_contentArea = this.Q<VisualElement>(CONTENT_AREA);
 
