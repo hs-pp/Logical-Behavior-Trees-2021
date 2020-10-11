@@ -43,11 +43,8 @@ namespace GraphTheory.BuiltInNodes
                 Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Switching BlackboardConditional element");
 
                 blackboardElementIdProp.stringValue = blackboardElements[selectedIndex].GUID;
-                for(int i = conditionalsList.arraySize -1; i >= 0; i--)
-                {
-                    conditionalsList.DeleteArrayElementAtIndex(i);
-                    NodeGraph.RemoveOutportFromNode(property, i);
-                }
+                NodeGraph.RemoveAllOutportsFromNode(property);
+                conditionalsList.arraySize = 0;
                 blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
                 Undo.CollapseUndoOperations(group);
             }
