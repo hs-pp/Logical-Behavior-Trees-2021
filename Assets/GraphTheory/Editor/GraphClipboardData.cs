@@ -44,7 +44,7 @@ namespace GraphTheory.Editor
                 NodeView nodeView = element as NodeView;
                 if (nodeView != null)
                 {
-                    if(!(typeof(BuiltInNodes.EntryNode).IsAssignableFrom(nodeView.Node.GetType())))
+                    if(!(typeof(BuiltInNodes.EntryNode).IsAssignableFrom(nodeView.NodeType)))
                     {
                         m_serializedGraphElements.Add(new ClipboardElement(nodeView.Node));
                     }

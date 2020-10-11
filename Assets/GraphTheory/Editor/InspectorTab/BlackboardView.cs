@@ -18,7 +18,7 @@ namespace GraphTheory.Editor
         private SerializedProperty m_serializedBlackboardDataElements = null;
         private List<BlackboardRow> m_allElementRows = new List<BlackboardRow>();
 
-        public Action OnBlackboardElementChanged = null;
+        public Action<int> OnBlackboardElementChanged = null;
 
         public BlackboardView(NodeGraphView nodeGraphView)
         {
@@ -141,9 +141,11 @@ namespace GraphTheory.Editor
         /// <param name="index"></param>
         private void DeleteElement(int index)
         {
+            int undoGroup = Undo.GetCurrentGroup();
+            m_serializedBlackboardDataElements.serializedObject.Update();
             m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
-            OnBlackboardElementChanged?.Invoke();
+            OnBlackboardElementChanged?.Invoke(undoGroup);
             ClearElements();
             LoadElements();
             Debug.LogWarning("If you see an \"Unsupported type\" error, you can ignore it. It's a Unity bug!\nClick into this log to read more!");
@@ -165,6 +167,7 @@ namespace GraphTheory.Editor
 
         private void AddNewElement(Type type)
         {
+            int undoGroup = Undo.GetCurrentGroup();
             BlackboardElement newElement = Activator.CreateInstance(m_blackboardElementLookup[type]) as BlackboardElement;
             m_blackboardData.AddElement(newElement);
 
@@ -174,15 +177,15 @@ namespace GraphTheory.Editor
             SerializedProperty serializedBlackboardElement = m_serializedBlackboardDataElements.GetArrayElementAtIndex(lastIndex);
 
             AddBlackboardRow(newElement, serializedBlackboardElement, lastIndex);
-
-            Debug.Log("should happen here");
-            OnBlackboardElementChanged?.Invoke();
+            
+            OnBlackboardElementChanged?.Invoke(undoGroup);
         }
 
         private void EditBlackboardFieldName(Blackboard blackboard, VisualElement blackboardElementView, string newName)
         {
+            int undoGroup = Undo.GetCurrentGroup();
             (blackboardElementView as BlackboardElementView).ChangeElementName(newName);
-            OnBlackboardElementChanged?.Invoke();
+            OnBlackboardElementChanged?.Invoke(undoGroup);
         }
     }
 }

@@ -61,11 +61,6 @@ namespace GraphTheory.BuiltInNodes
                 }
             }
         }
-
-        public VisualElement GetNodeViewOutportElement(int index, SerializedProperty property)
-        {
-            return m_conditionals[index].OnDrawNodeView(property);
-        }
 #endif
     }
 }

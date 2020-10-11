@@ -85,7 +85,7 @@ namespace GraphTheory.Editor
             return portViews;
         }
 
-        public void ClearDisplays()
+        public void ClearDisplays(bool deletePorts)
         {
             HeaderContainer.Clear();
             PreTitleContainer.Clear();
@@ -95,6 +95,11 @@ namespace GraphTheory.Editor
             for(int i = 0; i < OutportContainers.Count; i++)
             {
                 OutportContainers[i]?.ClearContainers();
+            }
+            if (deletePorts)
+            {
+                OutportContainers.Clear();
+                AllOutportsContainer.Clear();
             }
             SecondaryBodyContainer.Clear();
             FooterContainer.Clear();

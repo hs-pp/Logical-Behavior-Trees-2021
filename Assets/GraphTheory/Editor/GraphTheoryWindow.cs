@@ -103,7 +103,7 @@ namespace GraphTheory.Editor
             mainPanelLeft.Add(m_mainTabGroup);
 
             // Other setup
-            m_inspectorTab.GraphInspector.OnBlackboardElementChanged += () => { m_nodeGraphView.CallAllNodeViewDrawerBlackboardElementChanged(); };
+            m_inspectorTab.GraphInspector.OnBlackboardElementChanged += (undoGroup) => { m_nodeGraphView.CallAllNodeViewDrawerBlackboardElementChanged(undoGroup); };
             //=========================================================================================//
 
             //==================================Callback Listeners=====================================//
@@ -121,7 +121,7 @@ namespace GraphTheory.Editor
         private void OnDisable()
         {
             SerializeData();
-
+            m_nodeGraphView.Reset();
             GraphModificationProcessor.OnGraphCreated -= OnNewGraphCreated;
             GraphModificationProcessor.OnGraphWillDelete -= OnGraphWillDelete;
         }

@@ -61,6 +61,16 @@ namespace GraphTheory.Editor
             m_propertyField = new PropertyField();
             m_propertyField.style.display = DisplayStyle.None;
             m_inspectorArea.Add(m_propertyField);
+
+            Undo.undoRedoPerformed += () => 
+            {
+                if (m_selectedNode != null)
+                {
+                    m_selectedNodeProperty.serializedObject.Update();
+                    SetNode(m_selectedNode, m_selectedNodeProperty);
+                }
+            };
+
         }
 
         public void SetVisible(bool visible)
@@ -106,7 +116,7 @@ namespace GraphTheory.Editor
                 // This requires Unity 2020.2 to work correctly https://forum.unity.com/threads/uielements-developer-guide.648043/#post-6073137
                 m_propertyField.RegisterCallback<SerializedPropertyChangeEvent>(x =>
                 {
-                    m_nodeGraphView.GetNodeViewById(node.Id).HandleOnSerializedPropertyChanged();
+                    m_nodeGraphView.GetNodeViewById(node.Id)?.HandleOnSerializedPropertyChanged();
                 });
 
                 m_inspectorArea.Add(m_propertyField);

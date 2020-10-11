@@ -11,10 +11,11 @@ namespace GraphTheory.Editor
 {
     public class NodeView : Node
     {
-        private NodeGraphView m_nodeGraphView = null;
         public ANode Node { get; private set; } = null;
+        public Type NodeType { get; private set; } = null;
+        private NodeGraphView m_nodeGraphView = null;
         public SerializedProperty SerializedNode { get; set; } = null;
-        public string NodeId { get { return Node != null ? Node.Id : string.Empty; } }
+        public string NodeId { get; private set; } = null;
 
         private NodeDisplayContainers m_nodeDisplayContainers = null;
         private PortView m_inport = null;
@@ -23,30 +24,33 @@ namespace GraphTheory.Editor
         private IEdgeConnectorListener m_edgeConnectorListener = null;
         private NodeViewDrawer m_nodeViewDrawer = null;
 
-        public NodeView(ANode node, 
+        public NodeView(ANode node,
             SerializedProperty serializedNode, 
             NodeGraphView nodeGraphView, 
             IEdgeConnectorListener edgeConnectorListener,
             NodeViewDrawer nodeViewDrawer) : base()
         {
-            if (node == null)
+            if(serializedNode == null)
+            {
                 return;
+            }
 
             Node = node;
+            NodeType = Node.GetType();
             SerializedNode = serializedNode;
             m_nodeGraphView = nodeGraphView;
             m_edgeConnectorListener = edgeConnectorListener;
+
+            NodeId = SerializedNode.FindPropertyRelative(ANode.IdVarname).stringValue;
 
             m_nodeDisplayContainers = new NodeDisplayContainers(this);
             m_nodeViewDrawer = nodeViewDrawer;
             m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph, m_nodeDisplayContainers);
             m_nodeViewDrawer.OnSetup();
 
-            m_nodeGraphView.OnBlackboardElementChanged += HandleOnBlackboardElementChanged;
-
             title = m_nodeViewDrawer.DisplayName;
 
-            bool isEntryNode = Node is BuiltInNodes.EntryNode;
+            bool isEntryNode = (typeof(BuiltInNodes.EntryNode)).IsAssignableFrom(NodeType);
             if (isEntryNode)
             {
                 this.capabilities = this.capabilities & (~Capabilities.Deletable);
@@ -66,34 +70,28 @@ namespace GraphTheory.Editor
                 m_nodeDisplayContainers.SetInport(m_inport);
             }
 
-            for (int j = 0; j < serializedNode.FindPropertyRelative("m_outports").arraySize; j++)
-            {
-                PortView newPort = new PortView(this,
-                    Orientation.Horizontal,
-                    Direction.Output,
-                    Port.Capacity.Single,
-                    typeof(bool),
-                    j,
-                    m_edgeConnectorListener);
-                newPort.portName = "";
-                m_outports.Add(newPort);
-                m_nodeDisplayContainers.AddNewOutport(newPort);
-            }
+            CreateOutports();
 
             // Draw node
-            m_nodeViewDrawer.Repaint();
+            m_nodeViewDrawer.Repaint(m_outports);
 
             RefreshExpandedState();
             RefreshPorts();
 
-            SetPosition(new Rect(Node.Position, Vector2.zero));
+            Vector2 pos = SerializedNode.FindPropertyRelative(ANode.PositionVarName).vector2Value;
+            SetPosition(new Rect(pos, Vector2.zero));
 
             //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
         }
 
         public void RepaintNodeView()
         {
-            m_nodeViewDrawer.Repaint();
+            SerializedNode.serializedObject.Update();
+            
+            CreateOutports();
+            m_nodeViewDrawer.Repaint(m_outports);
+            OnUnloadView();
+            OnLoadView();
         }
 
         protected override void ToggleCollapse()
@@ -104,17 +102,21 @@ namespace GraphTheory.Editor
 
         public void OnLoadView()
         {
-            for (int k = 0; k < Node.NumOutports; k++)
+            m_nodeGraphView.OnBlackboardElementChanged += HandleOnBlackboardElementChanged;
+
+            SerializedProperty outports = SerializedNode.FindPropertyRelative(ANode.OutportsVarName);
+
+            for (int k = 0; k < outports.arraySize; k++)
             {
-                OutportEdge edge = Node.GetOutportEdge(k);
-                if (!edge.IsValid)
+                SerializedProperty outportProp = outports.GetArrayElementAtIndex(k);
+                if (!OutportEdge.IsValid(outportProp))
                 {
                     continue;
                 }
                 EdgeView edgeView = new EdgeView()
                 {
-                    OutportEdge = edge,
-                    input = m_nodeGraphView.GetNodeViewById(edge.ConnectedNodeId).m_inport,
+                    OutportEdgeProp = outportProp,
+                    input = m_nodeGraphView.GetNodeViewById(outportProp.FindPropertyRelative(OutportEdge.ConnectedNodeIdVarName).stringValue).m_inport,
                     output = m_outports[k],
                 };
                 edgeView.Setup();
@@ -129,6 +131,10 @@ namespace GraphTheory.Editor
                 if (m_nodeGraphView.Contains(edgeView))
                 {
                     m_nodeGraphView.RemoveElement(edgeView);
+                    if (edgeView.SecondPort != null)
+                    {
+                        edgeView.SecondPort.Disconnect(edgeView);
+                    }
                 }
             }
             m_edgeViews.Clear();
@@ -145,9 +151,26 @@ namespace GraphTheory.Editor
             }
         }
 
+        public void CreateOutports()
+        {
+            m_outports.Clear();
+            for (int j = 0; j < SerializedNode.FindPropertyRelative(ANode.OutportsVarName).arraySize; j++)
+            {
+                PortView newPort = new PortView(this,
+                    Orientation.Horizontal,
+                    Direction.Output,
+                    Port.Capacity.Single,
+                    typeof(bool),
+                    j,
+                    m_edgeConnectorListener);
+                newPort.portName = "";
+                m_outports.Add(newPort);
+            }
+        }
+
         public bool OutportHasEdge(int outportIndex)
         {
-            return Node.OutportEdgeIsValid(outportIndex);
+            return OutportEdge.IsValid(SerializedNode.FindPropertyRelative(ANode.OutportsVarName).GetArrayElementAtIndex(outportIndex));
         }
 
         public PortView GetOutport(int outportIndex)
@@ -159,8 +182,11 @@ namespace GraphTheory.Editor
         {
             if (edgeView.FirstPort.Node == this)
             {
-                Node.AddOutportEdge(edgeView.FirstPort.PortIndex, edgeView.SecondPort.Node.NodeId);
-                edgeView.OutportEdge = Node.GetOutportEdge(edgeView.FirstPort.PortIndex);
+                SerializedProperty outportsProp = SerializedNode.FindPropertyRelative(ANode.OutportsVarName);
+                SerializedProperty newOutportProp = outportsProp.GetArrayElementAtIndex(edgeView.FirstPort.PortIndex);
+                newOutportProp.FindPropertyRelative(OutportEdge.ConnectedNodeIdVarName).stringValue = edgeView.SecondPort.Node.NodeId;
+                newOutportProp.serializedObject.ApplyModifiedProperties();
+                edgeView.OutportEdgeProp = newOutportProp;
             }
             AddEdgeView(edgeView);
         }
@@ -188,7 +214,8 @@ namespace GraphTheory.Editor
                 edgeView.SecondPort.Node.RemoveEdge(edgeView);
                 m_nodeGraphView.RemoveElement(edgeView);
                 m_edgeViews.Remove(edgeView.EdgeId);
-                Node.RemoveOutportEdge(edgeView.FirstPort.PortIndex);
+                OutportEdge.SetInvalid(SerializedNode.FindPropertyRelative(ANode.OutportsVarName)
+                    .GetArrayElementAtIndex(edgeView.FirstPort.PortIndex));
             }
             else if (edgeView.SecondPort.Node == this)
             {
@@ -207,7 +234,8 @@ namespace GraphTheory.Editor
 
         public void UpdateNodeDataPosition()
         {
-            Node.Position = this.GetPosition().position;
+            SerializedNode.FindPropertyRelative(ANode.PositionVarName).vector2Value = this.GetPosition().position;
+            SerializedNode.serializedObject.ApplyModifiedProperties();
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -218,7 +246,7 @@ namespace GraphTheory.Editor
             // This isn't very performant but is there a better way?
             evt.menu.AppendAction("Open Script", (menuAction) => 
             {
-                string nodeTypeName = Node.GetType().Name;
+                string nodeTypeName = NodeType.Name;
                 IEnumerable<string> scriptPaths = AssetDatabase.FindAssets($"t:script {nodeTypeName}").Select(AssetDatabase.GUIDToAssetPath);
                 foreach (string path in scriptPaths)
                 {
@@ -253,9 +281,9 @@ namespace GraphTheory.Editor
             //    .Cast<GraphElement>());
         }
 
-        public void HandleOnBlackboardElementChanged()
+        public void HandleOnBlackboardElementChanged(int undoGroup)
         {
-            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
+            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke(undoGroup);
         }
 
         public void HandleOnSerializedPropertyChanged()

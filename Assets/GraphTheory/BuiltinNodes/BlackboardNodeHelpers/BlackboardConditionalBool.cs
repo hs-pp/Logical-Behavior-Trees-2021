@@ -22,14 +22,6 @@ public class BlackboardConditionalBool : IBlackboardConditionalElement
     [SerializeField]
     private bool m_comparedValue = false;
 
-    public VisualElement OnDrawNodeView(SerializedProperty property)
-    {
-        string selectedEnum = ((BoolComparator)(property.FindPropertyRelative("m_boolComparator").intValue)).ToString();
-        string comparedVal = property.FindPropertyRelative("m_comparedValue").boolValue.ToString();
-        string desc = $"{selectedEnum} to {comparedVal}";
-        return new Label(desc);
-    }
-
     public bool Evaluate()
     {
         return true;

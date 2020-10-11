@@ -39,7 +39,9 @@ namespace GraphTheory
         public virtual int DefaultNumOutports { get { return 1; } }
         public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
 
-        public static string OutportsVarName = "m_outports";
+        public static readonly string OutportsVarName = "m_outports";
+        public static readonly string IdVarname = "m_id";
+        public static readonly string PositionVarName = "m_position";
 
         public ANode()
         {
@@ -67,33 +69,13 @@ namespace GraphTheory
             }
         }
 
-        public void AddOutportEdge(int outportIndex, string connectedEdge)
-        {
-            if (outportIndex > m_outports.Count - 1)
-            {
-                Debug.LogError("Error adding outport edge!");
-                return;
-            }
-            m_outports[outportIndex].ConnectedNodeId = connectedEdge;
-        }
-
-        public void RemoveOutportEdge(int outportIndex)
-        {
-            if (outportIndex > m_outports.Count - 1)
-            {
-                Debug.LogError("Error removing outport edge!");
-                return;
-            }
-            m_outports[outportIndex].SetInvalid();
-        }
-
         public bool OutportEdgeIsValid(int index)
         {
             if (index >= m_outports.Count || index < 0)
             {
                 return false;
             }
-            return m_outports[index].IsValid;
+            return m_outports[index].IsValid();
         }
 #endif
     }

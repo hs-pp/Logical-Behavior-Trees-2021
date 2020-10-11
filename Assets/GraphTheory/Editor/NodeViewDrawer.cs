@@ -18,7 +18,7 @@ namespace GraphTheory.Editor
         protected BlackboardData BlackboardData { get { return NodeGraph.BlackboardData; } }
         private NodeDisplayContainers m_nodeDisplayContainers = null;
 
-        public Action OnBlackboardElementChanged = null;
+        public Action<int> OnBlackboardElementChanged = null;
         public Action OnRepaint = null;
         public Action OnSerializedPropertyChanged = null;
 
@@ -34,12 +34,12 @@ namespace GraphTheory.Editor
             m_nodeDisplayContainers = nodeDisplayContainers;
         }
 
-        public void Repaint()
+        public void Repaint(List<PortView> portViews = null)
         {
             TargetProperty.serializedObject.Update();
             OnRepaint?.Invoke();
 
-            m_nodeDisplayContainers.ClearDisplays();
+            m_nodeDisplayContainers.ClearDisplays(portViews != null);
 
             OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
             OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
@@ -47,6 +47,10 @@ namespace GraphTheory.Editor
             OnDrawInport(m_nodeDisplayContainers.InportContainer);
             for (int i = 0; i < TargetProperty.FindPropertyRelative(ANode.OutportsVarName).arraySize; i++)
             {
+                if (portViews != null)
+                {
+                    m_nodeDisplayContainers.AddNewOutport(portViews[i]);
+                }
                 OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
             }
             OnDrawSecondaryBody(m_nodeDisplayContainers.SecondaryBodyContainer);

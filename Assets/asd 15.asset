@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f71c17646588c0e4bbadefdda3ca4159, type: 3}
-  m_Name: asd 10
+  m_Name: asd 15
   m_EditorClassIdentifier: 
   m_nodeCollection:
     m_nodes:
@@ -44,7 +44,7 @@ MonoBehaviour:
     00000002:
       type: {class: StringBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
-        m_guid: 565bf75f-0f97-4c77-b5e8-3ff06b366035
+        m_guid: 49e4fc7d-b395-4509-a42f-600d54a01243
         m_name: new String
         m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
@@ -53,7 +53,7 @@ MonoBehaviour:
     00000003:
       type: {class: BoolBlackboardElement, ns: , asm: Assembly-CSharp}
       data:
-        m_guid: 5b71d5db-058c-4f15-b519-e3c9dbe2898d
+        m_guid: 851338dc-9856-4d3f-b046-d0c8fbbf9eb6
         m_name: new Boolean
         m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089

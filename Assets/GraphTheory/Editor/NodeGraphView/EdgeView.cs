@@ -1,12 +1,13 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 namespace GraphTheory.Editor
 {
     public class EdgeView : Edge
     {
-        public OutportEdge OutportEdge { get; set; }
-        public string EdgeId { get { return OutportEdge.Id; } }
+        public SerializedProperty OutportEdgeProp { get; set; }
+        public string EdgeId { get { return OutportEdgeProp.FindPropertyRelative(OutportEdge.IdVarName).stringValue; } }
         public PortView FirstPort { get; private set; }
         public PortView SecondPort { get; private set; }
 

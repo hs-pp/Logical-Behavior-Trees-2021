@@ -14,7 +14,6 @@ namespace GraphTheory.Editor
         private MiniMap m_miniMap = null;
         private NodeCreationWindow m_nodeCreationWindow = null;
         private IEdgeConnectorListener m_edgeConectorListener = null;
-
         private NodeGraph m_nodeGraph = null;
         public NodeGraph NodeGraph { get { return m_nodeGraph; } }
         private GraphTypeMetadata m_graphTypeMetadata = null;
@@ -28,7 +27,7 @@ namespace GraphTheory.Editor
         public Action<ISelectable> OnAddToSelection = null;
         public Action<ISelectable> OnRemoveFromSelection = null;
         public Action OnClearSelection = null;
-        public Action OnBlackboardElementChanged = null;
+        public Action<int> OnBlackboardElementChanged = null;
 
         public NodeGraphView() 
         {
@@ -85,9 +84,10 @@ namespace GraphTheory.Editor
                 return;
 
             m_nodeGraph = nodeGraph;
-            m_nodeCollection = nodeCollection;
+             m_nodeCollection = nodeCollection;
             m_graphTypeMetadata.SetNewGraphType(m_nodeGraph.GetType());
 
+            m_nodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
             m_nodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
             m_nodeGraph.OnNodeOutportRemoved += OnNodeOutportRemoved;
             m_nodeGraph.OnNodeAllOutportsRemoved += OnNodeAllOutportsRemoved;
@@ -104,12 +104,13 @@ namespace GraphTheory.Editor
             RefreshSerializedNodeReferences();
         }
 
-        private void Reset()
+        public void Reset()
         {
             if(m_nodeGraph != null)
             {
                 m_nodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
                 m_nodeGraph.OnNodeOutportRemoved -= OnNodeOutportRemoved;
+                m_nodeGraph.OnNodeAllOutportsRemoved -= OnNodeAllOutportsRemoved;
             }
 
             m_nodeGraph = null;
@@ -165,12 +166,14 @@ namespace GraphTheory.Editor
         {
             if (graphViewChange.elementsToRemove != null)
             {
+                int group = Undo.GetCurrentGroup();
                 Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Deleted Graph Elements");
+                List<NodeView> nodeViewsToDelete = new List<NodeView>();
                 for (int i = graphViewChange.elementsToRemove.Count - 1; i >= 0; i--)
                 {
                     if (graphViewChange.elementsToRemove[i] is NodeView)
                     {
-                        DeleteNode(graphViewChange.elementsToRemove[i] as NodeView);
+                        nodeViewsToDelete.Add(graphViewChange.elementsToRemove[i] as NodeView);
                     }
                     else if (graphViewChange.elementsToRemove[i] is EdgeView)
                     {
@@ -178,9 +181,12 @@ namespace GraphTheory.Editor
                         edgeView.FirstPort.Node.RemoveEdge(edgeView);
                     }
                 }
+                DeleteNodes(nodeViewsToDelete);
+                Undo.CollapseUndoOperations(group);
             }
             else if (graphViewChange.movedElements != null)
             {
+                int group = Undo.GetCurrentGroup();
                 Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Moved Graph Elements");
                 for (int k = 0; k < graphViewChange.movedElements.Count; k++)
                 {
@@ -189,6 +195,7 @@ namespace GraphTheory.Editor
                         (graphViewChange.movedElements[k] as NodeView).UpdateNodeDataPosition();
                     }
                 }
+                Undo.CollapseUndoOperations(group);
             }
             return graphViewChange;
         }
@@ -231,28 +238,33 @@ namespace GraphTheory.Editor
             return nodeView;
         }
 
-        private void DeleteNode(NodeView nodeView)
+        private void DeleteNodes(List<NodeView> nodeViews)
         {
-            OnRemoveNode?.Invoke(nodeView);
-            nodeView.OnDeleteNode();
-            m_nodeViews.Remove(nodeView.NodeId);
-            m_nodeCollection.RemoveNode(nodeView.NodeId);
+            for(int i = 0; i < nodeViews.Count; i++)
+            {
+                OnRemoveNode?.Invoke(nodeViews[i]);
+                nodeViews[i].OnDeleteNode();
+                m_nodeViews.Remove(nodeViews[i].NodeId);
+                m_nodeCollection.RemoveNode(nodeViews[i].NodeId);
+            }
             RefreshSerializedNodeReferences();
         }
 
         private void OnNodeOutportAdded(string nodeId)
         {
-            RedrawGraphView();
+            //RedrawGraphView();
+            m_nodeViews[nodeId].RepaintNodeView();
         }
 
         private void OnNodeOutportRemoved(string nodeId, int index)
         {
-            RedrawGraphView(); // CBB
+            //RedrawGraphView();
+            m_nodeViews[nodeId].RepaintNodeView();
         }
 
         private void OnNodeAllOutportsRemoved(string nodeId)
         {
-            RedrawGraphView(); // CBB
+            m_nodeViews[nodeId].RepaintNodeView();
         }
 
         private void RedrawGraphView()
@@ -362,7 +374,7 @@ namespace GraphTheory.Editor
             {
                 return false;
             }
-            return m_nodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName);
+            return (clipboardData == null || m_nodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName));
         }
 
         private void UnserializeAndPasteGraphElements(string operationName, string data)
@@ -408,11 +420,11 @@ namespace GraphTheory.Editor
             return clipboardElements;
         }
 
-        public void CallAllNodeViewDrawerBlackboardElementChanged()
+        public void CallAllNodeViewDrawerBlackboardElementChanged(int undoGroup)
         {
             foreach(NodeView nodeView in m_nodeViews.Values)
             {
-                nodeView.HandleOnBlackboardElementChanged();
+                nodeView.HandleOnBlackboardElementChanged(undoGroup);
             }
         }
     }

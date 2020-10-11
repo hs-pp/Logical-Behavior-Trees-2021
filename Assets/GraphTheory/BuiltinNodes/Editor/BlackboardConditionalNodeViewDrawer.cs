@@ -12,30 +12,34 @@ namespace GraphTheory.BuiltInNodes
 
         public override void OnSetup()
         {
-            OnBlackboardElementChanged += () => { ValidateBlackboardElement(); Repaint(); };
+            OnBlackboardElementChanged += (undoGroup) => { ValidateBlackboardElement(undoGroup); Repaint(); };
             OnSerializedPropertyChanged += () => { Repaint(); };
         }
 
-        private void ValidateBlackboardElement()
+        private void ValidateBlackboardElement(int undoGroup = -1)
         {
+            TargetProperty.serializedObject.Update();
+
+            if(undoGroup == -1)
+            {
+                undoGroup = Undo.GetCurrentGroup();
+            }
+
             BlackboardConditional target = (Target as BlackboardConditional);
             if(BlackboardData.GetElementById(target.BlackboardElementId) == null)
             {
                 TargetProperty.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName).stringValue = "";
                 SerializedProperty conditionalsList = TargetProperty.FindPropertyRelative(BlackboardConditional.ConditionalsVarName);
-                for (int i = conditionalsList.arraySize - 1; i >= 0; i--)
-                {
-                    conditionalsList.DeleteArrayElementAtIndex(i);
-                    NodeGraph.RemoveOutportFromNode(TargetProperty, i);
-                }
+                NodeGraph.RemoveAllOutportsFromNode(TargetProperty);
+                conditionalsList.arraySize = 0;
                 TargetProperty.serializedObject.ApplyModifiedProperties();
             }
+            Undo.CollapseUndoOperations(undoGroup);
             TargetProperty.serializedObject.Update();
         }
 
         public override void OnDrawPrimaryBody(VisualElement primaryBodyContainer)
         {
-            Debug.Log("repainting this guy");
             base.OnDrawPrimaryBody(primaryBodyContainer);
             string blackboardEleId = TargetProperty.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName).stringValue;
             BlackboardElement blackboardElement = NodeGraph.BlackboardData.GetElementById(blackboardEleId);
@@ -48,8 +52,15 @@ namespace GraphTheory.BuiltInNodes
         public override void OnDrawOutport(int outportIndex, OutportContainer outportContainer)
         {
             base.OnDrawOutport(outportIndex, outportContainer);
-            outportContainer.OutportBody.Add((Target as BlackboardConditional).GetNodeViewOutportElement(outportIndex, 
-                TargetProperty.FindPropertyRelative(BlackboardConditional.ConditionalsVarName).GetArrayElementAtIndex(outportIndex)));
+
+            SerializedProperty conditionalProp = TargetProperty
+                .FindPropertyRelative(BlackboardConditional.ConditionalsVarName)
+                .GetArrayElementAtIndex(outportIndex);
+
+            string selectedEnum = ((BlackboardConditionalBool.BoolComparator)(conditionalProp.FindPropertyRelative("m_boolComparator").intValue)).ToString();
+            string comparedVal = conditionalProp.FindPropertyRelative("m_comparedValue").boolValue.ToString();
+            string desc = $"{selectedEnum} to {comparedVal}";
+            outportContainer.OutportBody.Add(new Label(desc));
         }
     }
 }

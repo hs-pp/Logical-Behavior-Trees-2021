@@ -20,6 +20,7 @@ namespace GraphTheory.BuiltInNodes
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
+            property.serializedObject.Update();
             List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardData.GetAllElements();
             SerializedProperty conditionalsList = property.FindPropertyRelative(BlackboardConditional.ConditionalsVarName);
 
@@ -28,21 +29,6 @@ namespace GraphTheory.BuiltInNodes
             int selectedIndex = blackboardElements.FindIndex(x => x.GUID == blackboardElementIdProp.stringValue);
             if(selectedIndex == -1)
             {
-                blackboardElementIdProp.serializedObject.Update();
-
-                int group = Undo.GetCurrentGroup();
-                Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Reset blackboard conditional");
-
-                selectedIndex = -1;
-                blackboardElementIdProp.stringValue = "";
-                blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
-                property.FindPropertyRelative(BlackboardConditional.ConditionalsVarName).arraySize = 0;
-                for (int i = conditionalsList.arraySize - 1; i >= 0; i--)
-                {
-                    conditionalsList.DeleteArrayElementAtIndex(i);
-                    NodeGraph.RemoveOutportFromNode(property, i);
-                }
-                Undo.CollapseUndoOperations(group);
             }
             else if (string.IsNullOrEmpty(blackboardElementIdProp.stringValue)) // set to nothing
             {
@@ -69,7 +55,6 @@ namespace GraphTheory.BuiltInNodes
             GUILayout.Space(8);
 
             // Conditional Elements
-            EditorGUI.BeginChangeCheck();
             for (int i = 0; i < conditionalsList.arraySize; i++)
             {
                 GUILayout.BeginHorizontal();
@@ -82,15 +67,12 @@ namespace GraphTheory.BuiltInNodes
                     int group = Undo.GetCurrentGroup();
                     Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Delete blackboard conditional");
                     conditionalsList.DeleteArrayElementAtIndex(i);
+                    conditionalsList.serializedObject.ApplyModifiedProperties();
                     NodeGraph.RemoveOutportFromNode(property, i);
                     Undo.CollapseUndoOperations(group);
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Space(4);
-            }
-            if (EditorGUI.EndChangeCheck())
-            {
-                conditionalsList.serializedObject.ApplyModifiedProperties();
             }
 
             if(GUILayout.Button("Add Conditional"))
@@ -107,7 +89,7 @@ namespace GraphTheory.BuiltInNodes
                 if (conditionalElementType != null)
                 {
                     conditionalsList.serializedObject.Update();
-
+                    Debug.Log("pressed");
                     int group = Undo.GetCurrentGroup();
                     Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Add blackboard conditional");
                     IBlackboardConditionalElement newConditionalEle = Activator.CreateInstance(conditionalElementType) as IBlackboardConditionalElement;
