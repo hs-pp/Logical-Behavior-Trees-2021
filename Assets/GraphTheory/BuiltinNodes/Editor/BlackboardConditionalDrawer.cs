@@ -29,23 +29,28 @@ namespace GraphTheory.BuiltInNodes
             int selectedIndex = blackboardElements.FindIndex(x => x.GUID == blackboardElementIdProp.stringValue);
             if(selectedIndex == -1)
             {
-            }
-            else if (string.IsNullOrEmpty(blackboardElementIdProp.stringValue)) // set to nothing
-            {
+                conditionalsList.serializedObject.Update();
+
+                int group = Undo.GetCurrentGroup();
+                Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Resetting BlackboardConditional element");
+                blackboardElementIdProp.stringValue = "";
+                NodeGraph.RemoveAllOutportsFromNode(property);
+                conditionalsList.arraySize = 0;
+                conditionalsList.serializedObject.ApplyModifiedProperties();
+                Undo.CollapseUndoOperations(group);
             }
             EditorGUI.BeginChangeCheck();
             selectedIndex = EditorGUILayout.Popup("Blackboard Element", selectedIndex, blackboardElements.Select(x => x.Name).ToArray());
             if(EditorGUI.EndChangeCheck())
             {
-                blackboardElementIdProp.serializedObject.Update();
+                conditionalsList.serializedObject.Update();
 
                 int group = Undo.GetCurrentGroup();
                 Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Switching BlackboardConditional element");
-
                 blackboardElementIdProp.stringValue = blackboardElements[selectedIndex].GUID;
                 NodeGraph.RemoveAllOutportsFromNode(property);
                 conditionalsList.arraySize = 0;
-                blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
+                conditionalsList.serializedObject.ApplyModifiedProperties();
                 Undo.CollapseUndoOperations(group);
             }
 
