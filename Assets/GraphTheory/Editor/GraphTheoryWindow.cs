@@ -103,9 +103,7 @@ namespace GraphTheory.Editor
             mainPanelLeft.Add(m_mainTabGroup);
 
             // Other setup
-            m_inspectorTab.GraphInspector.OnAddBlackboardElement += (addedEle) => { m_nodeGraphView.OnAddBlackboardElement?.Invoke(addedEle); };
-            m_inspectorTab.GraphInspector.OnRemoveBlackboardElement += (removedEle) => { m_nodeGraphView.OnRemoveBlackboardElement?.Invoke(removedEle); };
-            m_inspectorTab.GraphInspector.OnBlackboardNameChanged += () => { m_nodeGraphView.CallAllNodeViewDrawerBlackboardElementChanged(); };
+            m_inspectorTab.GraphInspector.OnBlackboardElementChanged += () => { m_nodeGraphView.CallAllNodeViewDrawerBlackboardElementChanged(); };
             //=========================================================================================//
 
             //==================================Callback Listeners=====================================//

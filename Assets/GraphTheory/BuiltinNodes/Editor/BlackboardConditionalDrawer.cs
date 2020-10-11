@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,70 +12,118 @@ namespace GraphTheory.BuiltInNodes
     [CustomPropertyDrawer(typeof(BlackboardConditional))]
     public class BlackboardConditionalDrawer : PropertyDrawer
     {
-        private class BlackboardElementPopupEle
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            public BlackboardElement Element;
-            public string GetLabel()
-            {
-                return Element != null ? Element.Name : "NONE";
-            }
-            public string GetLabelWithType()
-            {
-                return Element != null ? $"{Element.Name} ({Element.Type.Name})" : "NONE (NONE)";
-            }
-            public string GetId()
-            {
-                return Element != null ? Element.GUID : "";
-            }
+            return 0;
         }
-        
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            VisualElement ve = new VisualElement();
+            EditorGUI.BeginProperty(position, label, property);
+            List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardData.GetAllElements();
+            SerializedProperty conditionalsList = property.FindPropertyRelative(BlackboardConditional.ConditionalsVarName);
 
-            List<BlackboardElementPopupEle> elements = new List<BlackboardElementPopupEle>();
-            elements.Add(new BlackboardElementPopupEle());
-            
-            foreach (BlackboardElement ele in (property.serializedObject.targetObject as NodeGraph).BlackboardData.GetAllElements())
-            {
-                elements.Add(new BlackboardElementPopupEle() { Element = ele });
-            }
-            SerializedProperty blackboardElementIdProp = property.FindPropertyRelative("m_blackboardElementId");
-
-            int selectedIndex = elements.FindIndex(x => x.GetId() == blackboardElementIdProp.stringValue);
-            if(selectedIndex == -1) // Currently selected id is invalid.
+            // Selected Blackboard Element dropdown
+            SerializedProperty blackboardElementIdProp = property.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName);
+            int selectedIndex = blackboardElements.FindIndex(x => x.GUID == blackboardElementIdProp.stringValue);
+            if(selectedIndex == -1)
             {
                 blackboardElementIdProp.serializedObject.Update();
-                selectedIndex = 0;
+
+                int group = Undo.GetCurrentGroup();
+                Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Reset blackboard conditional");
+
+                selectedIndex = -1;
                 blackboardElementIdProp.stringValue = "";
                 blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
+                property.FindPropertyRelative(BlackboardConditional.ConditionalsVarName).arraySize = 0;
+                for (int i = conditionalsList.arraySize - 1; i >= 0; i--)
+                {
+                    conditionalsList.DeleteArrayElementAtIndex(i);
+                    NodeGraph.RemoveOutportFromNode(property, i);
+                }
+                Undo.CollapseUndoOperations(group);
             }
-            else if(string.IsNullOrEmpty(blackboardElementIdProp.stringValue)) // set to nothing
+            else if (string.IsNullOrEmpty(blackboardElementIdProp.stringValue)) // set to nothing
             {
             }
-
-            PopupField<BlackboardElementPopupEle> popupField = new PopupField<BlackboardElementPopupEle>("BlackboardElement:", elements, selectedIndex, 
-                (ele) => { return ele.GetLabel(); }, 
-                (ele) => { return ele.GetLabelWithType(); });
-
-            void OnBlackboardElementChanged(ChangeEvent<BlackboardElementPopupEle> evt)
+            EditorGUI.BeginChangeCheck();
+            selectedIndex = EditorGUILayout.Popup("Blackboard Element", selectedIndex, blackboardElements.Select(x => x.Name).ToArray());
+            if(EditorGUI.EndChangeCheck())
             {
                 blackboardElementIdProp.serializedObject.Update();
-                blackboardElementIdProp.stringValue = evt.newValue.GetId();
+
+                int group = Undo.GetCurrentGroup();
+                Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Switching BlackboardConditional element");
+
+                blackboardElementIdProp.stringValue = blackboardElements[selectedIndex].GUID;
+                for(int i = conditionalsList.arraySize -1; i >= 0; i--)
+                {
+                    conditionalsList.DeleteArrayElementAtIndex(i);
+                    NodeGraph.RemoveOutportFromNode(property, i);
+                }
                 blackboardElementIdProp.serializedObject.ApplyModifiedProperties();
+                Undo.CollapseUndoOperations(group);
             }
 
-            popupField.RegisterValueChangedCallback(OnBlackboardElementChanged);
+            GUILayout.Space(8);
 
-            ve.Add(popupField);
+            // Conditional Elements
+            EditorGUI.BeginChangeCheck();
+            for (int i = 0; i < conditionalsList.arraySize; i++)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.BeginVertical("box");
+                GUILayout.Label("Condition:");
+                EditorGUILayout.PropertyField(conditionalsList.GetArrayElementAtIndex(i), true);
+                GUILayout.EndVertical();
+                if(GUILayout.Button("X", GUILayout.ExpandHeight(true), GUILayout.Width(20))) // Delete
+                {
+                    int group = Undo.GetCurrentGroup();
+                    Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Delete blackboard conditional");
+                    conditionalsList.DeleteArrayElementAtIndex(i);
+                    NodeGraph.RemoveOutportFromNode(property, i);
+                    Undo.CollapseUndoOperations(group);
+                }
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+            }
+            if (EditorGUI.EndChangeCheck())
+            {
+                conditionalsList.serializedObject.ApplyModifiedProperties();
+            }
 
-            PropertyField propField = new PropertyField(blackboardElementIdProp, " ");
-            propField.Bind(property.serializedObject);
-            propField.SetEnabled(false);
+            if(GUILayout.Button("Add Conditional"))
+            {
+                if(selectedIndex == -1)
+                {
+                    return;
+                }
 
-            ve.Add(propField);
-            return ve;
+                BlackboardElement ele = blackboardElements[selectedIndex];
 
+                Type conditionalElementType = null;
+                BlackboardConditional.BlackboardConditionalElementTypes.TryGetValue(ele.GetType(), out conditionalElementType);
+                if (conditionalElementType != null)
+                {
+                    conditionalsList.serializedObject.Update();
+
+                    int group = Undo.GetCurrentGroup();
+                    Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Add blackboard conditional");
+                    IBlackboardConditionalElement newConditionalEle = Activator.CreateInstance(conditionalElementType) as IBlackboardConditionalElement;
+                    conditionalsList.InsertArrayElementAtIndex(conditionalsList.arraySize);
+                    conditionalsList.GetArrayElementAtIndex(conditionalsList.arraySize - 1).managedReferenceValue = newConditionalEle;
+                    conditionalsList.serializedObject.ApplyModifiedProperties();
+                    NodeGraph.AddOutportToNode(property);
+                    Undo.CollapseUndoOperations(group);
+                }
+                else
+                {
+                    Debug.LogError("There is no implementation of BlackboardConditional for type " + ele.GetType().Name);
+                }
+            }
+
+            EditorGUI.EndProperty();
         }
     }
 }

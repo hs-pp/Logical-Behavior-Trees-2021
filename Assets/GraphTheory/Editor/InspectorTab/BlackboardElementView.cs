@@ -18,6 +18,14 @@ namespace GraphTheory.Editor
 
             text = m_blackboardElement.Name;
             typeText = m_blackboardElement.Type.Name;
+            if (typeText == "Single")
+            {
+                typeText = "Float";
+            }
+            else if (typeText == "Int32")
+            {
+                typeText = "Int";
+            }
 
             m_onDeleteElement = onDeleteElement;
 

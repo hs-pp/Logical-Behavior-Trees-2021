@@ -28,14 +28,10 @@ namespace GraphTheory.Editor
         public Action<ISelectable> OnAddToSelection = null;
         public Action<ISelectable> OnRemoveFromSelection = null;
         public Action OnClearSelection = null;
-        public Action<BlackboardElement> OnAddBlackboardElement = null;
-        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
+        public Action OnBlackboardElementChanged = null;
 
         public NodeGraphView() 
         {
-            OnAddBlackboardElement += (ele) => { Debug.Log("Added ele"); };
-            OnRemoveBlackboardElement += (ele) => { Debug.Log("Removed ele"); };
-
             styleSheets.Add(Resources.Load<StyleSheet>("GraphTheory/NodeGraph/NodeGraphView"));
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
@@ -94,6 +90,7 @@ namespace GraphTheory.Editor
 
             m_nodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
             m_nodeGraph.OnNodeOutportRemoved += OnNodeOutportRemoved;
+            m_nodeGraph.OnNodeAllOutportsRemoved += OnNodeAllOutportsRemoved;
 
             List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
@@ -245,12 +242,22 @@ namespace GraphTheory.Editor
 
         private void OnNodeOutportAdded(string nodeId)
         {
-            SetNodeCollection(m_nodeGraph); // CBB
+            RedrawGraphView();
         }
 
         private void OnNodeOutportRemoved(string nodeId, int index)
         {
-            SetNodeCollection(m_nodeGraph); // CBB
+            RedrawGraphView(); // CBB
+        }
+
+        private void OnNodeAllOutportsRemoved(string nodeId)
+        {
+            RedrawGraphView(); // CBB
+        }
+
+        private void RedrawGraphView()
+        {
+            SetNodeCollection(m_nodeGraph);
         }
 
         public void CreateEdgeView(EdgeView edgeView)
@@ -405,7 +412,7 @@ namespace GraphTheory.Editor
         {
             foreach(NodeView nodeView in m_nodeViews.Values)
             {
-                nodeView.HandleOnBlackboardElementNameChanged();
+                nodeView.HandleOnBlackboardElementChanged();
             }
         }
     }

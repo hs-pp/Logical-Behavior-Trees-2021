@@ -18,9 +18,7 @@ namespace GraphTheory.Editor
         private SerializedProperty m_serializedBlackboardDataElements = null;
         private List<BlackboardRow> m_allElementRows = new List<BlackboardRow>();
 
-        public Action<BlackboardElement> OnAddBlackboardElement = null;
-        public Action<BlackboardElement> OnRemoveBlackboardElement = null;
-        public Action OnBlackboardElementNameChanged = null;
+        public Action OnBlackboardElementChanged = null;
 
         public BlackboardView(NodeGraphView nodeGraphView)
         {
@@ -98,7 +96,16 @@ namespace GraphTheory.Editor
             GenericMenu menu = new GenericMenu();
             foreach (Type supportedType in m_blackboardElementLookup.Keys)
             {
-                menu.AddItem(new GUIContent(supportedType.Name), false, () =>
+                string name = supportedType.Name;
+                if(name == "Single")
+                {
+                    name = "Float";
+                }
+                else if(name == "Int32")
+                {
+                    name = "Int";
+                }
+                menu.AddItem(new GUIContent(name), false, () =>
                 {
                     AddNewElement(supportedType);
                 });
@@ -134,10 +141,9 @@ namespace GraphTheory.Editor
         /// <param name="index"></param>
         private void DeleteElement(int index)
         {
-            OnRemoveBlackboardElement?.Invoke(m_blackboardData.GetElementAt(index));
-
             m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
             m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
+            OnBlackboardElementChanged?.Invoke();
             ClearElements();
             LoadElements();
             Debug.LogWarning("If you see an \"Unsupported type\" error, you can ignore it. It's a Unity bug!\nClick into this log to read more!");
@@ -170,13 +176,13 @@ namespace GraphTheory.Editor
             AddBlackboardRow(newElement, serializedBlackboardElement, lastIndex);
 
             Debug.Log("should happen here");
-            OnAddBlackboardElement?.Invoke(newElement);
+            OnBlackboardElementChanged?.Invoke();
         }
 
         private void EditBlackboardFieldName(Blackboard blackboard, VisualElement blackboardElementView, string newName)
         {
             (blackboardElementView as BlackboardElementView).ChangeElementName(newName);
-            OnBlackboardElementNameChanged?.Invoke();
+            OnBlackboardElementChanged?.Invoke();
         }
     }
 }

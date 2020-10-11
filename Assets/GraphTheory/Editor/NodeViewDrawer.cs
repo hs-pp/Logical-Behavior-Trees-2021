@@ -36,6 +36,7 @@ namespace GraphTheory.Editor
 
         public void Repaint()
         {
+            TargetProperty.serializedObject.Update();
             OnRepaint?.Invoke();
 
             m_nodeDisplayContainers.ClearDisplays();
@@ -44,7 +45,7 @@ namespace GraphTheory.Editor
             OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
             OnDrawPrimaryBody(m_nodeDisplayContainers.PrimaryBodyContainer);
             OnDrawInport(m_nodeDisplayContainers.InportContainer);
-            for (int i = 0; i < Target.NumOutports; i++)
+            for (int i = 0; i < TargetProperty.FindPropertyRelative(ANode.OutportsVarName).arraySize; i++)
             {
                 OnDrawOutport(i, m_nodeDisplayContainers.OutportContainers[i]);
             }

@@ -42,8 +42,7 @@ namespace GraphTheory.Editor
             m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph, m_nodeDisplayContainers);
             m_nodeViewDrawer.OnSetup();
 
-            m_nodeGraphView.OnAddBlackboardElement += HandleOnAddBlackboardElement;
-            m_nodeGraphView.OnRemoveBlackboardElement += HandleOnRemoveBlackboardElement;
+            m_nodeGraphView.OnBlackboardElementChanged += HandleOnBlackboardElementChanged;
 
             title = m_nodeViewDrawer.DisplayName;
 
@@ -92,6 +91,11 @@ namespace GraphTheory.Editor
             //this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent gce) => { Debug.Log(gce.newRect.position); });
         }
 
+        public void RepaintNodeView()
+        {
+            m_nodeViewDrawer.Repaint();
+        }
+
         protected override void ToggleCollapse()
         {
             base.ToggleCollapse();
@@ -129,8 +133,7 @@ namespace GraphTheory.Editor
             }
             m_edgeViews.Clear();
 
-            m_nodeGraphView.OnAddBlackboardElement -= HandleOnAddBlackboardElement;
-            m_nodeGraphView.OnRemoveBlackboardElement -= HandleOnRemoveBlackboardElement;
+            m_nodeGraphView.OnBlackboardElementChanged -= HandleOnBlackboardElementChanged;
         }
 
         public void OnDeleteNode()
@@ -250,17 +253,7 @@ namespace GraphTheory.Editor
             //    .Cast<GraphElement>());
         }
 
-        private void HandleOnAddBlackboardElement(BlackboardElement element)
-        {
-            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
-        }
-
-        private void HandleOnRemoveBlackboardElement(BlackboardElement element)
-        {
-            m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
-        }
-
-        public void HandleOnBlackboardElementNameChanged()
+        public void HandleOnBlackboardElementChanged()
         {
             m_nodeViewDrawer?.OnBlackboardElementChanged?.Invoke();
         }

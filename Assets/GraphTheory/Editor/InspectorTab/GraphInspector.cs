@@ -19,9 +19,7 @@ namespace GraphTheory.Editor
         private IMGUIContainer m_imguiContainer = null;
         private BlackboardView m_blackboardView = null;
 
-        public Action<BlackboardElement> OnAddBlackboardElement { get { return m_blackboardView.OnAddBlackboardElement; } set { m_blackboardView.OnAddBlackboardElement = value; } }
-        public Action<BlackboardElement> OnRemoveBlackboardElement { get { return m_blackboardView.OnRemoveBlackboardElement; } set { m_blackboardView.OnRemoveBlackboardElement = value; } }
-        public Action OnBlackboardNameChanged { get { return m_blackboardView.OnBlackboardElementNameChanged; } set { m_blackboardView.OnBlackboardElementNameChanged = value; } }
+        public Action OnBlackboardElementChanged { get { return m_blackboardView.OnBlackboardElementChanged; } set { m_blackboardView.OnBlackboardElementChanged = value; } }
 
         public GraphInspector(NodeGraphView nodeGraphView)
         {

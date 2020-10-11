@@ -39,6 +39,8 @@ namespace GraphTheory
         public virtual int DefaultNumOutports { get { return 1; } }
         public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
 
+        public static string OutportsVarName = "m_outports";
+
         public ANode()
         {
             for (int i = 0; i < DefaultNumOutports; i++)

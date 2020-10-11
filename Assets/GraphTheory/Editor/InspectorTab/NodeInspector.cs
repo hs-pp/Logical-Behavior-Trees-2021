@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace GraphTheory.Editor
         private PropertyField m_propertyField = null;
         private IMGUIContainer m_imguiContainer = null;
         private SerializedProperty m_selectedNodeProperty = null;
+        private ANode m_selectedNode = null;
 
         private Label m_nodeNameLabel = null;
         private Label m_nodeIdLabel = null;
@@ -74,6 +76,7 @@ namespace GraphTheory.Editor
                 return;
             }
 
+            m_selectedNode = node;
             m_selectedNodeProperty = serializedNode;
             
             m_nodeNameLabel.text = AddSpacesToSentence(node.GetType().Name);
@@ -117,9 +120,15 @@ namespace GraphTheory.Editor
 
             m_selectedNodeProperty.serializedObject.Update();
 
+            EditorGUI.BeginChangeCheck();
             GUILayout.BeginVertical();
             EditorGUILayout.PropertyField(m_selectedNodeProperty, true);
             GUILayout.EndVertical();
+            if(EditorGUI.EndChangeCheck())
+            {
+                m_selectedNodeProperty.serializedObject.ApplyModifiedProperties();
+                m_nodeGraphView.GetNodeViewById(m_selectedNode.Id).HandleOnSerializedPropertyChanged();
+            }
         }
 
         private void UnselectNode()
@@ -174,6 +183,29 @@ namespace GraphTheory.Editor
             {
                 m_commentPlaceholder.style.display = DisplayStyle.Flex;
             }
+        }
+
+        public void RegisterAnyChangeEvent(VisualElement field, Action callback)
+        {
+            field.RegisterCallback((ChangeEvent<int> e) => callback());
+            field.RegisterCallback((ChangeEvent<bool> e) => callback());
+            field.RegisterCallback((ChangeEvent<float> e) => callback());
+            field.RegisterCallback((ChangeEvent<string> e) => callback());
+            field.RegisterCallback((ChangeEvent<Color> e) => callback());
+            field.RegisterCallback((ChangeEvent<UnityEngine.Object> e) => callback());
+            field.RegisterCallback((ChangeEvent<Enum> e) => callback());
+            field.RegisterCallback((ChangeEvent<Vector2> e) => callback());
+            field.RegisterCallback((ChangeEvent<Vector3> e) => callback());
+            field.RegisterCallback((ChangeEvent<Vector4> e) => callback());
+            field.RegisterCallback((ChangeEvent<Rect> e) => callback());
+            field.RegisterCallback((ChangeEvent<AnimationCurve> e) => callback());
+            field.RegisterCallback((ChangeEvent<Bounds> e) => callback());
+            field.RegisterCallback((ChangeEvent<Gradient> e) => callback());
+            field.RegisterCallback((ChangeEvent<Quaternion> e) => callback());
+            field.RegisterCallback((ChangeEvent<Vector2Int> e) => callback());
+            field.RegisterCallback((ChangeEvent<Vector3Int> e) => callback());
+            field.RegisterCallback((ChangeEvent<RectInt> e) => callback());
+            field.RegisterCallback((ChangeEvent<BoundsInt> e) => callback());
         }
     }
 }

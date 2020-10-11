@@ -26,6 +26,7 @@ namespace GraphTheory
         public BlackboardData BlackboardData { get { return m_blackboardData; } }
         public Action<string> OnNodeOutportAdded = null;
         public Action<string, int> OnNodeOutportRemoved = null;
+        public Action<string> OnNodeAllOutportsRemoved = null;
 
         public NodeGraph()
         {
@@ -51,6 +52,11 @@ namespace GraphTheory
         public static void RemoveOutportFromNode(SerializedProperty serializedNode, int index = -1)
         {
             (serializedNode.serializedObject.targetObject as NodeGraph).RemoveOutportFromNode_Internal(serializedNode, index);
+        }
+
+        public static void RemoveAllOutportsFromNode(SerializedProperty serializedNode)
+        {
+            (serializedNode.serializedObject.targetObject as NodeGraph).RemoveAllOutportsFromNode_Internal(serializedNode);
         }
 
 
@@ -84,6 +90,15 @@ namespace GraphTheory
             serializedNode.FindPropertyRelative("m_outports").DeleteArrayElementAtIndex(index);
             serializedNode.serializedObject.ApplyModifiedProperties();
             OnNodeOutportRemoved?.Invoke(nodeId, index);
+        }
+
+        private void RemoveAllOutportsFromNode_Internal(SerializedProperty serializedNode)
+        {
+            string nodeId = serializedNode.FindPropertyRelative("m_id").stringValue;
+            Undo.RegisterCompleteObjectUndo(this, $"Removed all Outports from Node {nodeId}");
+            serializedNode.FindPropertyRelative("m_outports").arraySize = 0;
+            serializedNode.serializedObject.ApplyModifiedProperties();
+            OnNodeAllOutportsRemoved?.Invoke(nodeId);
         }
 
         /// For SerializedProperties ///

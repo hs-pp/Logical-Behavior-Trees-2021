@@ -17,6 +17,8 @@ namespace GraphTheory.Editor
         public VisualElement SecondaryBodyContainer { get; private set; }
         public VisualElement FooterContainer { get; private set; }
 
+        private VisualElement AllOutportsContainer = null;
+
         public NodeDisplayContainers(NodeView nodeView)
         {
             NodeView = nodeView;
@@ -39,8 +41,12 @@ namespace GraphTheory.Editor
 
             FooterContainer = new VisualElement();
             FooterContainer.name = "footer-container";
-
             NodeView.Add(FooterContainer);
+
+            AllOutportsContainer = new VisualElement();
+            AllOutportsContainer.name = "all-ports-container";
+            AllOutportsContainer.style.backgroundColor = new Color(0.17578125f, 0.17578125f, 0.17578125f);
+            NodeView.outputContainer.Add(AllOutportsContainer);
         }
 
         public VisualElement CreateBaseElement(string name)
@@ -55,7 +61,7 @@ namespace GraphTheory.Editor
         {
             OutportContainer outportContainer = new OutportContainer(outport);
             OutportContainers.Add(outportContainer);
-            NodeView.outputContainer.Add(outportContainer);
+            AllOutportsContainer.Add(outportContainer);
         }
 
         public void SetInport(PortView inport)
