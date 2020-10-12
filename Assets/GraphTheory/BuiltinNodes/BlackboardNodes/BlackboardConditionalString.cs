@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.UIElements;
 #endif
 
 [BlackboardElementType(typeof(StringBlackboardElement))]
@@ -35,7 +31,7 @@ public class BlackboardConditionalString : IBlackboardConditionalElement
     {
         string selectedEnum = ((StringComparator)(conditionalProp.FindPropertyRelative(ComparatorVarName).intValue)).ToString();
         string comparedVal = conditionalProp.FindPropertyRelative(ComparedValVarName).stringValue;
-        return $"{selectedEnum} to {comparedVal}";
+        return $"{selectedEnum} to \"{comparedVal}\"";
     }
 #endif
 }

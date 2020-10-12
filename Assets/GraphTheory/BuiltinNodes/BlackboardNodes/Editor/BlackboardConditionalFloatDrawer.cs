@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(BlackboardConditionalString))]
-public class BlackboardConditionalStringDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(BlackboardConditionalFloat))]
+public class BlackboardConditionalFloatDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
@@ -14,7 +14,6 @@ public class BlackboardConditionalStringDrawer : PropertyDrawer
         EditorGUI.BeginProperty(position, label, property);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PropertyField(property.FindPropertyRelative(BlackboardConditionalString.ComparatorVarName), GUIContent.none);
-        GUILayout.Label(" to ");
         SerializedProperty boolProp = property.FindPropertyRelative(BlackboardConditionalString.ComparedValVarName);
         EditorGUILayout.PropertyField(boolProp, GUIContent.none);
         EditorGUILayout.EndHorizontal();

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace GraphTheory.BuiltInNodes
 {
-    //[CustomNodeViewDrawer(typeof(BlackboardConditional))]
+    [CustomNodeViewDrawer(typeof(BlackboardConditional))]
     public class BlackboardConditionalNodeViewDrawer : NodeViewDrawer
     {
         public override string DisplayName { get { return "Blackboard Conditional"; } }
