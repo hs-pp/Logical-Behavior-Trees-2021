@@ -40,10 +40,46 @@ namespace GraphTheory.BuiltInNodes
                 return m_blackboardConditionalElementTypes;
             }
         }
+        private static Dictionary<Type, IBlackboardConditionalElement> m_blankConditionalElements = null;
+        private static Dictionary<string, IBlackboardConditionalElement> m_blankConditionalsByTypeString 
+            = new Dictionary<string, IBlackboardConditionalElement>();
+        public static string GetOutportLabel(SerializedProperty conditionalProp)
+        {
+            if(m_blankConditionalElements == null)
+            {
+                SetElementTypeDictionary();
+            }
+            IBlackboardConditionalElement blankConditional = null;
+            string managedReferenceTypeStr = conditionalProp.managedReferenceFullTypename;
+            m_blankConditionalsByTypeString.TryGetValue(managedReferenceTypeStr, out blankConditional);
+            if(blankConditional == null)
+            {
+                GetTypeFromManagedReferenceFullTypeName(managedReferenceTypeStr, out Type conditionalType);
+                blankConditional = m_blankConditionalElements[conditionalType];
+                m_blankConditionalsByTypeString.Add(managedReferenceTypeStr, blankConditional);
+            }
+            return blankConditional.GetOutportLabel(conditionalProp);
+        }
+
+        private static bool GetTypeFromManagedReferenceFullTypeName(string managedReferenceFullTypename, out Type managedReferenceInstanceType)
+        {
+            managedReferenceInstanceType = null;
+
+            var parts = managedReferenceFullTypename.Split(' ');
+            if (parts.Length == 2)
+            {
+                var assemblyPart = parts[0];
+                var nsClassnamePart = parts[1];
+                managedReferenceInstanceType = Type.GetType($"{nsClassnamePart}, {assemblyPart}");
+            }
+
+            return managedReferenceInstanceType != null;
+        }
 
         private static void SetElementTypeDictionary()
         {
             m_blackboardConditionalElementTypes = new Dictionary<Type, Type>();
+            m_blankConditionalElements = new Dictionary<Type, IBlackboardConditionalElement>();
             List<Type> conditionalElementTypes = new List<Type>();
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             for (int i = 0; i < assemblies.Length; i++)
@@ -58,8 +94,10 @@ namespace GraphTheory.BuiltInNodes
                 if(!m_blackboardConditionalElementTypes.ContainsKey(relatedElementType))
                 {
                     m_blackboardConditionalElementTypes.Add(relatedElementType, conditionalElementTypes[i]);
+                    m_blankConditionalElements.Add(conditionalElementTypes[i], Activator.CreateInstance(conditionalElementTypes[i]) as IBlackboardConditionalElement);
                 }
             }
+            Debug.Log("Count" + m_blankConditionalElements.Count);
         }
 #endif
     }

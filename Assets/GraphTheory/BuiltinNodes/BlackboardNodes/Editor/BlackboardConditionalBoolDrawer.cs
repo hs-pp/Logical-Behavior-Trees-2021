@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [CustomPropertyDrawer(typeof(BlackboardConditionalBool))]
 public class BlackboardConditionalBoolDrawer : PropertyDrawer
@@ -16,14 +12,13 @@ public class BlackboardConditionalBoolDrawer : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        SerializedProperty boolProp = property.FindPropertyRelative("m_comparedValue");
-
         EditorGUI.BeginProperty(position, label, property);
-        GUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(property.FindPropertyRelative("m_boolComparator"), GUIContent.none);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(property.FindPropertyRelative(BlackboardConditionalBool.ComparatorVarName), GUIContent.none);
         GUILayout.Label(" to ");
+        SerializedProperty boolProp = property.FindPropertyRelative(BlackboardConditionalBool.ComparedValVarName);
         boolProp.boolValue = Convert.ToBoolean(EditorGUILayout.Popup(Convert.ToInt32(boolProp.boolValue), new string[] { "False", "True" }));
-        GUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
         EditorGUI.EndProperty();
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace GraphTheory.BuiltInNodes
 {
-    [CustomNodeViewDrawer(typeof(BlackboardConditional))]
+    //[CustomNodeViewDrawer(typeof(BlackboardConditional))]
     public class BlackboardConditionalNodeViewDrawer : NodeViewDrawer
     {
         public override string DisplayName { get { return "Blackboard Conditional"; } }
@@ -57,10 +57,8 @@ namespace GraphTheory.BuiltInNodes
                 .FindPropertyRelative(BlackboardConditional.ConditionalsVarName)
                 .GetArrayElementAtIndex(outportIndex);
 
-            string selectedEnum = ((BlackboardConditionalBool.BoolComparator)(conditionalProp.FindPropertyRelative("m_boolComparator").intValue)).ToString();
-            string comparedVal = conditionalProp.FindPropertyRelative("m_comparedValue").boolValue.ToString();
-            string desc = $"{selectedEnum} to {comparedVal}";
-            outportContainer.OutportBody.Add(new Label(desc));
+
+            outportContainer.OutportBody.Add(new Label(BlackboardConditional.GetOutportLabel(conditionalProp)));
         }
     }
 }

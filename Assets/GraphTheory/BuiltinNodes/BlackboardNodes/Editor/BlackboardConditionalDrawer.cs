@@ -27,17 +27,8 @@ namespace GraphTheory.BuiltInNodes
             // Selected Blackboard Element dropdown
             SerializedProperty blackboardElementIdProp = property.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName);
             int selectedIndex = blackboardElements.FindIndex(x => x.GUID == blackboardElementIdProp.stringValue);
-            if(selectedIndex == -1)
+            if(selectedIndex == -1) // Trying to handle this here causes the apocalypse. Just rely on the NodeView.
             {
-                conditionalsList.serializedObject.Update();
-
-                int group = Undo.GetCurrentGroup();
-                Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Resetting BlackboardConditional element");
-                blackboardElementIdProp.stringValue = "";
-                NodeGraph.RemoveAllOutportsFromNode(property);
-                conditionalsList.arraySize = 0;
-                conditionalsList.serializedObject.ApplyModifiedProperties();
-                Undo.CollapseUndoOperations(group);
             }
             EditorGUI.BeginChangeCheck();
             selectedIndex = EditorGUILayout.Popup("Blackboard Element", selectedIndex, blackboardElements.Select(x => x.Name).ToArray());

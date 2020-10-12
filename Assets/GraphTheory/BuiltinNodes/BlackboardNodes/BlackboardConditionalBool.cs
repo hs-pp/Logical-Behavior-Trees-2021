@@ -26,4 +26,16 @@ public class BlackboardConditionalBool : IBlackboardConditionalElement
     {
         return true;
     }
+
+#if UNITY_EDITOR
+    public static readonly string ComparatorVarName = "m_boolComparator";
+    public static readonly string ComparedValVarName = "m_comparedValue";
+
+    public string GetOutportLabel(SerializedProperty conditionalProp)
+    {
+        string selectedEnum = ((BoolComparator)(conditionalProp.FindPropertyRelative(ComparatorVarName).intValue)).ToString();
+        string comparedVal = conditionalProp.FindPropertyRelative(ComparedValVarName).boolValue.ToString();
+        return $"{selectedEnum} to {comparedVal}";
+    }
+#endif
 }
