@@ -34,8 +34,6 @@ namespace GraphTheory.BuiltInNodes
             selectedIndex = EditorGUILayout.Popup("Blackboard Element", selectedIndex, blackboardElements.Select(x => x.Name).ToArray());
             if(EditorGUI.EndChangeCheck())
             {
-                conditionalsList.serializedObject.Update();
-
                 int group = Undo.GetCurrentGroup();
                 Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Switching BlackboardConditional element");
                 blackboardElementIdProp.stringValue = blackboardElements[selectedIndex].GUID;
@@ -82,7 +80,6 @@ namespace GraphTheory.BuiltInNodes
                 if (conditionalElementType != null)
                 {
                     conditionalsList.serializedObject.Update();
-                    Debug.Log("pressed");
                     int group = Undo.GetCurrentGroup();
                     Undo.RecordObject(conditionalsList.serializedObject.targetObject, "Add blackboard conditional");
                     IBlackboardConditionalElement newConditionalEle = Activator.CreateInstance(conditionalElementType) as IBlackboardConditionalElement;

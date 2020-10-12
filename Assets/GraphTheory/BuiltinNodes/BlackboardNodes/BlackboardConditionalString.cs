@@ -27,10 +27,10 @@ public class BlackboardConditionalString : IBlackboardConditionalElement
     public static readonly string ComparatorVarName = "m_comparator";
     public static readonly string ComparedValVarName = "m_comparedValue";
 
-    public string GetOutportLabel(SerializedProperty conditionalProp)
+    public string GetOutportLabel(SerializedProperty setterProp)
     {
-        string selectedEnum = ((StringComparator)(conditionalProp.FindPropertyRelative(ComparatorVarName).intValue)).ToString();
-        string comparedVal = conditionalProp.FindPropertyRelative(ComparedValVarName).stringValue;
+        string selectedEnum = ((StringComparator)(setterProp.FindPropertyRelative(ComparatorVarName).intValue)).ToString();
+        string comparedVal = setterProp.FindPropertyRelative(ComparedValVarName).stringValue;
         return $"{selectedEnum} to \"{comparedVal}\"";
     }
 #endif

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,11 +20,11 @@ namespace GraphTheory.BuiltInNodes
         private List<IBlackboardConditionalElement> m_conditionals = new List<IBlackboardConditionalElement>();
 
 #if UNITY_EDITOR
-        public override bool UseIMGUIPropertyDrawer { get { return true; } }
-        public override int DefaultNumOutports { get { return 0; } }
-
         public static string BlackboardElementIdVarName = "m_blackboardElementId";
         public static string ConditionalsVarName = "m_conditionals";
+
+        public override bool UseIMGUIPropertyDrawer { get { return true; } }
+        public override int DefaultNumOutports { get { return 0; } }
 
         private static Dictionary<Type, Type> m_blackboardConditionalElementTypes = null;
         public static Dictionary<Type, Type> BlackboardConditionalElementTypes
@@ -43,6 +41,7 @@ namespace GraphTheory.BuiltInNodes
         private static Dictionary<Type, IBlackboardConditionalElement> m_blankConditionalElements = null;
         private static Dictionary<string, IBlackboardConditionalElement> m_blankConditionalsByTypeString 
             = new Dictionary<string, IBlackboardConditionalElement>();
+
         public static string GetOutportLabel(SerializedProperty conditionalProp)
         {
             if(m_blankConditionalElements == null)
@@ -97,7 +96,6 @@ namespace GraphTheory.BuiltInNodes
                     m_blankConditionalElements.Add(conditionalElementTypes[i], Activator.CreateInstance(conditionalElementTypes[i]) as IBlackboardConditionalElement);
                 }
             }
-            Debug.Log("Count" + m_blankConditionalElements.Count);
         }
 #endif
     }
