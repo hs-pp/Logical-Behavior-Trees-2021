@@ -1,10 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:VisualElement name="inport-container" style="flex-grow: 0;">
-        <ui:VisualElement name="inport-header" style="flex-grow: 1; justify-content: center;" />
-        <ui:VisualElement name="inport-row" style="flex-direction: row;">
-            <ui:VisualElement name="inport-area" style="height: auto; width: auto; justify-content: center;" />
-            <ui:VisualElement name="inport-body" style="flex-grow: 1; justify-content: center;" />
-        </ui:VisualElement>
-        <ui:VisualElement name="inport-footer" style="flex-grow: 1; justify-content: center;" />
-    </ui:VisualElement>
-</ui:UXML>

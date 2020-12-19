@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:ScrollView name="main-scrollview" style="margin-left: 8px; margin-right: 8px;">
+        <ui:VisualElement name="opened-graph-group" style="padding-bottom: 16px; padding-top: 8px;">
+            <ui:VisualElement style="border-left-color: rgba(115, 115, 115, 255); border-right-color: rgba(115, 115, 115, 255); border-top-color: rgba(115, 115, 115, 255); border-bottom-color: rgba(115, 115, 115, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; border-top-left-radius: 6px; border-bottom-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                <ui:Label text="Currently Open" name="opened-label" style="-unity-text-align: upper-center;" />
+                <ui:VisualElement name="divider" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(126, 126, 126); border-right-color: rgb(126, 126, 126); border-top-color: rgb(126, 126, 126); border-bottom-color: rgb(126, 126, 126); border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; margin-left: 16px; margin-right: 16px; margin-bottom: 4px;" />
+							  <Logical.Editor.UIElements.ObjectDisplayField name="opened-graph-field" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+			    <Logical.Editor.UIElements.GraphGroupFoldout name="recents-foldout" />
+			    <Logical.Editor.UIElements.GraphGroupFoldout name="favorites-foldout" />
+        <ui:VisualElement name="all-graphs-group" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(126, 126, 126); border-right-color: rgb(126, 126, 126); border-top-color: rgb(126, 126, 126); border-bottom-color: rgb(126, 126, 126); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; margin-top: 16px; margin-bottom: 8px;">
+            <ui:Label text=" All Graphs" style="margin-bottom: 4px; -unity-text-align: upper-center;" />
+            <ui:VisualElement name="divider" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(126, 126, 126); border-right-color: rgb(126, 126, 126); border-top-color: rgb(126, 126, 126); border-bottom-color: rgb(126, 126, 126); margin-left: 16px; margin-right: 16px; margin-bottom: 4px;" />
+            <uie:ToolbarSearchField focusable="True" name="graphs-search-bar" style="width: auto; margin-left: 0; margin-right: 0; margin-bottom: 8px;" />
+        </ui:VisualElement>
+    </ui:ScrollView>
+</ui:UXML>

@@ -1,5 +1,5 @@
 ﻿using System;
-using GraphTheory;
+using Logical;
 
 public class SampleNodeGraph : NodeGraph
 {

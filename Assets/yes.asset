@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
+  m_Name: yes
+  m_EditorClassIdentifier: 
+  m_nodeCollection:
+    m_nodes:
+    - id: 0
+    m_entryNodeId: 01901eea-46ea-4495-99ae-11115923ee66
+  GraphProperties:
+    id: 1
+  m_blackboardData:
+    m_allElements:
+    - id: 2
+    - id: 3
+  references:
+    version: 1
+    00000000:
+      type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 01901eea-46ea-4495-99ae-11115923ee66
+        m_outports:
+        - Id: 9ca3f029-4f60-4f60-bcb7-58c49135ad24
+          ConnectedNodeId: 
+        m_position: {x: 0, y: 0}
+        m_comment: 
+    00000001:
+      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
+      data:
+        thisint: 6
+        thisstring: 
+        serializedClass:
+          serializedInt: 2
+          serializedString: 
+    00000002:
+      type: {class: StringBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: d84bd8e3-4573-4964-b078-eaf8398002f7
+        m_name: new String
+        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 
+    00000003:
+      type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 6e315a37-61ca-44a1-9eb3-4723240a429f
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0

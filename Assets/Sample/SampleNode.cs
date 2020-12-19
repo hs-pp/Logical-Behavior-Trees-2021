@@ -1,4 +1,4 @@
-﻿using GraphTheory;
+﻿using Logical;
 using System;
 using UnityEngine;
 

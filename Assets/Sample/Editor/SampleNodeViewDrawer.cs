@@ -1,6 +1,6 @@
-﻿using GraphTheory;
-using GraphTheory.Editor;
-using GraphTheory.Editor.UIElements;
+﻿using Logical;
+using Logical.Editor;
+using Logical.Editor.UIElements;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

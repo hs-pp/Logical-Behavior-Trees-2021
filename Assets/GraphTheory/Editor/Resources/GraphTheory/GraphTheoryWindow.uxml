@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <uie:Toolbar name="toolbar" />
-    <ui:VisualElement name="base" style="width: 100%; height: 100%; display: flex;">
-        <GraphTheory.Editor.UIElements.TwoPaneSplitView orientation="horizontal" name="main-TwoPanelSplit" fixed-pane-initial-size="400" fixed-pane-index="0" min-pane-size="0">
-            <ui:VisualElement name="main-panel-left" style="min-width: auto; min-height: auto;" />
-            <ui:VisualElement name="main-panel-right" />
-        </GraphTheory.Editor.UIElements.TwoPaneSplitView>
-    </ui:VisualElement>
-</ui:UXML>

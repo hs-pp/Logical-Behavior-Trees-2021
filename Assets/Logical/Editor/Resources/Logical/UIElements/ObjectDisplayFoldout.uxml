@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:Foldout text="Foldout" name="foldout-main">
+			<Logical.Editor.UIElements.ObjectDisplayField />
+			<Logical.Editor.UIElements.ObjectDisplayField />
+			<Logical.Editor.UIElements.ObjectDisplayField />
+    </ui:Foldout>
+</ui:UXML>

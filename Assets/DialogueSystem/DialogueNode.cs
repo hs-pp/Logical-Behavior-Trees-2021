@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GraphTheory;
+using Logical;
 using System;
 using System.Runtime.Serialization;
 using UnityEditor.Experimental.GraphView;
