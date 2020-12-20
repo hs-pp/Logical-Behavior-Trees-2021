@@ -10,8 +10,9 @@ namespace Logical.Editor
     /// </summary>
     public class NodeDisplayContainers
     {
-        private static readonly Color BodyColor = new Color(0.15625f, 0.15625f, 0.15625f);
-        private static readonly Color OutportContainerColor = new Color(0.17578125f, 0.17578125f, 0.17578125f);
+        private static readonly Color LightGray = new Color(0.247f, 0.247f, 0.247f);
+        private static readonly Color MediumGray = new Color(0.17578125f, 0.17578125f, 0.17578125f);
+        private static readonly Color DarkGray = new Color(0.15625f, 0.15625f, 0.15625f);
 
         public NodeView NodeView { get; private set; }
         public NodeViewDrawer NodeViewDrawer { get; private set; }
@@ -24,59 +25,45 @@ namespace Logical.Editor
         public List<OutportContainer> OutportContainers = new List<OutportContainer>();
         public VisualElement SecondaryBodyContainer { get; private set; }
         public VisualElement FooterContainer { get; private set; }
+
+        // Specifically for setting colors
+        public VisualElement TitleElement { get; private set; }
+        public VisualElement TitleBordersElement { get; private set; }
+
         private VisualElement AllOutportsContainer { get; set; }
 
         public NodeDisplayContainers(NodeView nodeView, NodeViewDrawer nodeViewDrawer)
         {
             NodeView = nodeView;
             NodeViewDrawer = nodeViewDrawer;
-            Color nodeColor = NodeViewDrawer.NodeColor;
-            bool doColor = nodeColor != Color.clear; // Clear implies not implemented aka no custom color
-            if(!doColor)
-            {
-                nodeColor = OutportContainerColor;
-            }
 
             HeaderContainer = new VisualElement();
             HeaderContainer.name = "header-container";
             NodeView.Insert(0, HeaderContainer);
 
-            PreTitleContainer = CreateBaseElement("pre-title-container", nodeColor);
+            PreTitleContainer = CreateBaseElement("pre-title-container", LightGray);
             NodeView.titleContainer.Insert(0, PreTitleContainer);
 
-            PostTitleContainer = CreateBaseElement("post-title-container", nodeColor);
+            PostTitleContainer = CreateBaseElement("post-title-container", LightGray);
             NodeView.titleContainer.Add(PostTitleContainer);
 
-            PrimaryBodyContainer = CreateBaseElement("upper-body-container", BodyColor);
+            PrimaryBodyContainer = CreateBaseElement("upper-body-container", DarkGray);
             NodeView.Q<VisualElement>("contents")?.Insert(1, PrimaryBodyContainer);
 
-            SecondaryBodyContainer = CreateBaseElement("body-container", BodyColor);
+            SecondaryBodyContainer = CreateBaseElement("body-container", DarkGray);
             NodeView.extensionContainer.Add(SecondaryBodyContainer);
 
             FooterContainer = new VisualElement();
             FooterContainer.name = "footer-container";
             NodeView.Add(FooterContainer);
 
-            AllOutportsContainer = CreateBaseElement("all-ports-container", OutportContainerColor);
+            AllOutportsContainer = CreateBaseElement("all-ports-container", MediumGray);
             NodeView.outputContainer.Add(AllOutportsContainer);
 
-            if (doColor)
-            {
-                VisualElement titleElement = NodeView.Q<VisualElement>("title");
-                if (titleElement != null)
-                {
-                    titleElement.style.backgroundColor = nodeColor;
-                }
-                VisualElement titleBordersElement = NodeView.Q<VisualElement>("node-border");
-                if (titleBordersElement != null)
-                {
-                    titleBordersElement.style.borderTopColor = nodeColor;
-                    titleBordersElement.style.borderLeftColor = nodeColor;
-                    titleBordersElement.style.borderRightColor = nodeColor;
-                    titleBordersElement.style.borderBottomColor = nodeColor;
-                }
-                NodeView.elementTypeColor = NodeViewDrawer.NodeColor;
-            }
+            TitleElement = NodeView.Q<VisualElement>("title");
+            TitleBordersElement = NodeView.Q<VisualElement>("node-border");
+
+            UpdateColor();
         }
 
         public VisualElement CreateBaseElement(string name, Color backgroundColor)
@@ -115,6 +102,22 @@ namespace Logical.Editor
             return portViews;
         }
 
+        private void UpdateColor()
+        {
+            Color nodeColor = NodeViewDrawer.NodeColor;
+            if (nodeColor != Color.clear)// Clear implies not implemented aka no custom color
+            {
+                TitleElement.style.backgroundColor = nodeColor;
+                PreTitleContainer.style.backgroundColor = nodeColor;
+                PostTitleContainer.style.backgroundColor = nodeColor;
+                TitleBordersElement.style.borderTopColor = nodeColor;
+                TitleBordersElement.style.borderLeftColor = nodeColor;
+                TitleBordersElement.style.borderRightColor = nodeColor;
+                TitleBordersElement.style.borderBottomColor = nodeColor;
+                NodeView.elementTypeColor = nodeColor;
+            }
+        }
+
         public void ClearDisplays(bool deletePorts)
         {
             HeaderContainer.Clear();
@@ -133,6 +136,7 @@ namespace Logical.Editor
             }
             SecondaryBodyContainer.Clear();
             FooterContainer.Clear();
+            UpdateColor();
         }
 
         public void ResolveCollapsedPorts()
