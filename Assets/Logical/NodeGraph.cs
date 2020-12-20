@@ -20,14 +20,14 @@ namespace Logical
         [SerializeReference, HideInInspector]
         public AGraphProperties GraphProperties; // Properties universally associated to the graph
         [SerializeField]
-        private BlackboardData m_blackboardData; // Properties associated to a specific instance of the graph.
+        private BlackboardProperties m_blackboardProperties; // Properties associated to a specific instance of the graph.
 
 #if UNITY_EDITOR
         protected abstract Type GraphPropertiesType { get; } // Only necessary to determine what class to instantiate.
         public virtual bool UseIMGUIPropertyDrawer { get { return false; } } // Toggle on for LogicalGraphWindow to draw these using IMGUI. Defaulted to use UIToolkit.
 
         public NodeCollection NodeCollection { get { return m_nodeCollection; } }
-        public BlackboardData BlackboardData { get { return m_blackboardData; } }
+        public BlackboardProperties BlackboardProperties { get { return m_blackboardProperties; } }
         public Action<string> OnNodeOutportAdded = null;
         public Action<string, int> OnNodeOutportRemoved = null;
         public Action<string> OnNodeAllOutportsRemoved = null;
@@ -41,9 +41,9 @@ namespace Logical
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
             GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
-            m_blackboardData = new BlackboardData();
-            m_blackboardData.AddElement(new StringBlackboardElement());
-            m_blackboardData.AddElement(new BoolBlackboardElement());
+            m_blackboardProperties = new BlackboardProperties();
+            m_blackboardProperties.AddElement(new StringBlackboardElement());
+            m_blackboardProperties.AddElement(new BoolBlackboardElement());
         }
 
         public void Awake()
@@ -108,7 +108,7 @@ namespace Logical
         /// For SerializedProperties ///
         public static readonly string NodeCollection_VarName = "m_nodeCollection";
         public static readonly string GraphProperties_VarName = "GraphProperties";
-        public static readonly string BlackboardData_VarName = "m_blackboardData";
+        public static readonly string BlackboardProperties_VarName = "m_blackboardProperties";
 
 #endif
     }

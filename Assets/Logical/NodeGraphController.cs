@@ -24,7 +24,7 @@ namespace Logical
 
         public GraphRunner GraphRunner { get; private set; }
         public AGraphProperties GraphProperties { get { return GraphRunner.GraphProperties; } }
-        public BlackboardData BlackboardData { get { return GraphRunner.BlackboardData; } }
+        public BlackboardProperties BlackboardProperties { get { return GraphRunner.BlackboardProperties; } }
 
         public void Start()
         {
@@ -52,7 +52,7 @@ namespace Logical
             GraphRunner = new GraphRunner(m_nodeGraph, m_useOverrides
                 ? m_overrideProperties
                 : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as AGraphProperties,
-                JsonUtility.FromJson<BlackboardData>(JsonUtility.ToJson(m_nodeGraph.BlackboardData)));
+                JsonUtility.FromJson<BlackboardProperties>(JsonUtility.ToJson(m_nodeGraph.BlackboardProperties)));
 
             GraphRunner.OnGraphStart += () => { OnGraphStart?.Invoke(); };
             GraphRunner.OnGraphStop += () => { OnGraphStop?.Invoke(); };

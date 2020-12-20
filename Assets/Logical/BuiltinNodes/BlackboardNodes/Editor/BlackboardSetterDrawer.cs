@@ -22,7 +22,7 @@ namespace Logical.BuiltInNodes
             bool blackboardEleIsSet = true;
 
             SerializedProperty setterValueProp = property.FindPropertyRelative(BlackboardSetter.SetterValueVarName);
-            List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardData.GetAllElements();
+            List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardProperties.GetAllElements();
             SerializedProperty blackboardElementIdProp = property.FindPropertyRelative(BlackboardSetter.BlackboardElementIdVarName);
             int selectedIndex = blackboardElements.FindIndex(x => x.GUID == blackboardElementIdProp.stringValue);
             if (selectedIndex == -1) // Trying to handle this here causes the apocalypse. Just rely on the NodeView.

@@ -17,7 +17,7 @@ namespace Logical
     /// graph asset.
     /// </summary>
     [Serializable]
-    public class BlackboardData
+    public class BlackboardProperties
     {
         [SerializeReference]
         private List<BlackboardElement> m_allElements = new List<BlackboardElement>();

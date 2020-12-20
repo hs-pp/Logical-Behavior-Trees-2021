@@ -21,7 +21,7 @@ namespace Logical.BuiltInNodes
         {
             EditorGUI.BeginProperty(position, label, property);
             property.serializedObject.Update();
-            List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardData.GetAllElements();
+            List<BlackboardElement> blackboardElements = (property.serializedObject.targetObject as NodeGraph).BlackboardProperties.GetAllElements();
             SerializedProperty conditionalsList = property.FindPropertyRelative(BlackboardConditional.ConditionalsVarName);
 
             // Selected Blackboard Element dropdown

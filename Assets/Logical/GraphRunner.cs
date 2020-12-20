@@ -19,7 +19,7 @@ namespace Logical
     {
         private NodeCollection m_nodeCollection = null;
         public AGraphProperties GraphProperties { get; private set; }
-        public BlackboardData BlackboardData { get; private set; }
+        public BlackboardProperties BlackboardProperties { get; private set; }
 
         [NonSerialized]
         public Action OnGraphStart = null;
@@ -29,11 +29,11 @@ namespace Logical
         public Action<ANode> OnNodeChange = null;
         private ANode m_currentNode = null;
 
-        public GraphRunner(NodeGraph nodeGraph, AGraphProperties graphProperties, BlackboardData blackboardData)
+        public GraphRunner(NodeGraph nodeGraph, AGraphProperties graphProperties, BlackboardProperties blackboardProperties)
         {
             m_nodeCollection = nodeGraph.NodeCollection;
             GraphProperties = graphProperties;
-            BlackboardData = blackboardData;
+            BlackboardProperties = blackboardProperties;
 
             if (m_nodeCollection == null)
             {
@@ -41,11 +41,11 @@ namespace Logical
             }
         }
 
-        public GraphRunner(NodeCollection nodeCollection, AGraphProperties graphProperties, BlackboardData blackboardData)
+        public GraphRunner(NodeCollection nodeCollection, AGraphProperties graphProperties, BlackboardProperties blackboardProperties)
         {
             m_nodeCollection = nodeCollection;
             GraphProperties = graphProperties;
-            BlackboardData = blackboardData;
+            BlackboardProperties = blackboardProperties;
         }
 
         public void StartGraph()

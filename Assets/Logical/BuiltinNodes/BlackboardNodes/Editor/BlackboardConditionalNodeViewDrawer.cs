@@ -26,7 +26,7 @@ namespace Logical.BuiltInNodes
             }
 
             BlackboardConditional target = (Target as BlackboardConditional);
-            if(BlackboardData.GetElementById(target.BlackboardElementId) == null)
+            if(BlackboardProperties.GetElementById(target.BlackboardElementId) == null)
             {
                 TargetProperty.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName).stringValue = "";
                 SerializedProperty conditionalsList = TargetProperty.FindPropertyRelative(BlackboardConditional.ConditionalsVarName);
@@ -42,7 +42,7 @@ namespace Logical.BuiltInNodes
         {
             base.OnDrawPrimaryBody(primaryBodyContainer);
             string blackboardEleId = TargetProperty.FindPropertyRelative(BlackboardConditional.BlackboardElementIdVarName).stringValue;
-            BlackboardElement blackboardElement = NodeGraph.BlackboardData.GetElementById(blackboardEleId);
+            BlackboardElement blackboardElement = NodeGraph.BlackboardProperties.GetElementById(blackboardEleId);
             Label selectedEleLabel = new Label(blackboardElement == null ? "None" : blackboardElement.Name);
             selectedEleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
             selectedEleLabel.style.fontSize = 18;

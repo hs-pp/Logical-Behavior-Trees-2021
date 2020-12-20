@@ -26,7 +26,7 @@ namespace Logical.BuiltInNodes
             }
 
             BlackboardSetter target = (Target as BlackboardSetter);
-            if (BlackboardData.GetElementById(target.BlackboardElementId) == null)
+            if (BlackboardProperties.GetElementById(target.BlackboardElementId) == null)
             {
                 TargetProperty.FindPropertyRelative(BlackboardSetter.BlackboardElementIdVarName).stringValue = "";
                 SerializedProperty setterValueProp = TargetProperty.FindPropertyRelative(BlackboardSetter.SetterValueVarName);
@@ -41,7 +41,7 @@ namespace Logical.BuiltInNodes
         {
             base.OnDrawPrimaryBody(primaryBodyContainer);
             string blackboardEleId = TargetProperty.FindPropertyRelative(BlackboardSetter.BlackboardElementIdVarName).stringValue;
-            BlackboardElement blackboardElement = NodeGraph.BlackboardData.GetElementById(blackboardEleId);
+            BlackboardElement blackboardElement = NodeGraph.BlackboardProperties.GetElementById(blackboardEleId);
             Label selectedEleLabel = new Label(blackboardElement == null ? "None" : blackboardElement.Name);
             selectedEleLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
             selectedEleLabel.style.fontSize = 18;

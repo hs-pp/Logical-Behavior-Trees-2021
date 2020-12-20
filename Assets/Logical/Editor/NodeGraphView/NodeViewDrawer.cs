@@ -19,7 +19,7 @@ namespace Logical.Editor
         protected SerializedProperty TargetProperty { get; private set; }
         protected NodeGraph NodeGraph { get; private set; }
         protected AGraphProperties GraphProperties { get { return NodeGraph.GraphProperties; } }
-        protected BlackboardData BlackboardData { get { return NodeGraph.BlackboardData; } }
+        protected BlackboardProperties BlackboardProperties { get { return NodeGraph.BlackboardProperties; } }
         private NodeDisplayContainers m_nodeDisplayContainers = null;
 
         public Action<int> OnBlackboardElementChanged = null;

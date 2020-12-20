@@ -13,15 +13,15 @@ namespace Logical.Editor
     /// <summary>
     /// This view displays the whole Blackboard as well as the blackboard elements.
     /// The desired UI features of the Blackboard view are already mostly done by Unity.
-    /// This class mainly is functionality to wire our NodeGraph's BlackboardData into the 
+    /// This class mainly is functionality to wire our NodeGraph's BlackboardProperties into the 
     /// Blackboard UI with the assumption that the UI will just kinda work.
     /// </summary>
     public class BlackboardView : Blackboard
     {
         private Dictionary<Type, Type> m_blackboardElementLookup = new Dictionary<Type, Type>();
 
-        private BlackboardData m_blackboardData = null;
-        private SerializedProperty m_serializedBlackboardDataElements = null;
+        private BlackboardProperties m_blackboardProperties = null;
+        private SerializedProperty m_serializedBlackboardElements = null;
         private List<BlackboardRow> m_allElementRows = new List<BlackboardRow>();
 
         public Action<int> OnBlackboardElementChanged = null;
@@ -34,9 +34,9 @@ namespace Logical.Editor
             editTextRequested += EditBlackboardFieldName;
             Undo.undoRedoPerformed += () =>
             {
-                if (m_serializedBlackboardDataElements != null)
+                if (m_serializedBlackboardElements != null)
                 {
-                    m_serializedBlackboardDataElements.serializedObject.Update();
+                    m_serializedBlackboardElements.serializedObject.Update();
                 }
 
                 ClearElements();
@@ -78,23 +78,23 @@ namespace Logical.Editor
             if (nodeGraph == null)
                 return;
 
-            m_blackboardData = nodeGraph.BlackboardData;
+            m_blackboardProperties = nodeGraph.BlackboardProperties;
             SerializedObject serializedGraph = new SerializedObject(nodeGraph);
-            m_serializedBlackboardDataElements = serializedGraph.FindProperty(NodeGraph.BlackboardData_VarName)
-                .FindPropertyRelative(BlackboardData.AllElements_VarName);
+            m_serializedBlackboardElements = serializedGraph.FindProperty(NodeGraph.BlackboardProperties_VarName)
+                .FindPropertyRelative(BlackboardProperties.AllElements_VarName);
             LoadElements();
         }
 
         private void Reset()
         {
-            m_blackboardData = null;
-            m_serializedBlackboardDataElements = null;
+            m_blackboardProperties = null;
+            m_serializedBlackboardElements = null;
             ClearElements();
         }
 
         private void OnAddClicked(Blackboard blackboard)
         {
-            if (m_serializedBlackboardDataElements == null || m_blackboardData == null)
+            if (m_serializedBlackboardElements == null || m_blackboardProperties == null)
             {
                 return;
             }
@@ -121,11 +121,11 @@ namespace Logical.Editor
 
         private void LoadElements()
         {
-            for (int i = 0; i < m_serializedBlackboardDataElements.arraySize; i++)
+            for (int i = 0; i < m_serializedBlackboardElements.arraySize; i++)
             {
-                string name = m_serializedBlackboardDataElements.GetArrayElementAtIndex(i).FindPropertyRelative(BlackboardElement.Name_VarName).stringValue;
-                BlackboardElement ele = m_blackboardData.GetElementByName(name);
-                AddBlackboardRow(ele, m_serializedBlackboardDataElements.GetArrayElementAtIndex(i), i);
+                string name = m_serializedBlackboardElements.GetArrayElementAtIndex(i).FindPropertyRelative(BlackboardElement.Name_VarName).stringValue;
+                BlackboardElement ele = m_blackboardProperties.GetElementByName(name);
+                AddBlackboardRow(ele, m_serializedBlackboardElements.GetArrayElementAtIndex(i), i);
             }
         }
 
@@ -148,9 +148,9 @@ namespace Logical.Editor
         private void DeleteElement(int index)
         {
             int undoGroup = Undo.GetCurrentGroup();
-            m_serializedBlackboardDataElements.serializedObject.Update();
-            m_serializedBlackboardDataElements.DeleteArrayElementAtIndex(index);
-            m_serializedBlackboardDataElements.serializedObject.ApplyModifiedProperties();
+            m_serializedBlackboardElements.serializedObject.Update();
+            m_serializedBlackboardElements.DeleteArrayElementAtIndex(index);
+            m_serializedBlackboardElements.serializedObject.ApplyModifiedProperties();
             OnBlackboardElementChanged?.Invoke(undoGroup);
             ClearElements();
             LoadElements();
@@ -175,12 +175,12 @@ namespace Logical.Editor
         {
             int undoGroup = Undo.GetCurrentGroup();
             BlackboardElement newElement = Activator.CreateInstance(m_blackboardElementLookup[type]) as BlackboardElement;
-            m_blackboardData.AddElement(newElement);
+            m_blackboardProperties.AddElement(newElement);
 
-            m_serializedBlackboardDataElements.serializedObject.Update();
+            m_serializedBlackboardElements.serializedObject.Update();
 
-            int lastIndex = m_serializedBlackboardDataElements.arraySize - 1;
-            SerializedProperty serializedBlackboardElement = m_serializedBlackboardDataElements.GetArrayElementAtIndex(lastIndex);
+            int lastIndex = m_serializedBlackboardElements.arraySize - 1;
+            SerializedProperty serializedBlackboardElement = m_serializedBlackboardElements.GetArrayElementAtIndex(lastIndex);
 
             AddBlackboardRow(newElement, serializedBlackboardElement, lastIndex);
             
