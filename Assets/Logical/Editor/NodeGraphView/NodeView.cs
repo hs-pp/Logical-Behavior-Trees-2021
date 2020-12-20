@@ -46,8 +46,8 @@ namespace Logical.Editor
 
             NodeId = SerializedNode.FindPropertyRelative(ANode.IdVarname).stringValue;
 
-            m_nodeDisplayContainers = new NodeDisplayContainers(this);
             m_nodeViewDrawer = nodeViewDrawer;
+            m_nodeDisplayContainers = new NodeDisplayContainers(this, m_nodeViewDrawer);
             m_nodeViewDrawer.SetNodeView(this, SerializedNode, nodeGraphView.NodeGraph, m_nodeDisplayContainers);
             m_nodeViewDrawer.OnSetup();
 
@@ -68,6 +68,7 @@ namespace Logical.Editor
                     Port.Capacity.Single,
                     typeof(bool),
                     0,
+                    m_nodeViewDrawer.NodeColor,
                     m_edgeConnectorListener);
                 m_inport.portName = "";
                 m_nodeDisplayContainers.SetInport(m_inport);
@@ -165,6 +166,7 @@ namespace Logical.Editor
                     Port.Capacity.Single,
                     typeof(bool),
                     j,
+                    m_nodeViewDrawer.NodeColor,
                     m_edgeConnectorListener);
                 newPort.portName = "";
                 m_outports.Add(newPort);

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Logical.Editor
@@ -19,6 +20,7 @@ namespace Logical.Editor
             Capacity capacity, 
             Type type, 
             int index,
+            Color portColor,
             IEdgeConnectorListener edgeConnectorListener) 
             : base(portOrientation, portDirection, capacity, type)
         {
@@ -26,6 +28,11 @@ namespace Logical.Editor
             PortIndex = index;
             this.m_EdgeConnector = new EdgeConnector<EdgeView>(edgeConnectorListener);
             this.AddManipulator(m_EdgeConnector);
+
+            if (portColor != Color.clear) // Clear implies custom color was not implemented!
+            {
+                this.portColor = portColor;
+            }
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using Logical;
 using Logical.Editor;
-using Logical.Editor.UIElements;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,6 +7,7 @@ using UnityEngine.UIElements;
 public class SampleNodeViewDrawer : NodeViewDrawer
 {
     public override string DisplayName { get { return "Sample Node"; } }
+    public override Color NodeColor { get { return new Color(0.58f, 0.22f, 0.22f); } }
 
     public override void OnDrawHeader(VisualElement headerContainer)
     {

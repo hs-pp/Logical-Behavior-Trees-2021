@@ -28,7 +28,8 @@ namespace Logical.Editor
 
         public virtual string DisplayName { get { return Target.GetType().Name; } }
         public virtual Vector2 NodeSize { get { return new Vector2(600, 300); } }
-        public virtual Color NodeColor { get { return Color.gray; } }
+        //public virtual Color NodeColor { get { return new Color(0.58f, 0.22f, 0.22f); } }
+        public virtual Color NodeColor { get { return Color.clear; } } // If color is left as clear, it will not apply a custom color
 
         public void SetNodeView(NodeView nodeView, SerializedProperty serializedNode, NodeGraph nodeGraph, NodeDisplayContainers nodeDisplayContainers)
         {
@@ -48,7 +49,6 @@ namespace Logical.Editor
             OnRepaint?.Invoke();
 
             m_nodeDisplayContainers.ClearDisplays(portViews != null);
-
             OnDrawHeader(m_nodeDisplayContainers.HeaderContainer);
             OnDrawTitle(m_nodeDisplayContainers.PreTitleContainer, m_nodeDisplayContainers.PostTitleContainer);
             OnDrawPrimaryBody(m_nodeDisplayContainers.PrimaryBodyContainer);

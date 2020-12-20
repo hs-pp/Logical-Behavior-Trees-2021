@@ -10,7 +10,12 @@ namespace Logical.Editor
     /// </summary>
     public class NodeDisplayContainers
     {
+        private static readonly Color BodyColor = new Color(0.15625f, 0.15625f, 0.15625f);
+        private static readonly Color OutportContainerColor = new Color(0.17578125f, 0.17578125f, 0.17578125f);
+
         public NodeView NodeView { get; private set; }
+        public NodeViewDrawer NodeViewDrawer { get; private set; }
+
         public VisualElement HeaderContainer { get; private set; }
         public VisualElement PreTitleContainer { get; private set; }
         public VisualElement PostTitleContainer { get; private set; }
@@ -19,44 +24,66 @@ namespace Logical.Editor
         public List<OutportContainer> OutportContainers = new List<OutportContainer>();
         public VisualElement SecondaryBodyContainer { get; private set; }
         public VisualElement FooterContainer { get; private set; }
+        private VisualElement AllOutportsContainer { get; set; }
 
-        private VisualElement AllOutportsContainer = null;
-
-        public NodeDisplayContainers(NodeView nodeView)
+        public NodeDisplayContainers(NodeView nodeView, NodeViewDrawer nodeViewDrawer)
         {
             NodeView = nodeView;
+            NodeViewDrawer = nodeViewDrawer;
+            Color nodeColor = NodeViewDrawer.NodeColor;
+            bool doColor = nodeColor != Color.clear; // Clear implies not implemented aka no custom color
+            if(!doColor)
+            {
+                nodeColor = OutportContainerColor;
+            }
 
             HeaderContainer = new VisualElement();
             HeaderContainer.name = "header-container";
             NodeView.Insert(0, HeaderContainer);
 
-            PreTitleContainer = CreateBaseElement("pre-title-container");
+            PreTitleContainer = CreateBaseElement("pre-title-container", nodeColor);
             NodeView.titleContainer.Insert(0, PreTitleContainer);
 
-            PostTitleContainer = CreateBaseElement("post-title-container");
+            PostTitleContainer = CreateBaseElement("post-title-container", nodeColor);
             NodeView.titleContainer.Add(PostTitleContainer);
 
-            PrimaryBodyContainer = CreateBaseElement("upper-body-container");
+            PrimaryBodyContainer = CreateBaseElement("upper-body-container", BodyColor);
             NodeView.Q<VisualElement>("contents")?.Insert(1, PrimaryBodyContainer);
 
-            SecondaryBodyContainer = CreateBaseElement("body-container");
+            SecondaryBodyContainer = CreateBaseElement("body-container", BodyColor);
             NodeView.extensionContainer.Add(SecondaryBodyContainer);
 
             FooterContainer = new VisualElement();
             FooterContainer.name = "footer-container";
             NodeView.Add(FooterContainer);
 
-            AllOutportsContainer = new VisualElement();
-            AllOutportsContainer.name = "all-ports-container";
-            AllOutportsContainer.style.backgroundColor = new Color(0.17578125f, 0.17578125f, 0.17578125f);
+            AllOutportsContainer = CreateBaseElement("all-ports-container", OutportContainerColor);
             NodeView.outputContainer.Add(AllOutportsContainer);
+
+            if (doColor)
+            {
+                VisualElement titleElement = NodeView.Q<VisualElement>("title");
+                if (titleElement != null)
+                {
+                    titleElement.style.backgroundColor = nodeColor;
+                }
+                VisualElement titleBordersElement = NodeView.Q<VisualElement>("node-border");
+                if (titleBordersElement != null)
+                {
+                    titleBordersElement.style.borderTopColor = nodeColor;
+                    titleBordersElement.style.borderLeftColor = nodeColor;
+                    titleBordersElement.style.borderRightColor = nodeColor;
+                    titleBordersElement.style.borderBottomColor = nodeColor;
+                }
+                NodeView.elementTypeColor = NodeViewDrawer.NodeColor;
+            }
         }
 
-        public VisualElement CreateBaseElement(string name)
+        public VisualElement CreateBaseElement(string name, Color backgroundColor)
         {
             VisualElement baseEle = new VisualElement();
             baseEle.name = name;
-            baseEle.style.backgroundColor = new Color(0.15625f, 0.15625f, 0.15625f);
+            baseEle.style.backgroundColor = backgroundColor;
             return baseEle;
         }
 
