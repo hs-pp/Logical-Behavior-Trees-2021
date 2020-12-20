@@ -7,6 +7,10 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This inspector is shown when the LogicalGraphWindow has the Inspector tab selected and a node within the
+    /// graph selected. The inspector shows customizable information about the node.
+    /// </summary>
     public class NodeInspector : VisualElement
     {
         private static readonly string NODE_NAME_LABEL = "node-name-label";

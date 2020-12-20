@@ -5,6 +5,11 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This class is the view for a single blackboard element within the BlackboardView.
+    /// Just taking the base BlackboardField and adding a few more things to it.
+    /// Most of the desired UI is already done by Unity. Thanks I guess
+    /// </summary>
     public class BlackboardElementView : BlackboardField
     {
         private BlackboardElement m_blackboardElement = null;

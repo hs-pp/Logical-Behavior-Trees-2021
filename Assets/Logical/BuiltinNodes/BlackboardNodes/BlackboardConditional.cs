@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace Logical.BuiltInNodes
 {
+    /// <summary>
+    /// This node grabs the graph's blackboard elements and creates a conditional switch that lead to different outports.
+    /// </summary>
     [Serializable]
     public class BlackboardConditional : ANode
     {

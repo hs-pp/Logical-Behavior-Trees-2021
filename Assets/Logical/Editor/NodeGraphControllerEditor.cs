@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Cool custom editor for the NodeGraphController. Not much to see here.
+    /// </summary>
     [CustomEditor(typeof(NodeGraphController))]
     public class NodeGraphControllerDrawer : UnityEditor.Editor
     {

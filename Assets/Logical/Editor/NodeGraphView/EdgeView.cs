@@ -4,6 +4,9 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Visual representation of an edge between two nodeviews within the graph editor window.
+    /// </summary>
     public class EdgeView : Edge
     {
         public SerializedProperty OutportEdgeProp { get; set; }
@@ -28,7 +31,7 @@ namespace Logical.Editor
         /// https://github.com/Unity-Technologies/UnityCsReference/blob/master/Modules/GraphViewEditor/Views/GraphView.cs
         /// OnCustomStyleResolved eventually takes you to GraphView.ChangeLayer where it's trying to prevent it from unselecting itself but 
         /// the result is it still does.
-        /// Great way to see this is to override OnUnselected:
+        /// Great way to see this is to override OnUnselected():
         //public override void OnUnselected()
         //{
         //    System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
@@ -45,7 +48,7 @@ namespace Logical.Editor
         //    base.OnUnselected();
         //}
         /// For now, there is a hacky solution in place that re-selects the edgeview if it was originally selected by
-        /// the GraphTheoryWindow's Deserialize method.
+        /// the GraphTheoryWindow's Deserialize method. Sed.
         /// </summary>
         /// <param name="styles"></param>
         protected override void OnCustomStyleResolved(ICustomStyle styles)

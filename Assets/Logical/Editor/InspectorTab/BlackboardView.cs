@@ -10,6 +10,12 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This view displays the whole Blackboard as well as the blackboard elements.
+    /// The desired UI features of the Blackboard view are already mostly done by Unity.
+    /// This class mainly is functionality to wire our NodeGraph's BlackboardData into the 
+    /// Blackboard UI with the assumption that the UI will just kinda work.
+    /// </summary>
     public class BlackboardView : Blackboard
     {
         private Dictionary<Type, Type> m_blackboardElementLookup = new Dictionary<Type, Type>();

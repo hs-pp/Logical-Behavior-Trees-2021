@@ -8,6 +8,10 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// A nodeview drawer to be inherited from. This drawer provides a number of overridable methods to customize very specific parts
+    /// of the nodeview of any node type.
+    /// </summary>
     public class NodeViewDrawer
     {
         protected NodeView TargetView { get; private set; }
@@ -34,6 +38,10 @@ namespace Logical.Editor
             m_nodeDisplayContainers = nodeDisplayContainers;
         }
 
+        /// <summary>
+        /// Call this to clear and redraw the whole node.
+        /// TODO: Why are we passing in portViews?
+        /// </summary>
         public void Repaint(List<PortView> portViews = null)
         {
             TargetProperty.serializedObject.Update();

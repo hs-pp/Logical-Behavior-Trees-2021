@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This class takes a NodeView and breaks it into small pieces to enable precise customization.
+    /// The NodeViewDrawer takes this class and provides a very clean way to customize the appearance of custom nodes.
+    /// </summary>
     public class NodeDisplayContainers
     {
         public NodeView NodeView { get; private set; }

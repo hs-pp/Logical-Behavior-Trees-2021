@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Logical
 {
+    /// <summary>
+    /// An intermediary blackboard element where T is the actual variable type.
+    /// This mostly does serialization of the specified generic type.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [Serializable]
     public abstract class ABlackboardElement<T> : BlackboardElement, ISerializationCallbackReceiver
     {
@@ -44,7 +49,6 @@ namespace Logical
         }
 
         public void OnBeforeSerialize() { }
-
         public void OnAfterDeserialize()
         {
             Type = Type.GetType(m_serializedType);

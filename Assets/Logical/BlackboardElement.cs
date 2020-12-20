@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace Logical
 {
+    /// <summary>
+    /// The base BlackboardElement type that the rest of the Logical system should be interfacing with.
+    /// It's sole implementor ABlackboardElement handles serialization support for the actual value object
+    /// of the blackboard element.
+    /// 
+    /// Custom blackboard elements should inherit from ABlackboardElement.
+    /// </summary>
     [Serializable]
     public abstract class BlackboardElement
     {

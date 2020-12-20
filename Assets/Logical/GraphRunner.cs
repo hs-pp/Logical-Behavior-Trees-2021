@@ -3,6 +3,18 @@ using UnityEngine;
 
 namespace Logical
 {
+    /// <summary>
+    /// The class that actually runs a graph.
+    /// This class has three essential methods that control the lifetime of a graph:
+    /// 1. StartGraph(): Starts the graph, beginning at the graph's EntryNode.
+    /// 2. UpdateGraph(): Calls OnUpdateNode() on the currently active node in the graph. This effectively does nothing if none of your nodes require OnUpdateNode().
+    /// 3. StopGraph(): Stops the graph and exits out of the current node properly.
+    /// 
+    /// This class does not need to be attached to a monobehaviour, but it'll need someone to call it's UpdateGraph()
+    /// method assuming the graph that is running needs updates called on its nodes.
+    /// 
+    /// NodeGraphController is a basic monobehaviour that uses a GraphRunner to execute graphs at runtime.
+    /// </summary>
     public class GraphRunner
     {
         private NodeCollection m_nodeCollection = null;

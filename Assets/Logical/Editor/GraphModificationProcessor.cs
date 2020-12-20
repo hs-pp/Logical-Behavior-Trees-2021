@@ -4,7 +4,10 @@ using UnityEditor;
 namespace Logical.Editor
 {
     /// <summary>
-    /// Currently Unity does not provide a way to track graphs that are duplicated :(
+    /// This class allows the LogicalGraphWindow to listen to graph asset modifications from outside the editor window.
+    /// Currently, creating a graph, deleting a graph, and moving a graph from outside the editor window will notify the
+    /// window to update itself accordingly.
+    /// NOTE: Currently Unity does not provide a way to listen for assets that are duplicated :( Please dont fire me.
     /// </summary>
     public class GraphModificationProcessor : UnityEditor.AssetModificationProcessor
     {

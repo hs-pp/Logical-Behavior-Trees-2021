@@ -4,6 +4,10 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Visual representation of a port from where an edge can be made to connect
+    /// two nodes together.
+    /// </summary>
     public class PortView : Port
     {
         public NodeView Node { get; private set; } = null;

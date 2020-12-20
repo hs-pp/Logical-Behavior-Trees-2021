@@ -4,6 +4,9 @@ using UnityEngine.Events;
 
 namespace Logical
 {
+    /// <summary>
+    /// A basic monobehaviour that runs a graph at runtime.
+    /// </summary>
     public class NodeGraphController : MonoBehaviour
     {
         [SerializeField]
@@ -11,9 +14,9 @@ namespace Logical
         [SerializeReference]
         private AGraphProperties m_overrideProperties = null;
         [SerializeField]
-        private bool m_useOverrides = false;
+        private bool m_useOverrides = false; // Enables override of the GraphProperties of the graph. Overrides will appear in this component's inspector.
         [SerializeField]
-        private bool m_createGraphInstance = false;
+        private bool m_createGraphInstance = true; // Creates a copy of the referenced graph before running it. This ensures that every running graph is a unique instance.
 
         public UnityEvent OnGraphStart = null;
         public UnityEvent OnGraphStop = null;
@@ -26,6 +29,11 @@ namespace Logical
         public void Start()
         {
             StartGraph();
+        }
+
+        public void SetGraph(NodeGraph nodeGraph)
+        {
+            m_nodeGraph = nodeGraph;
         }
 
         public void StartGraph()
@@ -45,9 +53,6 @@ namespace Logical
                 ? m_overrideProperties
                 : JsonUtility.FromJson(JsonUtility.ToJson(m_nodeGraph.GraphProperties), m_nodeGraph.GraphProperties.GetType()) as AGraphProperties,
                 JsonUtility.FromJson<BlackboardData>(JsonUtility.ToJson(m_nodeGraph.BlackboardData)));
-
-            GraphRunner.OnGraphStart += () => { Debug.Log("Start"); };
-            GraphRunner.OnGraphStop += () => { Debug.Log("Stop"); };
 
             GraphRunner.OnGraphStart += () => { OnGraphStart?.Invoke(); };
             GraphRunner.OnGraphStop += () => { OnGraphStop?.Invoke(); };

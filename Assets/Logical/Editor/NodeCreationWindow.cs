@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Logical.BuiltInNodes;
-using Logical.Editor.UIElements;
 using UnityEngine.UIElements;
-using Logical.Editor;
 using UnityEditor;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This class is for the node creation window when right clicking on the graph zone and
+    /// choosing the option to add a new node.
+    /// </summary>
     public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
     {
         private NodeGraphView m_nodeGraphView = null;

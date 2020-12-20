@@ -1,8 +1,10 @@
-﻿using Logical.Editor.UIElements;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Basic editor window data that need to be serialized and saved.
+    /// </summary>
     [System.Serializable]
     public class GraphWindowData
     {

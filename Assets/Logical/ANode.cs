@@ -4,15 +4,22 @@ using UnityEngine;
 
 namespace Logical
 {
+    /// <summary>
+    /// The base node element.
+    /// Simply stores a unique Id, outport connection information, and it's position on the graph.
+    /// Inherited classes can freely add more variables as necessary with full Unity serialization support.
+    /// </summary>
     [Serializable]
     public abstract class ANode
     {
         [SerializeField, HideInInspector]
         private string m_id = Guid.NewGuid().ToString();
-        public string Id { get { return m_id; } }
         [SerializeField, HideInInspector]
         private List<OutportEdge> m_outports = new List<OutportEdge>(0);
 
+        public string Id { get { return m_id; } }
+
+        // These methods should be implemented to make the node do whatever it needs to do.
         public virtual void OnNodeEnter(GraphRunner graphRunner) { }
         public virtual void OnNodeUpdate(GraphRunner graphRunner) { }
         public virtual void OnNodeExit(GraphRunner graphRunner) { }
@@ -36,9 +43,10 @@ namespace Logical
         public Vector2 Position { get { return m_position; } set { m_position = value; } }
         public int NumOutports { get { return m_outports.Count; } }
 
-        public virtual int DefaultNumOutports { get { return 1; } }
-        public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
+        public virtual int DefaultNumOutports { get { return 1; } } // For editor convenience.
+        public virtual bool UseIMGUIPropertyDrawer { get { return false; } } // Toggle on for LogicalGraphWindow to draw these using IMGUI. Defaulted to use UIToolkit.
 
+        /// For SerializedProperties ///
         public static readonly string OutportsVarName = "m_outports";
         public static readonly string IdVarname = "m_id";
         public static readonly string PositionVarName = "m_position";

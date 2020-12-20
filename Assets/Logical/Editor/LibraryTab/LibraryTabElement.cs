@@ -1,6 +1,4 @@
-﻿using Logical;
-using Logical.Editor;
-using Logical.Editor.UIElements;
+﻿using Logical.Editor.UIElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +9,9 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// All the fun stuff that happens on the Library tab of the LogicalGraphWindow happens here.
+    /// </summary>
     public class LibraryTabElement : TabContentElement
     {
         private const string ALL_GRAPHS_GROUP = "all-graphs-group";

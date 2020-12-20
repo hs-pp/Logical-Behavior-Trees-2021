@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Editor data saved related to the library tab.
+    /// </summary>
     [System.Serializable]
     public class LibraryTabData
     {

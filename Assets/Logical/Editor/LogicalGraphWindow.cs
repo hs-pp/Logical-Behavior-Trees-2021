@@ -11,6 +11,9 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// One big meaty boi
+    /// </summary>
     public class LogicalTheoryWindow : EditorWindow
     {
         private const string DATA_STRING = "GraphWindowData";

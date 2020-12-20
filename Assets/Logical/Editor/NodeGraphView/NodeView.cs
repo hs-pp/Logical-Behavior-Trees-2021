@@ -9,6 +9,9 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// The visual representation of a single node withing a node graph in the editor window.
+    /// </summary>
     public class NodeView : Node
     {
         public ANode Node { get; private set; } = null;

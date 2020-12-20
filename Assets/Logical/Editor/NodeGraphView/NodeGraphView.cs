@@ -8,6 +8,10 @@ using UnityEditor;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// The visual representation of the graph-itself.
+    /// The grid, the graph elements (nodes, edges), and grid related functionality all lives here.
+    /// </summary>
     public class NodeGraphView : GraphView
     {
         private GridBackground m_gridBackground = null;

@@ -6,6 +6,11 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This inspector is shown when the LogicalGraphWindow has the Inspector tab selected and no graph elements inside
+    /// the graph grid selected. (Tap the grid, not the node elements)
+    /// Simply, it shows the selected graph's graph properties and then the graph's blackboard data.
+    /// </summary>
     public class GraphInspector : VisualElement
     {
         private static readonly string GRAPH_PROPERTIES_AREA = "graph-properties-area";

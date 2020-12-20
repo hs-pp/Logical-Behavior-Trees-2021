@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace Logical
 {
+    /// <summary>
+    /// A serialized collection of all the nodes in a given graph.
+    /// </summary>
     [System.Serializable]
     public class NodeCollection
     {

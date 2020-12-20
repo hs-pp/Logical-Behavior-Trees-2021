@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace Logical.Editor 
 {
+    /// <summary>
+    /// TODO: Why is this here and not in LogicalGraphWindow?
+    /// </summary>
     public class NodeGraphEditor
     {
         [MenuItem("Graph/Logical Graph")]

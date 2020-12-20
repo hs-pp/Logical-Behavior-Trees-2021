@@ -3,6 +3,10 @@ using UnityEditor;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// This class manages the entirety of the Inspector tab on the left hand side of the
+    /// LogicalGraphWindow. 
+    /// </summary>
     public class InspectorTabElement : TabContentElement
     {
         private NodeGraph m_nodeGraph = null;

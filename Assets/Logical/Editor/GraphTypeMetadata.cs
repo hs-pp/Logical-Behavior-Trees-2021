@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Class that fetches and stores all pertinent classes to the whole Logical system.
+    /// Uses some cute one-time reflection to find stuff with the right attributes.
+    /// </summary>
     public class GraphTypeMetadata
     {
         public Type GraphType { get; private set; } = null;

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Data representation of a group of nodes and connections when copied to the clipboard.
+    /// </summary>
     [Serializable]
     public class GraphClipboardData
     {

@@ -3,7 +3,7 @@ using Logical;
 
 public class SampleNodeGraph : NodeGraph
 {
-    public override Type GraphPropertiesType => typeof(SampleNodeGraphProperties);
+    protected override Type GraphPropertiesType => typeof(SampleNodeGraphProperties);
 
     public class SampleNodeGraphProperties : AGraphProperties
     {

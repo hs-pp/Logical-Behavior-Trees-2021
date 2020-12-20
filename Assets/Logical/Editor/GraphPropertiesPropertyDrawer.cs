@@ -5,6 +5,11 @@ using UnityEngine.UIElements;
 
 namespace Logical.Editor
 {
+    /// <summary>
+    /// Simple property drawer for GraphProperties.
+    /// Displaying the whole class as a property force-draws a foldout before drawing the class' properties.
+    /// So instead, we just loop through all its serialized properties and draw them individually.
+    /// </summary>
     [CustomPropertyDrawer(typeof(AGraphProperties))]
     public class GraphPropertiesPropertyDrawer : PropertyDrawer
     {
