@@ -14,7 +14,8 @@ namespace Logical.Editor
         public TabGroupData MainTabGroup = new TabGroupData();
 
         public string OpenGraphGUID = "";
-        public Vector2 GraphViewPosition; 
+        public Vector2 GraphViewPosition;
+        public bool ShowMinimap = true;
         public List<string> SelectedGraphElements = new List<string>();
     }
 }

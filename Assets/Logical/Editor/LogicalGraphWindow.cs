@@ -14,7 +14,7 @@ namespace Logical.Editor
     /// <summary>
     /// One big meaty boi
     /// </summary>
-    public class LogicalTheoryWindow : EditorWindow
+    public class LogicalTheoryWindow : EditorWindow, IHasCustomMenu
     {
         private const string DATA_STRING = "GraphWindowData";
         private const string TOOLBAR = "toolbar";
@@ -154,7 +154,8 @@ namespace Logical.Editor
                 m_nodeGraphView.SetViewPosition(m_graphWindowData.GraphViewPosition);
             }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
-            
+            m_nodeGraphView.ShowMinimap(m_graphWindowData.ShowMinimap);
+
             // Load graph element selection
             // Super sad that I need to wait a frame before I can add things to the selection and there's no clean way to
             // wait a frame. Otherwise, the elements will be technically selected but visually unselected.
@@ -270,6 +271,19 @@ namespace Logical.Editor
         {
             m_graphWindowData.SelectedGraphElements.Clear();
             m_inspectorTab.SetNode(null, null);
+        }
+
+        public void AddItemsToMenu(GenericMenu menu)
+        {
+            menu.AddItem(new GUIContent("Reset Graph Position"), false, () => 
+            {
+                m_nodeGraphView.FrameAll();
+            });
+            menu.AddItem(new GUIContent("Show Minimap"), m_graphWindowData.ShowMinimap, () => 
+            {
+                m_graphWindowData.ShowMinimap = !m_graphWindowData.ShowMinimap;
+                m_nodeGraphView.ShowMinimap(m_graphWindowData.ShowMinimap);
+            });
         }
     }
 }

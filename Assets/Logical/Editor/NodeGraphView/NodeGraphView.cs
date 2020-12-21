@@ -148,6 +148,10 @@ namespace Logical.Editor
         {
             viewTransform.position = position;
         }
+        public void ShowMinimap(bool show)
+        {
+            m_miniMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+        }
 
         public NodeView GetNodeViewById(string id)
         {
