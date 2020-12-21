@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Logical.Editor
 {
@@ -13,6 +14,7 @@ namespace Logical.Editor
         public TabGroupData MainTabGroup = new TabGroupData();
 
         public string OpenGraphGUID = "";
+        public Vector2 GraphViewPosition; 
         public List<string> SelectedGraphElements = new List<string>();
     }
 }

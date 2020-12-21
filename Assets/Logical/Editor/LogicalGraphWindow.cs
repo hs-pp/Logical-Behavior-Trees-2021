@@ -151,6 +151,7 @@ namespace Logical.Editor
             if(!string.IsNullOrEmpty(m_graphWindowData.OpenGraphGUID))
             {
                 OpenGraph(m_graphWindowData.OpenGraphGUID);
+                m_nodeGraphView.SetViewPosition(m_graphWindowData.GraphViewPosition);
             }
             m_mainTabGroup.DeserializeData(m_graphWindowData.MainTabGroup);
             
@@ -168,6 +169,7 @@ namespace Logical.Editor
         {
             m_graphWindowData.MainSplitViewPosition = m_mainSplitView.SplitPosition;
             m_graphWindowData.MainTabGroup = m_mainTabGroup.GetSerializedData();
+            m_graphWindowData.GraphViewPosition = m_nodeGraphView.GetViewPosition();
 
             Debug.Log("Serializing data: " + JsonUtility.ToJson(m_graphWindowData, true));
             EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(m_graphWindowData, true));

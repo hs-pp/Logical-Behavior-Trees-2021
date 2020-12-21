@@ -18,8 +18,8 @@ namespace Logical.Editor
         private MiniMap m_miniMap = null;
         private NodeCreationWindow m_nodeCreationWindow = null;
         private IEdgeConnectorListener m_edgeConectorListener = null;
-        private NodeGraph m_nodeGraph = null;
-        public NodeGraph NodeGraph { get { return m_nodeGraph; } }
+
+        public NodeGraph NodeGraph { get; private set; } = null;
         private GraphTypeMetadata m_graphTypeMetadata = null;
         private NodeCollection m_nodeCollection = null;
         private SerializedProperty m_nodeListProp = null;
@@ -70,7 +70,7 @@ namespace Logical.Editor
             
             RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
             RegisterCallback<MouseUpEvent>(x => { OnMouseClick?.Invoke(); }); 
-            Undo.undoRedoPerformed += () => { SetNodeCollection(m_nodeGraph); };
+            Undo.undoRedoPerformed += () => { SetNodeCollection(NodeGraph); };
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -87,14 +87,14 @@ namespace Logical.Editor
             if (nodeGraph == null || nodeCollection == null)
                 return;
 
-            m_nodeGraph = nodeGraph;
+            NodeGraph = nodeGraph;
              m_nodeCollection = nodeCollection;
-            m_graphTypeMetadata.SetNewGraphType(m_nodeGraph.GetType());
+            m_graphTypeMetadata.SetNewGraphType(NodeGraph.GetType());
 
-            m_nodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
-            m_nodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
-            m_nodeGraph.OnNodeOutportRemoved += OnNodeOutportRemoved;
-            m_nodeGraph.OnNodeAllOutportsRemoved += OnNodeAllOutportsRemoved;
+            NodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
+            NodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
+            NodeGraph.OnNodeOutportRemoved += OnNodeOutportRemoved;
+            NodeGraph.OnNodeAllOutportsRemoved += OnNodeAllOutportsRemoved;
 
             List<ANode> nodeData = m_nodeCollection.GetAllNodes();
             for(int i = 0; i < nodeData.Count; i++)
@@ -108,16 +108,29 @@ namespace Logical.Editor
             RefreshSerializedNodeReferences();
         }
 
+        //public void SetNodeCollection(NodeGraph nodeGraph)
+        //{
+        //    ANode entryNode = nodeGraph?.NodeCollection?.GetEntryNode();
+        //    if(entryNode != null)
+        //    {
+        //        SetNodeCollection(nodeGraph, entryNode.Position);
+        //    }
+        //    else
+        //    {
+        //        SetNodeCollection(nodeGraph, Vector2.zero);
+        //    }
+        //}
+
         public void Reset()
         {
-            if(m_nodeGraph != null)
+            if(NodeGraph != null)
             {
-                m_nodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
-                m_nodeGraph.OnNodeOutportRemoved -= OnNodeOutportRemoved;
-                m_nodeGraph.OnNodeAllOutportsRemoved -= OnNodeAllOutportsRemoved;
+                NodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
+                NodeGraph.OnNodeOutportRemoved -= OnNodeOutportRemoved;
+                NodeGraph.OnNodeAllOutportsRemoved -= OnNodeAllOutportsRemoved;
             }
 
-            m_nodeGraph = null;
+            NodeGraph = null;
             m_nodeCollection = null;
             foreach (string id in m_nodeViews.Keys)
             {
@@ -125,6 +138,15 @@ namespace Logical.Editor
                 RemoveElement(m_nodeViews[id]);
             }
             m_nodeViews.Clear();
+        }
+
+        public Vector2 GetViewPosition()
+        {
+            return viewTransform.position;
+        }
+        public void SetViewPosition(Vector2 position)
+        {
+            viewTransform.position = position;
         }
 
         public NodeView GetNodeViewById(string id)
@@ -171,7 +193,7 @@ namespace Logical.Editor
             if (graphViewChange.elementsToRemove != null)
             {
                 int group = Undo.GetCurrentGroup();
-                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Deleted Graph Elements");
+                Undo.RegisterCompleteObjectUndo(NodeGraph, "Deleted Graph Elements");
                 List<NodeView> nodeViewsToDelete = new List<NodeView>();
                 for (int i = graphViewChange.elementsToRemove.Count - 1; i >= 0; i--)
                 {
@@ -191,7 +213,7 @@ namespace Logical.Editor
             else if (graphViewChange.movedElements != null)
             {
                 int group = Undo.GetCurrentGroup();
-                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Moved Graph Elements");
+                Undo.RegisterCompleteObjectUndo(NodeGraph, "Moved Graph Elements");
                 for (int k = 0; k < graphViewChange.movedElements.Count; k++)
                 {
                     if (graphViewChange.movedElements[k] is NodeView)
@@ -214,7 +236,7 @@ namespace Logical.Editor
         /// </summary>
         public NodeView CreateNode(Type nodeType, Vector2 pos)
         {
-            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Created Node");
+            Undo.RegisterCompleteObjectUndo(NodeGraph, "Created Node");
             ANode node = m_nodeCollection.CreateNode(nodeType, pos);
             m_nodeListProp.serializedObject.Update();
             NodeView nodeView = CreateNodeView(node);
@@ -226,7 +248,7 @@ namespace Logical.Editor
         {
             if(serializedNode == null)
             {
-                int index = m_nodeGraph.NodeCollection.GetNodeIndex(node);
+                int index = NodeGraph.NodeCollection.GetNodeIndex(node);
                 if(index == -1)
                 {
                     Debug.Log("wtf ");
@@ -273,7 +295,7 @@ namespace Logical.Editor
 
         private void RedrawGraphView()
         {
-            SetNodeCollection(m_nodeGraph);
+            SetNodeCollection(NodeGraph);
         }
 
         public void CreateEdgeView(EdgeView edgeView)
@@ -281,7 +303,7 @@ namespace Logical.Editor
             if (edgeView?.input == null || edgeView?.output == null)
                 return;
 
-            Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Created New Edge");
+            Undo.RegisterCompleteObjectUndo(NodeGraph, "Created New Edge");
             edgeView.Setup();
 
             // Outports can only have one edge connected to them.
@@ -363,7 +385,7 @@ namespace Logical.Editor
 
         private string CopyAndSerializeGraphElements(IEnumerable<GraphElement> elements)
         {
-            GraphClipboardData data = new GraphClipboardData(m_nodeGraph, elements);
+            GraphClipboardData data = new GraphClipboardData(NodeGraph, elements);
             return JsonUtility.ToJson(data, true);
         }
         
@@ -378,7 +400,7 @@ namespace Logical.Editor
             {
                 return false;
             }
-            return (clipboardData == null || m_nodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName));
+            return (clipboardData == null || NodeGraph.GetType() == Type.GetType(clipboardData.GraphTypeName));
         }
 
         private void UnserializeAndPasteGraphElements(string operationName, string data)
@@ -387,7 +409,7 @@ namespace Logical.Editor
 
             if(operationName == "Paste" || operationName == "Duplicate")
             {
-                Undo.RegisterCompleteObjectUndo(m_nodeGraph, "Paste Graph Elements");
+                Undo.RegisterCompleteObjectUndo(NodeGraph, "Paste Graph Elements");
 
                 Vector2 pos = m_mousePosition - new Vector2(contentViewContainer.transform.position.x, contentViewContainer.transform.position.y);
                 List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), pos);
