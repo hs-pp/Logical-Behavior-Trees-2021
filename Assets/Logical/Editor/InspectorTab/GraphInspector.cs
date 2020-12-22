@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logical.Editor.UIElements;
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -13,9 +14,13 @@ namespace Logical.Editor
     /// </summary>
     public class GraphInspector : VisualElement
     {
+        private static readonly string GRAPH_NAME_LABEL = "graph-name-label";
+        private static readonly string GRAPH_OBJECT_FIELD = "opened-graph-field";
         private static readonly string GRAPH_PROPERTIES_AREA = "graph-properties-area";
         private static readonly string BLACKBOARD_AREA = "blackboard-area";
 
+        private Label m_graphNameLabel = null;
+        private ObjectDisplayField m_graphObjectField = null;
         private VisualElement m_graphPropertiesArea = null;
         private VisualElement m_blackboardArea = null;
         private SerializedObject m_nodeGraphSO = null;
@@ -30,6 +35,9 @@ namespace Logical.Editor
         {
             var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.GraphInspector_UXML);
             uxmlAsset.CloneTree(this);
+
+            m_graphNameLabel = this.Q<Label>(GRAPH_NAME_LABEL);
+            m_graphObjectField = this.Q<ObjectDisplayField>(GRAPH_OBJECT_FIELD);
 
             m_graphPropertiesArea = this.Q<VisualElement>(GRAPH_PROPERTIES_AREA);
             m_propertyField = new PropertyField();
@@ -50,6 +58,10 @@ namespace Logical.Editor
 
             m_nodeGraphSO = new SerializedObject(nodeGraph);
             m_graphPropertiesProp = m_nodeGraphSO.FindProperty(NodeGraph.GraphProperties_VarName);
+
+            m_graphNameLabel.text = nodeGraph.name;
+            m_graphObjectField.SetObject(nodeGraph);
+
             if (nodeGraph.UseIMGUIPropertyDrawer)
             {
                 m_imguiContainer.Bind(m_nodeGraphSO);
