@@ -29,6 +29,7 @@ namespace Logical.Editor
         private LibraryTabElement m_libraryTab = null;
         private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
+        private ToolbarButton m_saveGraphButton = null;
 
         private NodeGraph m_openedGraphInstance = null;
         
@@ -64,7 +65,7 @@ namespace Logical.Editor
             m_toolbar.Add(graphCreateButton);
 
             // Save Button
-            var saveGraphButton = new ToolbarButton(() =>
+            m_saveGraphButton = new ToolbarButton(() =>
             {
                 if (m_openedGraphInstance != null)
                 {
@@ -72,14 +73,8 @@ namespace Logical.Editor
                     AssetDatabase.SaveAssets();
                 }
             });
-            saveGraphButton.text = "Save";            
-            m_toolbar.Add(saveGraphButton);
-
-            var anythingButton = new ToolbarButton(() =>
-            {
-            });
-            anythingButton.text = "test";
-            m_toolbar.Add(anythingButton);
+            m_saveGraphButton.text = "Save";
+            m_toolbar.Add(m_saveGraphButton);
             //=========================================================================================//
 
             //====================================Register Panels======================================//
@@ -127,6 +122,11 @@ namespace Logical.Editor
             m_nodeGraphView.Reset();
             GraphModificationProcessor.OnGraphCreated -= OnNewGraphCreated;
             GraphModificationProcessor.OnGraphWillDelete -= OnGraphWillDelete;
+        }
+
+        private void Update()
+        {
+            UpdateSaveButtonState(); // There's no callback for when an asset is set to dirty so we have to check it ever frame :(
         }
 
         /// <summary>
@@ -284,6 +284,18 @@ namespace Logical.Editor
                 m_graphWindowData.ShowMinimap = !m_graphWindowData.ShowMinimap;
                 m_nodeGraphView.ShowMinimap(m_graphWindowData.ShowMinimap);
             });
+        }
+
+        private void UpdateSaveButtonState()
+        {
+            if (EditorUtility.IsDirty(m_openedGraphInstance))
+            {
+                m_saveGraphButton.text = "*Save";
+            }
+            else
+            {
+                m_saveGraphButton.text = "Save";
+            }
         }
     }
 }
