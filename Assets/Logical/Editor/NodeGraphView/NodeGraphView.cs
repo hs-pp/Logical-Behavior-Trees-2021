@@ -310,12 +310,11 @@ namespace Logical.Editor
             Undo.RegisterCompleteObjectUndo(NodeGraph, "Created New Edge");
             edgeView.Setup();
 
+            NodeView firstNode = edgeView.FirstPort.Node;
             // Outports can only have one edge connected to them.
-            if (edgeView.FirstPort.Node.OutportHasEdge(edgeView.FirstPort.PortIndex))
+            if (firstNode.OutportHasEdge(edgeView.FirstPort.PortIndex))
             {
-
-                Debug.LogError("Outport already has edge.");
-                return;
+                firstNode.RemoveEdge(firstNode.GetEdgeViewByPortIndex(edgeView.FirstPort.PortIndex));
             }
 
             edgeView.FirstPort.Node.AddEdge(edgeView);

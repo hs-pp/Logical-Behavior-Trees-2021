@@ -237,6 +237,17 @@ namespace Logical.Editor
             return null;
         }
 
+        public EdgeView GetEdgeViewByPortIndex(int outportIndex)
+        {
+            string edgeViewId = SerializedNode
+                .FindPropertyRelative(ANode.OutportsVarName)
+                .GetArrayElementAtIndex(outportIndex)
+                .FindPropertyRelative(OutportEdge.IdVarName)
+                .stringValue;
+
+            return m_edgeViews[edgeViewId];
+        }
+
         public void UpdateNodeDataPosition()
         {
             SerializedNode.FindPropertyRelative(ANode.PositionVarName).vector2Value = this.GetPosition().position;
