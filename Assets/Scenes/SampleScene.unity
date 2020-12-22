@@ -153,11 +153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462cea00262a68e4cac1f689befb3e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_nodeGraph: {fileID: 11400000, guid: 7e0f03c36085b2e49a42443da24a280a, type: 2}
+  m_nodeGraph: {fileID: 11400000, guid: 99e86cdb8d14f8f40bda2a5391f8c4af, type: 2}
   m_overrideProperties:
     id: 0
   m_useOverrides: 1
-  m_createGraphInstance: 0
+  m_createGraphInstance: 1
   OnGraphStart:
     m_PersistentCalls:
       m_Calls: []
@@ -267,6 +267,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &705507995

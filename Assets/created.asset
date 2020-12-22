@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
+  m_Name: created
+  m_EditorClassIdentifier: 
+  m_nodeCollection:
+    m_nodes:
+    - id: 0
+    - id: 1
+    - id: 2
+    - id: 3
+    - id: 4
+    m_entryNodeId: 6eedb5c5-a8e1-4bed-896a-1eca626b2e13
+  GraphProperties:
+    id: 5
+  m_blackboardProperties:
+    m_allElements:
+    - id: 6
+    - id: 7
+    - id: 8
+  references:
+    version: 1
+    00000000:
+      type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 6eedb5c5-a8e1-4bed-896a-1eca626b2e13
+        m_outports:
+        - Id: 5a80ff70-8c74-45a6-bc1d-7772f05b16e2
+          ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
+        m_position: {x: -516, y: -97}
+        m_comment: 
+    00000001:
+      type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
+        m_outports:
+        - Id: 7f39a0f7-8015-4c81-b36e-3635eaf4fae5
+          ConnectedNodeId: ed5b09de-9c34-4512-ae83-575a00019318
+        - Id: becf95d8-08c8-48c0-a641-180dc115faf3
+          ConnectedNodeId: 1d5f528d-c5c7-46a1-9183-c4c8ccaf9bd9
+        m_position: {x: -277, y: -114}
+        m_comment: 
+        m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
+        m_conditionals:
+        - id: 9
+        - id: 10
+    00000002:
+      type: {class: BlackboardSetter, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 1d5f528d-c5c7-46a1-9183-c4c8ccaf9bd9
+        m_outports:
+        - Id: 57c7a062-0b3e-4af1-8c84-0b7469cb749f
+          ConnectedNodeId: 0e6a9ca0-f171-424b-b871-690c778385ee
+        m_position: {x: -70, y: 29}
+        m_comment: 
+        m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
+        m_setterValue:
+          id: 11
+    00000003:
+      type: {class: DebugLogNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: 0e6a9ca0-f171-424b-b871-690c778385ee
+        m_outports:
+        - Id: caf09798-3f8d-486e-9a79-fccfadbb79ff
+          ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
+        m_position: {x: -255, y: 196}
+        m_comment: 
+        Message: 'new Single is '
+    00000004:
+      type: {class: DebugLogNode, ns: , asm: Assembly-CSharp}
+      data:
+        m_id: ed5b09de-9c34-4512-ae83-575a00019318
+        m_outports:
+        - Id: 5f88db00-e3f4-486a-ada8-98586a962c18
+          ConnectedNodeId: 
+        m_position: {x: 47, y: -182}
+        m_comment: 
+        Message: Yay we finished!
+    00000005:
+      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
+      data:
+        thisint: 6
+        thisstring: 
+        serializedClass:
+          serializedInt: 2
+          serializedString: 
+    00000006:
+      type: {class: StringBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 099bf71f-2aab-46b1-a144-7480402d4691
+        m_name: new String
+        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 
+    00000007:
+      type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: cd90bb76-4db4-4e27-a2a5-63321a5cf154
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0
+    00000008:
+      type: {class: FloatBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 435fd638-2c36-4b87-931f-06d5d67e75cd
+        m_name: new Single
+        m_serializedType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0
+    00000009:
+      type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_comparator: 3
+        m_comparedValue: 2
+    0000000A:
+      type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_comparator: 2
+        m_comparedValue: 2
+    0000000B:
+      type: {class: BlackboardSetterFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_setterCommand: 1
+        m_newValue: 1

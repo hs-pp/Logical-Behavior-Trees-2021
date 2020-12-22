@@ -21,10 +21,21 @@ namespace Logical.BuiltInNodes
         [SerializeField]
         private bool m_newValue = false;
 
-        public bool Evaluate()
+        public void Evaluate(BlackboardElement element)
         {
-            return true;
+            bool boolValue = (bool)element.Value;
+            switch (m_setterCommand)
+            {
+                case BoolSetterCommand.Set_To:
+                    boolValue = m_newValue;
+                    break;
+                case BoolSetterCommand.Toggle:
+                    boolValue = !boolValue;
+                    break;
+            }
+            element.Value = boolValue;
         }
+
 #if UNITY_EDITOR
         public static readonly string SetterCommandVarName = "m_setterCommand";
         public static readonly string NewValueVarName = "m_newValue";

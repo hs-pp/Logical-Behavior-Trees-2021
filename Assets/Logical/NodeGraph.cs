@@ -42,8 +42,6 @@ namespace Logical
             m_nodeCollection.SetEntryNode(entryNode.Id);
             GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
             m_blackboardProperties = new BlackboardProperties();
-            m_blackboardProperties.AddElement(new StringBlackboardElement());
-            m_blackboardProperties.AddElement(new BoolBlackboardElement());
         }
 
         public void Awake()
@@ -73,7 +71,10 @@ namespace Logical
             string newOutportId = Guid.NewGuid().ToString();
 
             SerializedProperty outportsProperty = serializedNode.FindPropertyRelative(ANode.OutportsVarName);
+            Debug.Log("originally num outports is " + outportsProperty.arraySize);
+
             outportsProperty.InsertArrayElementAtIndex(outportsProperty.arraySize);
+            Debug.Log("Now num outports is " + outportsProperty.arraySize);
             SerializedProperty newOutportProperty = outportsProperty.GetArrayElementAtIndex(outportsProperty.arraySize - 1);
             newOutportProperty.FindPropertyRelative(OutportEdge.IdVarName).stringValue = newOutportId;
             newOutportProperty.FindPropertyRelative(OutportEdge.ConnectedNodeIdVarName).stringValue = "";

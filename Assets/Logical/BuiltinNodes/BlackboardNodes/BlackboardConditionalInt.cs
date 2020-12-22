@@ -15,16 +15,49 @@ namespace Logical.BuiltInNodes
             Equals,
             Does_Not_Equal,
             Less_Than,
-            Greater_Than
+            Greater_Than,
+            Greater_Than_Or_Equal_To,
+            Less_Than_or_Equal_To,
+            Else,
         }
         [SerializeField]
         private IntComparator m_comparator = IntComparator.Equals;
         [SerializeField]
         private int m_comparedValue = 0;
 
-        public bool Evaluate()
+        public bool Evaluate(BlackboardElement element)
         {
-            return true;
+            int intVal = (int)element.Value;
+            switch (m_comparator)
+            {
+                case IntComparator.Equals:
+                    if (intVal == m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Does_Not_Equal:
+                    if (intVal != m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Less_Than:
+                    if (intVal < m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Greater_Than:
+                    if (intVal > m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Less_Than_or_Equal_To:
+                    if (intVal <= m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Greater_Than_Or_Equal_To:
+                    if (intVal >= m_comparedValue)
+                        return true;
+                    break;
+                case IntComparator.Else:
+                    return true;
+            }
+            return false;
         }
 
 #if UNITY_EDITOR

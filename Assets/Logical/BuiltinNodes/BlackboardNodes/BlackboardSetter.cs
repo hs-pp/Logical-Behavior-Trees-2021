@@ -19,6 +19,20 @@ namespace Logical.BuiltInNodes
         [SerializeReference]
         private IBlackboardSetterElement m_setterValue = null;
 
+        public override void OnNodeEnter(GraphRunner graphRunner)
+        {
+            base.OnNodeEnter(graphRunner);
+
+            if (string.IsNullOrEmpty(m_blackboardElementId))
+            {
+                Debug.LogError("BlackboardSetter: Blackboard element is not set!");
+                return;
+            }
+            BlackboardElement element = graphRunner.BlackboardProperties.GetElementById(m_blackboardElementId);
+            m_setterValue.Evaluate(element);
+            TraverseEdge(graphRunner, 0);
+        }
+
 #if UNITY_EDITOR
         public static readonly string BlackboardElementIdVarName = "m_blackboardElementId";
         public static readonly string SetterValueVarName = "m_setterValue";

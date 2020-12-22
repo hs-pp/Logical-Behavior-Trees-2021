@@ -24,9 +24,21 @@ namespace Logical.BuiltInNodes
         [SerializeField]
         private bool m_comparedValue = false;
 
-        public bool Evaluate()
+        public bool Evaluate(BlackboardElement element)
         {
-            return true;
+            bool boolValue = (bool)element.Value;
+            switch (m_boolComparator)
+            {
+                case BoolComparator.Equals:
+                    if (m_comparedValue == boolValue)
+                        return true;
+                    break;
+                case BoolComparator.Does_Not_Equal:
+                    if (m_comparedValue != boolValue)
+                        return true;
+                    break;
+            }
+            return false;
         }
 
 #if UNITY_EDITOR

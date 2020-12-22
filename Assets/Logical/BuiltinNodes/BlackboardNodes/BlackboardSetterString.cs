@@ -22,10 +22,24 @@ namespace Logical.BuiltInNodes
         [SerializeField]
         private string m_newValue = "";
 
-        public bool Evaluate()
+        public void Evaluate(BlackboardElement element)
         {
-            return true;
+            string strValue = (string)element.Value;
+            switch(m_setterCommand)
+            {
+                case StringSetterCommand.Set_To:
+                    strValue = m_newValue;
+                    break;
+                case StringSetterCommand.Append:
+                    strValue += m_newValue;
+                    break;
+                case StringSetterCommand.Prepend:
+                    strValue = m_newValue + strValue;
+                    break;
+            }
+            element.Value = strValue;
         }
+
 #if UNITY_EDITOR
         public static readonly string SetterCommandVarName = "m_setterCommand";
         public static readonly string NewValueVarName = "m_newValue";

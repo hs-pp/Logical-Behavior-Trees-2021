@@ -17,7 +17,7 @@ public class SampleNode : ANode
         framecount++;
         if(framecount >= 100)
         {
-            graphRunner.TraverseEdge(GetOutportEdge(0));
+            TraverseEdge(graphRunner, 0);
         }
     }
 

@@ -24,14 +24,14 @@ namespace Logical
         public virtual void OnNodeUpdate(GraphRunner graphRunner) { }
         public virtual void OnNodeExit(GraphRunner graphRunner) { }
 
-        public OutportEdge GetOutportEdge(int index)
-        {
-            return m_outports[index];
-        }
-
         public bool ContainsOutport(OutportEdge outportEdge)
         {
             return m_outports.Exists(x => x.Id == outportEdge.Id);
+        }
+
+        protected void TraverseEdge(GraphRunner graphRunner, int edgeIndex)
+        {
+            graphRunner.TraverseEdge(m_outports[edgeIndex]);
         }
 
         [SerializeField, HideInInspector]

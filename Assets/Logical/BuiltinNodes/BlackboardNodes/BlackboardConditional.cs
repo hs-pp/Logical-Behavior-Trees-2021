@@ -22,6 +22,25 @@ namespace Logical.BuiltInNodes
         [SerializeReference]
         private List<IBlackboardConditionalElement> m_conditionals = new List<IBlackboardConditionalElement>();
 
+        public override void OnNodeEnter(GraphRunner graphRunner)
+        {
+            base.OnNodeEnter(graphRunner);
+            if(string.IsNullOrEmpty(m_blackboardElementId))
+            {
+                Debug.LogError("BlackboardConditional: Blackboard element is not set!");
+                return;
+            }
+            BlackboardElement element = graphRunner.BlackboardProperties.GetElementById(m_blackboardElementId);
+            for(int i = 0; i < m_conditionals.Count; i++)
+            {
+                if (m_conditionals[i].Evaluate(element))
+                {
+                    TraverseEdge(graphRunner, i);
+                    return;
+                }
+            }
+        }
+
 #if UNITY_EDITOR
         public static string BlackboardElementIdVarName = "m_blackboardElementId";
         public static string ConditionalsVarName = "m_conditionals";

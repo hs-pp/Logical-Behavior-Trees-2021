@@ -15,13 +15,14 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
     m_entryNodeId: 01901eea-46ea-4495-99ae-11115923ee66
   GraphProperties:
-    id: 1
-  m_blackboardData:
+    id: 2
+  m_blackboardProperties:
     m_allElements:
-    - id: 2
     - id: 3
+    - id: 4
   references:
     version: 1
     00000000:
@@ -30,10 +31,19 @@ MonoBehaviour:
         m_id: 01901eea-46ea-4495-99ae-11115923ee66
         m_outports:
         - Id: 9ca3f029-4f60-4f60-bcb7-58c49135ad24
-          ConnectedNodeId: 
-        m_position: {x: 0, y: 0}
+          ConnectedNodeId: d1ecbccb-568a-465e-be76-c373870626f8
+        m_position: {x: -334, y: -28}
         m_comment: 
     00000001:
+      type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: d1ecbccb-568a-465e-be76-c373870626f8
+        m_outports: []
+        m_position: {x: -85, y: -142}
+        m_comment: 
+        m_blackboardElementId: 
+        m_conditionals: []
+    00000002:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6
@@ -41,19 +51,19 @@ MonoBehaviour:
         serializedClass:
           serializedInt: 2
           serializedString: 
-    00000002:
+    00000003:
       type: {class: StringBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
-        m_guid: d84bd8e3-4573-4964-b078-eaf8398002f7
+        m_guid: b3e2252b-d86c-43d5-9a0a-c04b1b668733
         m_name: new String
         m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 
-    00000003:
+    00000004:
       type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
-        m_guid: 6e315a37-61ca-44a1-9eb3-4723240a429f
+        m_guid: 12322a8b-592b-4bc7-859a-5c779c9bc249
         m_name: new Boolean
         m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089

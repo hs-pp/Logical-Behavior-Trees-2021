@@ -22,10 +22,24 @@ namespace Logical.BuiltInNodes
         [SerializeField]
         private float m_newValue = 0;
 
-        public bool Evaluate()
+        public void Evaluate(BlackboardElement element)
         {
-            return true;
+            float floatValue = (float)element.Value;
+            switch (m_setterCommand)
+            {
+                case FloatSetterCommand.Set_To:
+                    floatValue = m_newValue;
+                    break;
+                case FloatSetterCommand.Increment:
+                    floatValue += m_newValue;
+                    break;
+                case FloatSetterCommand.Decrement:
+                    floatValue -= m_newValue;
+                    break;
+            }
+            element.Value = floatValue;
         }
+
 #if UNITY_EDITOR
         public static readonly string SetterCommandVarName = "m_setterCommand";
         public static readonly string NewValueVarName = "m_newValue";

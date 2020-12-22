@@ -6,7 +6,7 @@ namespace Logical.BuiltInNodes
 {
     public interface IBlackboardSetterElement
     {
-        bool Evaluate();
+        void Evaluate(BlackboardElement element);
 #if UNITY_EDITOR
         string GetOutportLabel(SerializedProperty setterProp);
 #endif

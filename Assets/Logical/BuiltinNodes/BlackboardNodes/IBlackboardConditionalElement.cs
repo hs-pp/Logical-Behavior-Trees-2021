@@ -6,7 +6,7 @@ namespace Logical.BuiltInNodes
 {
     public interface IBlackboardConditionalElement
     {
-        bool Evaluate();
+        bool Evaluate(BlackboardElement element);
 #if UNITY_EDITOR
         string GetOutportLabel(SerializedProperty conditionalProp);
 #endif

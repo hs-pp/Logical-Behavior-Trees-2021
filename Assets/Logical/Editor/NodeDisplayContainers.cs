@@ -28,7 +28,7 @@ namespace Logical.Editor
 
         // Specifically for setting colors
         public VisualElement TitleElement { get; private set; }
-        public VisualElement TitleBordersElement { get; private set; }
+        public VisualElement NodeBordersElement { get; private set; }
 
         private VisualElement AllOutportsContainer { get; set; }
 
@@ -61,7 +61,10 @@ namespace Logical.Editor
             NodeView.outputContainer.Add(AllOutportsContainer);
 
             TitleElement = NodeView.Q<VisualElement>("title");
-            TitleBordersElement = NodeView.Q<VisualElement>("node-border");
+            NodeBordersElement = NodeView.Q<VisualElement>("node-border");
+
+            //VisualElement SelectionBorder = NodeView.Q<VisualElement>("selection-border");
+            //NodeBordersElement.Add(SelectionBorder);
 
             UpdateColor();
         }
@@ -110,10 +113,10 @@ namespace Logical.Editor
                 TitleElement.style.backgroundColor = nodeColor;
                 PreTitleContainer.style.backgroundColor = nodeColor;
                 PostTitleContainer.style.backgroundColor = nodeColor;
-                TitleBordersElement.style.borderTopColor = nodeColor;
-                TitleBordersElement.style.borderLeftColor = nodeColor;
-                TitleBordersElement.style.borderRightColor = nodeColor;
-                TitleBordersElement.style.borderBottomColor = nodeColor;
+                NodeBordersElement.style.borderTopColor = nodeColor;
+                NodeBordersElement.style.borderLeftColor = nodeColor;
+                NodeBordersElement.style.borderRightColor = nodeColor;
+                NodeBordersElement.style.borderBottomColor = nodeColor;
                 NodeView.elementTypeColor = nodeColor;
             }
         }

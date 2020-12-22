@@ -15,7 +15,7 @@ namespace Logical.BuiltInNodes
         public override void OnNodeEnter(GraphRunner graphRunner)
         {
             Debug.Log("EntryNode Enter");
-            graphRunner.TraverseEdge(GetOutportEdge(0));
+            TraverseEdge(graphRunner, 0);
         }
 
         public override void OnNodeUpdate(GraphRunner graphRunner)
