@@ -19,18 +19,20 @@ namespace Logical.Editor
         private const string FAVORITES_FOLDOUT = "favorites-foldout";
         private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string SEARCH_FIELD = "graphs-search-bar";
+        private const string CREATE_GRAPH_INSTANCE_BUTTON = "new-graph-button";
 
         private string m_currentGraphGuid = "";
         private ObjectDisplayField m_currentGraphDisplay = null;
+        private Button m_createGraphInstanceButton = null;
 
         private RecentsController m_recentsController = null;
         private FavoritesController m_favoritesController = null;
         private AllGraphsController m_allGraphsController = null;
 
         private LibraryTabData LibraryTabData { get; set; }
-        private Action<string> OnObjectFieldDoubleClick { get; } = null;
+        private Action<string> OnObjectFieldDoubleClick { get; }
 
-        public LibraryTabElement(Action<string> onObjectFieldDoubleClick)
+        public LibraryTabElement(Action<string> onObjectFieldDoubleClick, Action onCreateGraphInstancePressed)
         {
             OnObjectFieldDoubleClick = onObjectFieldDoubleClick;
 
@@ -38,10 +40,13 @@ namespace Logical.Editor
             uxmlAsset.CloneTree(this);
 
             m_currentGraphDisplay = this.Q<ObjectDisplayField>(OPENED_GRAPH_FIELD);
+            m_createGraphInstanceButton = this.Q<Button>(CREATE_GRAPH_INSTANCE_BUTTON);
 
             m_recentsController = new RecentsController(this);
             m_favoritesController = new FavoritesController(this);
             m_allGraphsController = new AllGraphsController(this);
+
+            m_createGraphInstanceButton.clicked += onCreateGraphInstancePressed;
         }
 
         private Manipulator GetAddToFavManip(string graphGUID)

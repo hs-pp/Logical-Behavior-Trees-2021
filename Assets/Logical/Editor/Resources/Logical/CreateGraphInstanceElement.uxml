@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="new-graph-instance-window-container" style="align-items: center; overflow: hidden;">
+        <ui:Button text="Close" display-tooltip-when-elided="True" name="close-button" style="align-items: stretch; margin-right: 4px; margin-left: auto; margin-top: 4px; margin-bottom: 4px;" />
+        <ui:VisualElement name="new-graph-instance-window" style="max-width: 500px; align-items: center; overflow: visible;">
+            <ui:Label text="Create Graph Instance" display-tooltip-when-elided="True" name="title" style="-unity-text-align: upper-center; font-size: 26px; -unity-font-style: bold;" />
+            <ui:VisualElement name="divider" style="height: 4px; width: 300px; border-top-width: 1px; border-left-color: rgb(196, 196, 196); border-right-color: rgb(196, 196, 196); border-top-color: rgb(196, 196, 196); border-bottom-color: rgb(196, 196, 196);" />
+            <ui:VisualElement name="inputs-area">
+                <ui:Label text="1) Please select a graph type:" display-tooltip-when-elided="True" name="graph-type-label" style="margin-top: 16px;" />
+                <ui:IMGUIContainer name="graph-type-enum-area" />
+                <ui:Label text="2) Graph instance name:" display-tooltip-when-elided="True" name="graph-name-label" style="margin-top: 16px;" />
+                <ui:TextField picking-mode="Ignore" value="filler text" name="graph-name-textfield" style="flex-grow: 0; width: 277px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="path-container" style="flex-direction: row; margin-top: 12px; margin-bottom: 12px; max-width: none; width: auto; white-space: nowrap; overflow: visible;">
+                <ui:Label text="Path:" display-tooltip-when-elided="True" name="path-label-label" style="-unity-font-style: bold; font-size: 17px;" />
+                <ui:Label text=" " display-tooltip-when-elided="True" name="path-label" style="-unity-text-align: middle-left;" />
+            </ui:VisualElement>
+            <ui:Button text="Create!" display-tooltip-when-elided="True" name="create-button" style="margin-top: 16px; width: 160px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

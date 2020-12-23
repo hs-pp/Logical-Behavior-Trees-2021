@@ -30,6 +30,7 @@ namespace Logical.Editor
         private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
         private ToolbarButton m_saveGraphButton = null;
+        private CreateGraphInstanceElement m_createGraphInstanceElement = null;
 
         private NodeGraph m_openedGraphInstance = null;
         
@@ -42,6 +43,16 @@ namespace Logical.Editor
             EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(new GraphWindowData(), true));
         }
 
+        private void OpenCreateGraphInstanceWindow()
+        {
+            m_nodeGraphView.style.display = DisplayStyle.None;
+            m_createGraphInstanceElement.style.display = DisplayStyle.Flex;
+        }
+        private void CloseCreateGraphInstanceWindow()
+        {
+            m_nodeGraphView.style.display = DisplayStyle.Flex;
+            m_createGraphInstanceElement.style.display = DisplayStyle.None;
+        }
         /// <summary>
         /// When the UI is enabled, it sets up all the VisualElement references and loads in the window data.
         /// </summary>
@@ -51,18 +62,10 @@ namespace Logical.Editor
             var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.LogicalGraphWindow_UXML);
             uxmlAsset.CloneTree(rootVisualElement);
             m_mainSplitView = rootVisualElement.Q<UIElements.TwoPaneSplitView>(MAIN_SPLITVIEW);
-            //=========================================================================================//
+            //=========================================================================================//=
 
             //==================================Register Toolbar=======================================//
             m_toolbar = rootVisualElement.Q<Toolbar>(TOOLBAR);
-
-            // Create Button
-            var graphCreateButton = new ToolbarButton(() =>
-            {
-                CreateNewGraphPopup.OpenWindow();
-            });
-            graphCreateButton.text = "Create Graph";
-            m_toolbar.Add(graphCreateButton);
 
             // Save Button
             m_saveGraphButton = new ToolbarButton(() =>
@@ -89,10 +92,15 @@ namespace Logical.Editor
             m_nodeGraphView.OnRemoveFromSelection += OnGraphElementSelectionRemoved;
             m_nodeGraphView.OnClearSelection += OnGraphElementSelectionCleared;
             mainPanelRight.Add(m_nodeGraphView);
-            
+
+            // Instantiate and hide the create new graph window
+            m_createGraphInstanceElement = new CreateGraphInstanceElement(() => { CloseCreateGraphInstanceWindow(); });
+            m_createGraphInstanceElement.style.display = DisplayStyle.None;
+            mainPanelRight.Add(m_createGraphInstanceElement);
+
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
-            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); })));
+            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); } , OpenCreateGraphInstanceWindow)));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement(m_nodeGraphView)));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);

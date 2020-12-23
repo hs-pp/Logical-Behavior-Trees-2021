@@ -17,4 +17,13 @@
             <uie:ToolbarSearchField focusable="True" name="graphs-search-bar" style="width: auto; margin-left: 0; margin-right: 0; margin-bottom: 8px;" />
         </ui:VisualElement>
     </ui:ScrollView>
+    <ui:VisualElement name="bottom-buttons" style="justify-content: flex-start; top: auto; flex-direction: column; height: auto; margin-top: auto; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(115, 115, 115); border-right-color: rgb(115, 115, 115); border-top-color: rgb(115, 115, 115); border-bottom-color: rgb(115, 115, 115); border-top-left-radius: 6px; border-bottom-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; margin-left: 4px; margin-right: 4px; margin-bottom: 4px; flex-shrink: 0;">
+        <ui:Label text="Create" display-tooltip-when-elided="True" name="create-label" style="-unity-text-align: upper-center; overflow: hidden;" />
+        <ui:Button text="New Graph Instance" display-tooltip-when-elided="True" name="new-graph-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;" />
+        <ui:Label text="Generate" display-tooltip-when-elided="True" name="generate-label" style="-unity-text-align: upper-center; margin-top: 4px; overflow: hidden;" />
+        <ui:VisualElement name="horizontal-layout" style="flex-direction: row; flex-shrink: 0; overflow: hidden; justify-content: space-around;">
+            <ui:Button text="Graph Class" display-tooltip-when-elided="True" name="generate-graph-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; flex-grow: 1; padding-right: 6px; margin-right: 1px;" />
+            <ui:Button text="Node Class" display-tooltip-when-elided="True" name="generate-node-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; flex-grow: 1; padding-left: 6px; margin-left: 1px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>
