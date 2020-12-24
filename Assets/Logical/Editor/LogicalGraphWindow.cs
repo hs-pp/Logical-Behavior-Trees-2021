@@ -287,6 +287,10 @@ namespace Logical.Editor
             {
                 m_nodeGraphView.FrameAll();
             });
+            menu.AddItem(new GUIContent("Reset Graph Position to origin"), false, () =>
+            {
+                m_nodeGraphView.FrameOrigin();
+            });
             menu.AddItem(new GUIContent("Show Minimap"), m_graphWindowData.ShowMinimap, () => 
             {
                 m_graphWindowData.ShowMinimap = !m_graphWindowData.ShowMinimap;

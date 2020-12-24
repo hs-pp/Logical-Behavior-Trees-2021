@@ -33,12 +33,16 @@ namespace Logical.Editor
         public Action OnClearSelection = null;
         public Action<int> OnBlackboardElementChanged = null;
 
+        //private AxisGraphElement m_xAxisIndicator = null;
+        private GraphAxesController m_graphAxesController = null;
+
         public NodeGraphView() 
         {
             styleSheets.Add(Resources.Load<StyleSheet>(ResourceAssetPaths.NodeGraphView_StyleSheet));
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-            this.AddManipulator(new CustomContentDragger());
+            CustomContentDragger customContentDragger = new CustomContentDragger();
+            this.AddManipulator(customContentDragger);
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
@@ -71,6 +75,11 @@ namespace Logical.Editor
             RegisterCallback<MouseMoveEvent>(x => { m_mousePosition = x.localMousePosition;});
             RegisterCallback<MouseUpEvent>(x => { OnMouseClick?.Invoke(); }); 
             Undo.undoRedoPerformed += () => { SetNodeCollection(NodeGraph); };
+
+            m_graphAxesController = new GraphAxesController(this, customContentDragger);
+            m_graphAxesController.SetEnable(true);
+            //m_xAxisIndicator = new AxisGraphElement(this, customContentDragger, AxisGraphElement.Axis.X);
+            //Add(m_xAxisIndicator);
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -106,6 +115,8 @@ namespace Logical.Editor
                 m_nodeViews[nodeData[j].Id].OnLoadView();
             }
             RefreshSerializedNodeReferences();
+            //m_xAxisIndicator.Refresh();
+            m_graphAxesController.RefreshPositions();
         }
 
         //public void SetNodeCollection(NodeGraph nodeGraph)
@@ -146,7 +157,7 @@ namespace Logical.Editor
         }
         public void SetViewPosition(Vector2 position)
         {
-            viewTransform.position = position;
+            this.UpdateViewTransform(position, viewTransform.scale);
         }
         public void ShowMinimap(bool show)
         {
