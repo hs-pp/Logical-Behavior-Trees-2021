@@ -11,29 +11,32 @@ public class GraphAxesController
 
     private NodeGraphView m_nodeGraphView = null;
     private CustomContentDragger m_customContentDragger = null;
+    private SecondarySelectionDragger m_secondarySelectionDragger = null;
 
     private GraphAxis m_xAxis = null;
     private GraphAxis m_yAxis = null;
 
     private bool m_isEnabled = false;
 
-    public GraphAxesController(NodeGraphView nodeGraphView, CustomContentDragger contentDragger)
+    public GraphAxesController(NodeGraphView nodeGraphView, CustomContentDragger contentDragger, SecondarySelectionDragger secondarySelectionDragger)
     {
         m_nodeGraphView = nodeGraphView;
         m_customContentDragger = contentDragger;
+        m_secondarySelectionDragger = secondarySelectionDragger;
 
         m_xAxis = new GraphAxis();
         m_yAxis = new GraphAxis();
 
+        VisualElement graphViewContent = m_nodeGraphView.Q<VisualElement>("contentViewContainer");
         nodeGraphView.Add(m_xAxis);
         nodeGraphView.Add(m_yAxis);
-        m_xAxis.SendToBack();
-        m_yAxis.SendToBack();
+        m_xAxis.PlaceBehind(graphViewContent);
+        m_yAxis.PlaceBehind(graphViewContent);
 
         m_nodeGraphView.RegisterCallback<GeometryChangedEvent>(UpdateSizes);
         m_nodeGraphView.viewTransformChanged += RefreshPositions;
         m_customContentDragger.PositionChanged += RefreshPositions;
-
+        m_secondarySelectionDragger.OnDragging += RefreshPositions; // TODO: This is a hack to get the axes to update when moving nodes around. But it still doesn't work perfectly.
     }
 
     ~GraphAxesController()
@@ -83,6 +86,10 @@ public class GraphAxesController
         m_yAxis.SetSize(new Vector2(geomChanged.newRect.width, AXIS_LINE_WIDTH));
     }
 
+    /// <summary>
+    /// This is a GraphElement because of the SetPosition() method which simply sets the VisualElement's layout.
+    /// The default VisualElement's layout is readonly for some reason?
+    /// </summary>
     public class GraphAxis : GraphElement
     {
         public GraphAxis()

@@ -43,6 +43,8 @@ namespace Logical.Editor
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             CustomContentDragger customContentDragger = new CustomContentDragger();
             this.AddManipulator(customContentDragger);
+            SecondarySelectionDragger secondarySelectionDragger = new SecondarySelectionDragger();
+            this.AddManipulator(secondarySelectionDragger); // Order here matters because the SecondarySelectionDragger allows the event to propagate
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
@@ -76,7 +78,7 @@ namespace Logical.Editor
             RegisterCallback<MouseUpEvent>(x => { OnMouseClick?.Invoke(); }); 
             Undo.undoRedoPerformed += () => { SetNodeCollection(NodeGraph); };
 
-            m_graphAxesController = new GraphAxesController(this, customContentDragger);
+            m_graphAxesController = new GraphAxesController(this, customContentDragger, secondarySelectionDragger);
             m_graphAxesController.SetEnable(true);
             //m_xAxisIndicator = new AxisGraphElement(this, customContentDragger, AxisGraphElement.Axis.X);
             //Add(m_xAxisIndicator);

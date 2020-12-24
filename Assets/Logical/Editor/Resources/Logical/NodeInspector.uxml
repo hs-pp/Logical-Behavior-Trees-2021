@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="scroll">
-        <ui:Label text="Blackboard Conditional" display-tooltip-when-elided="false" name="node-name-label" style="font-size: 30px; -unity-text-align: upper-left; white-space: normal; height: auto; -unity-font-style: bold; margin-bottom: 2px;" />
+        <ui:Label text="Blackboard Conditional" display-tooltip-when-elided="false" name="node-name-label" style="font-size: 30px; -unity-text-align: upper-left; white-space: normal; height: auto; -unity-font-style: bold; margin-bottom: 2px; min-width: 170px; overflow: hidden; visibility: visible; min-height: auto; max-height: 120px;" />
         <ui:Label text="839492347-39432-4324-3439-342" display-tooltip-when-elided="True" name="node-id-label" />
-        <ui:TextField picking-mode="Ignore" value="filler text" text="filler text" multiline="true" name="comment-field" style="margin-bottom: 16px; min-height: 80px; margin-top: 12px;">
-            <ui:Label text="Comment..." display-tooltip-when-elided="True" name="comment-placeholder" style="position: absolute; -unity-font-style: italic; color: rgb(118, 111, 111); margin-left: 5px; margin-top: 5px;" />
+        <ui:TextField picking-mode="Ignore" value="filler text" text="filler text" multiline="true" name="comment-field" style="margin-bottom: 16px; min-height: 80px; margin-top: 12px;">
+            <ui:Label text="Comment..." display-tooltip-when-elided="True" name="comment-placeholder" style="position: absolute; -unity-font-style: italic; color: rgb(118, 111, 111); margin-left: 5px; margin-top: 5px;" />
         </ui:TextField>
-        <ui:VisualElement name="inspector-area" style="flex-grow: 1; flex-shrink: 0;" />
+        <ui:VisualElement name="inspector-area" style="flex-grow: 1; flex-shrink: 0;" />
     </ui:VisualElement>
 </ui:UXML>
