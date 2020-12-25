@@ -11,6 +11,7 @@ namespace Logical.Editor
     public static class ResourceAssetPaths
     {
         // UXML
+        public static string CoordinateLabel_UXML = "Logical/NodeGraph/CoordinateLabel";
         public static string CreateGraphInstanceElement_UXML = "Logical/CreateGraphInstanceElement";
         public static string GraphInspector_UXML = "Logical/GraphInspector";
         public static string ImportContainer_UXML = "Logical/NodeGraph/InportContainer";

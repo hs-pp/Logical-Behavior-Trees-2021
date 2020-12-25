@@ -1,6 +1,5 @@
 using Logical.Editor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -9,6 +8,7 @@ using UnityEngine.UIElements;
 public class GraphAxesController : VisualElement
 {
     public static float AXIS_LINE_WIDTH = 4;
+    public static float HALF_AXIS_LINE_WIDTH = 2;
 
     private NodeGraphView m_nodeGraphView = null;
     private CustomContentDragger m_customContentDragger = null;
@@ -17,7 +17,7 @@ public class GraphAxesController : VisualElement
     private GraphAxis m_xAxis = null;
     private GraphAxis m_yAxis = null;
     private List<CoordinateLabel> m_coordinateLabels = new List<CoordinateLabel>();
-
+    private List<CoordinateLabel> m_cachedCoordinateLabels = new List<CoordinateLabel>();
     private bool m_isEnabled = false;
 
     public GraphAxesController(NodeGraphView nodeGraphView, CustomContentDragger contentDragger, SecondarySelectionDragger secondarySelectionDragger)
@@ -49,6 +49,17 @@ public class GraphAxesController : VisualElement
 
         m_nodeGraphView?.Remove(m_xAxis);
         m_nodeGraphView?.Remove(m_yAxis);
+
+        foreach (CoordinateLabel label in m_coordinateLabels)
+        {
+            Remove(label); 
+        }
+        m_coordinateLabels.Clear();
+        foreach (CoordinateLabel label in m_cachedCoordinateLabels)
+        {
+            Remove(label);
+        }
+        m_cachedCoordinateLabels.Clear();
     }
 
     public void SetEnable(bool isEnabled)
@@ -65,14 +76,19 @@ public class GraphAxesController : VisualElement
             return;
         }
 
-        Vector2 topLeft = m_nodeGraphView.viewTransform.position;
-        Vector2 xPos = new Vector2(Mathf.Clamp(topLeft.x, AXIS_LINE_WIDTH / 2, m_nodeGraphView.viewport.worldBound.width - AXIS_LINE_WIDTH), 0);
-        Vector2 yPos = new Vector2(0, Mathf.Clamp(topLeft.y, AXIS_LINE_WIDTH / 2, m_nodeGraphView.viewport.worldBound.height - AXIS_LINE_WIDTH));
-        m_xAxis.SetPos(xPos);
-        m_yAxis.SetPos(yPos);
+        Vector2 size = m_nodeGraphView.viewport.worldBound.size;
+
+        Vector2 center = new Vector2(
+            m_nodeGraphView.viewTransform.position.x - m_nodeGraphView.contentViewContainer.layout.x,
+            m_nodeGraphView.viewTransform.position.y - m_nodeGraphView.contentViewContainer.layout.y);
+
+        center.x = Mathf.Clamp(center.x, 3, size.x - HALF_AXIS_LINE_WIDTH); // hard coded min val for aesthetic. HALF_AXIS_LINE_WIDTH doesnt look as good.
+        center.y = Mathf.Clamp(center.y, HALF_AXIS_LINE_WIDTH, size.y - HALF_AXIS_LINE_WIDTH);
+
+        m_xAxis.SetPos(new Vector2(center.x, 0));
+        m_yAxis.SetPos(new Vector2(0, center.y));
 
         RefreshCoordinateLabels();
-        //Debug.Log(m_nodeGraphView.viewTransform.position + " " + (m_nodeGraphView.contentViewContainer.worldBound));
     }
 
     private void RefreshPositions(GraphView graphView)
@@ -87,69 +103,60 @@ public class GraphAxesController : VisualElement
 
     private void RefreshCoordinateLabels()
     {
-        Rect worldBound = m_nodeGraphView.viewport.worldBound;
-        worldBound.position = new Vector2(worldBound.position.x - m_nodeGraphView.viewTransform.position.x, worldBound.position.y - m_nodeGraphView.viewTransform.position.y);
-
-        float zoom = m_nodeGraphView.viewTransform.scale.x;
-        int increment = 100;
-
-        List<CoordinateLabel> oldList = new List<CoordinateLabel>(m_coordinateLabels);
+        m_cachedCoordinateLabels.AddRange(m_coordinateLabels);
+        foreach (CoordinateLabel label in m_coordinateLabels)
+        {
+            Remove(label);
+        }
         m_coordinateLabels.Clear();
         CoordinateLabel GetCoordinateLabel()
         {
             CoordinateLabel coordinateLabel;
-            if (oldList.Count > 0)
+            if (m_cachedCoordinateLabels.Count > 0)
             {
-                coordinateLabel = oldList[oldList.Count - 1];
-                oldList.RemoveAt(oldList.Count - 1);
+                coordinateLabel = m_cachedCoordinateLabels[m_cachedCoordinateLabels.Count - 1];
+                m_cachedCoordinateLabels.RemoveAt(m_cachedCoordinateLabels.Count - 1); 
             }
             else
             {
                 coordinateLabel = new CoordinateLabel();
-                m_nodeGraphView.Add(coordinateLabel);
             }
+            Add(coordinateLabel);
             m_coordinateLabels.Add(coordinateLabel);
             return coordinateLabel;
         }
 
-        //xAxis
-        CoordinateLabel.Direction dir;
-        Vector2 xAxisPos = m_xAxis.GetPosition().position;
-        if (xAxisPos.x > worldBound.center.x)
-        {
-            dir = CoordinateLabel.Direction.LEFT;
-        }
-        else
-        {
-            dir = CoordinateLabel.Direction.RIGHT;
-        }
+        Vector2 size = m_nodeGraphView.viewport.worldBound.size;
+        Vector2 topRight_graphSpace = m_nodeGraphView.viewTransform.position;
+        Vector2 offset_graphSpace = m_nodeGraphView.contentViewContainer.layout.position;
+        Vector2 center_ScreenSpace = new Vector2(
+            topRight_graphSpace.x - offset_graphSpace.x,
+            topRight_graphSpace.y - offset_graphSpace.y);
 
-        int upperBound = (int)((worldBound.y + worldBound.height) / increment) * increment;
-        int lowerBound = (int)((worldBound.y) / increment) * increment;
-        Debug.Log($"{lowerBound} to {upperBound}");
-        for(int i = lowerBound; i <= upperBound; i += increment)
-        {
-            if (i - worldBound.y > 0)
-            {
-                CoordinateLabel coordinateLabel = GetCoordinateLabel();
-                coordinateLabel.SetLabelXAxis(i, new Vector2(xAxisPos.x, i - worldBound.y), dir);
-            }
-        }
+        center_ScreenSpace.x = Mathf.Clamp(center_ScreenSpace.x, 0, size.x);
+        center_ScreenSpace.y = Mathf.Clamp(center_ScreenSpace.y, 0, size.y);
 
-        //for (int i = 1; i < (worldBound.height / increment / 2) + 1; i++)
-        //{
-        //    int num = i * increment;
-        //    CoordinateLabel coordinateLabel = GetCoordinateLabel();
-        //    coordinateLabel.SetLabelXAxis(num, new Vector2(xAxisPos.x, num - worldBound.y), dir);
-        //    CoordinateLabel coordinateLabel2 = GetCoordinateLabel();
-        //    coordinateLabel2.SetLabelXAxis(-num, new Vector2(xAxisPos.x, -num - worldBound.y), dir);
-        //}
+        float zoom = m_nodeGraphView.viewTransform.scale.x;
+        float increment = 100;
+        float zoomedIncrement = increment * zoom;
 
-        foreach(CoordinateLabel remaining in oldList)
+        Vector2 topLeft_GraphSpace = new Vector2(offset_graphSpace.x - topRight_graphSpace.x,
+            offset_graphSpace.y - topRight_graphSpace.y);
+        Vector2 bottomRight_GraphSpace = size + new Vector2(offset_graphSpace.x - topRight_graphSpace.x,
+            offset_graphSpace.y - topRight_graphSpace.y);
+
+        float lowerBound = (int)(topLeft_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
+        float upperBound = (int)(bottomRight_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
+
+        for(float i = lowerBound; i <= upperBound; i += zoomedIncrement)
         {
-            m_nodeGraphView.Remove(remaining);
+            //if (i == 0) continue;
+
+            CoordinateLabel coordinateLabel = GetCoordinateLabel();
+            coordinateLabel.SetLabelXAxis((int)(i / zoom), new Vector2(center_ScreenSpace.x, i - offset_graphSpace.y + topRight_graphSpace.y), CoordinateLabel.Direction.RIGHT);
         }
     }
+
 
     private void RefreshSizes(GeometryChangedEvent geomChanged)
     {
@@ -165,15 +172,17 @@ public class GraphAxesController : VisualElement
     {
         public GraphAxis()
         {
+            Color color = new Color(0.098f, 0.098f, 0.098f);
             capabilities &= ~Capabilities.Movable;
-            style.borderLeftColor = Color.black;
-            style.borderLeftWidth = AXIS_LINE_WIDTH;
-            style.borderRightColor = Color.black;
-            style.borderRightWidth = AXIS_LINE_WIDTH;
-            style.borderTopColor = Color.black;
-            style.borderTopWidth = AXIS_LINE_WIDTH;
-            style.borderBottomColor = Color.black;
-            style.borderBottomWidth = AXIS_LINE_WIDTH;
+            //style.borderLeftColor = color;
+            //style.borderLeftWidth = AXIS_LINE_WIDTH;
+            //style.borderRightColor = color;
+            //style.borderRightWidth = AXIS_LINE_WIDTH;
+            //style.borderTopColor = color;
+            //style.borderTopWidth = AXIS_LINE_WIDTH;
+            //style.borderBottomColor = color;
+            //style.borderBottomWidth = AXIS_LINE_WIDTH;
+            style.backgroundColor = color;
             SetVisible(false);
         }
 
@@ -184,7 +193,7 @@ public class GraphAxesController : VisualElement
 
         public void SetPos(Vector2 position)
         {
-            SetPosition(new Rect(position, GetPosition().size));
+            SetPosition(new Rect(position - new Vector2(HALF_AXIS_LINE_WIDTH, HALF_AXIS_LINE_WIDTH), GetPosition().size));
         }
 
         public void SetSize(Vector2 size)
@@ -195,6 +204,8 @@ public class GraphAxesController : VisualElement
 
     public class CoordinateLabel : GraphElement, IDisposable
     {
+        private static readonly string COORDINATE_LABEL = "coordinate-label";
+
         public enum Direction
         {
             UP,
@@ -202,12 +213,14 @@ public class GraphAxesController : VisualElement
             LEFT,
             RIGHT,
         }
-
         private Label m_label = null;
         public CoordinateLabel()
         {
-            m_label = new Label();
-            Add(m_label);
+            var xmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CoordinateLabel_UXML);
+            xmlAsset.CloneTree(this);
+
+            m_label = this.Q<Label>(COORDINATE_LABEL);
+            //Add(m_label);
         }
         
 

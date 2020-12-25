@@ -15,9 +15,10 @@ MonoBehaviour:
   m_nodeCollection:
     m_nodes:
     - id: 0
+    - id: 1
     m_entryNodeId: 717637a2-67d9-4252-8a01-4c0e3c60e9cc
   GraphProperties:
-    id: 1
+    id: 2
   m_blackboardProperties:
     m_allElements: []
   references:
@@ -29,9 +30,18 @@ MonoBehaviour:
         m_outports:
         - Id: b272e2e4-4aa2-4941-889a-88c14350e6b1
           ConnectedNodeId: 
-        m_position: {x: 137, y: 125}
+        m_position: {x: 156, y: 101}
         m_comment: 
     00000001:
+      type: {class: AxisTesterNode, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_id: 4c3af918-5eb5-4083-9110-f8326e840d9a
+        m_outports:
+        - Id: 0e52c53f-3d1f-4189-9ab7-e6b0112f34b5
+          ConnectedNodeId: 
+        m_position: {x: 227, y: -43}
+        m_comment: 
+    00000002:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6

@@ -16,7 +16,7 @@ namespace Logical.Editor
     {
         public ANode Node { get; private set; } = null;
         public Type NodeType { get; private set; } = null;
-        private NodeGraphView m_nodeGraphView = null;
+        public NodeGraphView m_nodeGraphView = null;
         public SerializedProperty SerializedNode { get; set; } = null;
         public string NodeId { get; private set; } = null;
 

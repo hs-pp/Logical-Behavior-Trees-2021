@@ -80,9 +80,8 @@ namespace Logical.Editor
 
             m_graphAxesController = new GraphAxesController(this, customContentDragger, secondarySelectionDragger);
             Add(m_graphAxesController);
+            m_graphAxesController.PlaceBehind(contentViewContainer);
             m_graphAxesController.SetEnable(true);
-            //m_xAxisIndicator = new AxisGraphElement(this, customContentDragger, AxisGraphElement.Axis.X);
-            //Add(m_xAxisIndicator);
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -118,8 +117,7 @@ namespace Logical.Editor
                 m_nodeViews[nodeData[j].Id].OnLoadView();
             }
             RefreshSerializedNodeReferences();
-            //m_xAxisIndicator.Refresh();
-            m_graphAxesController.RefreshPositions();
+            m_graphAxesController?.RefreshPositions();
         }
 
         //public void SetNodeCollection(NodeGraph nodeGraph)
