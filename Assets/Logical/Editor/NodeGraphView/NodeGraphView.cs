@@ -79,6 +79,7 @@ namespace Logical.Editor
             Undo.undoRedoPerformed += () => { SetNodeCollection(NodeGraph); };
 
             m_graphAxesController = new GraphAxesController(this, customContentDragger, secondarySelectionDragger);
+            Add(m_graphAxesController);
             m_graphAxesController.SetEnable(true);
             //m_xAxisIndicator = new AxisGraphElement(this, customContentDragger, AxisGraphElement.Axis.X);
             //Add(m_xAxisIndicator);

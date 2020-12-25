@@ -48,7 +48,6 @@ public class SecondarySelectionDragger : MouseManipulator
         }
         if(m_nodeGraphView.selection.Count > 0)
         {
-            Debug.Log("yes");
             OnDragging?.Invoke();
         }
     }
