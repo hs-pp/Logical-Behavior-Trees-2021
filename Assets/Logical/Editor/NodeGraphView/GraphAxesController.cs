@@ -174,7 +174,7 @@ public class GraphAxesController : VisualElement
     {
         public GraphAxis()
         {
-            Color color = new Color(0.098f, 0.098f, 0.098f);
+            Color color = new Color(0.3f, 0.3f, 0.3f);
             capabilities &= ~Capabilities.Movable;
             style.backgroundColor = color;
             SetVisible(false);

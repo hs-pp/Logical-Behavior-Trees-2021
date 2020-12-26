@@ -1,13 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <ui:VisualElement name="coordinate-label-container" style="position: absolute; top: 0; left: 0; width: auto; align-items: center; bottom: auto; right: auto; flex-direction: column; justify-content: center;">
         <ui:VisualElement name="vertical-group" style="flex-grow: 1; align-items: center;">
-            <ui:VisualElement name="pointer-down" style="height: 6px; background-color: rgb(25, 25, 25); width: 4px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
+            <ui:VisualElement name="pointer-down" style="height: 6px; background-color: rgb(77, 77, 77); width: 4px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
             <ui:VisualElement name="horizontal-group" style="flex-direction: row; align-items: center; flex-grow: 1;">
-                <ui:VisualElement name="pointer-right" style="height: 4px; background-color: rgb(25, 25, 25); width: 6px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
-                <ui:Label text="10000" display-tooltip-when-elided="True" name="coordinate-label" style="align-items: center; flex-direction: row; padding-left: 1px; padding-right: 1px; padding-top: 0; padding-bottom: 0; flex-grow: 1; left: auto; position: relative; top: auto; right: auto; bottom: auto; width: 50px;" />
-                <ui:VisualElement name="pointer-left" style="height: 4px; background-color: rgb(25, 25, 25); width: 6px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
+                <ui:VisualElement name="pointer-right" style="height: 4px; background-color: rgb(77, 77, 77); width: 6px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
+                <ui:Label text="10000" display-tooltip-when-elided="True" name="coordinate-label" style="align-items: center; flex-direction: row; padding-left: 1px; padding-right: 1px; padding-top: 0; padding-bottom: 0; flex-grow: 1; left: auto; position: relative; top: auto; right: auto; bottom: auto; width: 50px; -unity-text-align: upper-center;" />
+                <ui:VisualElement name="pointer-left" style="height: 4px; background-color: rgb(77, 77, 77); width: 6px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
             </ui:VisualElement>
-            <ui:VisualElement name="pointer-up" style="height: 6px; background-color: rgb(25, 25, 25); width: 4px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
+            <ui:VisualElement name="pointer-up" style="height: 6px; background-color: rgb(77, 77, 77); width: 4px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; justify-content: flex-start; align-items: auto;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
