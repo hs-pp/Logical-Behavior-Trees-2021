@@ -116,33 +116,37 @@ public class GraphAxesController : VisualElement
             return coordinateLabel;
         }
 
-        float zoom = m_nodeGraphView.viewTransform.scale.x;
-        float increment = 100;
-        if(zoom <= 0.35f)
-        {
+        float zoom = m_nodeGraphView.viewTransform.scale.x; // x and y are the same so just take one of them.
+        float increment;
+        if (zoom <= 0.35f)
             increment = 400;
-        }
-        else if(zoom <= 0.6f)
-        {
+        else if (zoom <= 0.6f)
             increment = 200;
-        }
+        else
+            increment = 100;
         float zoomedIncrement = increment * zoom;
-        Vector2 topLeft_GraphSpace = new Vector2(offset_GraphSpace.x - topRight_GraphSpace.x,
-            offset_GraphSpace.y - topRight_GraphSpace.y);
-        Vector2 bottomRight_GraphSpace = size + new Vector2(offset_GraphSpace.x - topRight_GraphSpace.x,
-            offset_GraphSpace.y - topRight_GraphSpace.y);
 
-        float lowerBound = Mathf.Floor(topLeft_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
-        float upperBound = Mathf.Ceil(bottomRight_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
+        Vector2 lowerBound = new Vector2(Mathf.Floor((offset_GraphSpace.x - topRight_GraphSpace.x) / zoomedIncrement) * zoomedIncrement,
+            Mathf.Floor((offset_GraphSpace.y - topRight_GraphSpace.y) / zoomedIncrement) * zoomedIncrement);
+        Vector2 upperBound = new Vector2(Mathf.Ceil((size.x + offset_GraphSpace.x - topRight_GraphSpace.x) / zoomedIncrement) * zoomedIncrement,
+            Mathf.Ceil((size.y + offset_GraphSpace.y - topRight_GraphSpace.y) / zoomedIncrement) * zoomedIncrement);
 
-        for (float i = lowerBound; i <= upperBound; i += zoomedIncrement)
+        // X-Axis coordinate labels
+        for (float i = lowerBound.y; i <= upperBound.y; i += zoomedIncrement)
         {
             if ((int)i == 0) continue;
 
-            CoordinateLabel coordinateLabel = GetCoordinateLabel();
-            coordinateLabel.SetLabelXAxis((int)(Mathf.Round((i / zoom)/increment)*increment), 
-                new Vector2(center_ScreenSpace.x, i - offset_GraphSpace.y + topRight_GraphSpace.y), 
-                (center_ScreenSpace.x != xMax_ScreenSpace) ? CoordinateLabel.Direction.RIGHT : CoordinateLabel.Direction.LEFT);
+            GetCoordinateLabel().SetLabelXAxis((int)(Mathf.Round((i / zoom)/increment)*increment), 
+                new Vector2(Mathf.Max(center_ScreenSpace.x, 3), i - offset_GraphSpace.y + topRight_GraphSpace.y), 
+                (center_ScreenSpace.x < xMax_ScreenSpace) ? CoordinateLabel.Direction.RIGHT : CoordinateLabel.Direction.LEFT);
+        }
+        for(float i = lowerBound.x; i <= upperBound.x; i += zoomedIncrement)
+        {
+            if ((int)i == 0) continue;
+
+            GetCoordinateLabel().SetLabelXAxis((int)(Mathf.Round((i / zoom) / increment) * increment),
+                new Vector2(i - offset_GraphSpace.x + topRight_GraphSpace.x, center_ScreenSpace.y),
+                (center_ScreenSpace.y != yMax_ScreenSpace) ? CoordinateLabel.Direction.DOWN : CoordinateLabel.Direction.UP);
         }
     }
 
@@ -194,10 +198,11 @@ public class GraphAxesController : VisualElement
 
     public class CoordinateLabel : GraphElement, IDisposable
     {
-        private static readonly float FULL_LABEL_WIDTH = 60;
         private static readonly string COORDINATE_LABEL = "coordinate-label";
         private static readonly string POINTER_RIGHT = "pointer-right";
         private static readonly string POINTER_LEFT = "pointer-left";
+        private static readonly string POINTER_UP = "pointer-up";
+        private static readonly string POINTER_DOWN = "pointer-down";
 
         public enum Direction
         {
@@ -209,6 +214,8 @@ public class GraphAxesController : VisualElement
         private Label m_label = null;
         private VisualElement m_pointerRight = null;
         private VisualElement m_pointerLeft = null;
+        private VisualElement m_pointerUp = null;
+        private VisualElement m_pointerDown = null;
 
         public CoordinateLabel()
         {
@@ -218,8 +225,9 @@ public class GraphAxesController : VisualElement
             m_label = this.Q<Label>(COORDINATE_LABEL);
             m_pointerRight = this.Q<VisualElement>(POINTER_RIGHT);
             m_pointerLeft = this.Q<VisualElement>(POINTER_LEFT);
+            m_pointerUp = this.Q<VisualElement>(POINTER_UP);
+            m_pointerDown = this.Q<VisualElement>(POINTER_DOWN);
         }
-        
 
         public void SetLabelXAxis(int num, Vector2 position, Direction direction)
         {
@@ -231,15 +239,25 @@ public class GraphAxesController : VisualElement
             m_label.text = num.ToString();
             EnablePointer(direction);
 
-            // Kinda hacky way of adding offsets
+            // Kinda hacky way of adding offsets. These offsets are entirely dependent on the size of the CoordinateLabel VisualElement.
+            // We can assume that the actual position on the graph is correct.
             if (direction == Direction.RIGHT)
             {
                 position.y -= 9;
             }
             else if (direction == Direction.LEFT)
             {
-                position.x -= FULL_LABEL_WIDTH;
+                position.x -= 58;
                 position.y -= 9;
+            }
+            else if(direction == Direction.UP)
+            {
+                position.x -= 26;
+                position.y -= 24;
+            }
+            else if(direction == Direction.DOWN)
+            {
+                position.x -= 26;
             }
 
             SetPosition(new Rect(position, GetPosition().size));
@@ -249,8 +267,10 @@ public class GraphAxesController : VisualElement
         {
             m_pointerRight.style.display = DisplayStyle.None;
             m_pointerLeft.style.display = DisplayStyle.None;
+            m_pointerUp.style.display = DisplayStyle.None;
+            m_pointerDown.style.display = DisplayStyle.None;
 
-            switch(dir)
+            switch (dir)
             {
                 case Direction.RIGHT:
                     m_pointerRight.style.display = DisplayStyle.Flex;
@@ -259,6 +279,14 @@ public class GraphAxesController : VisualElement
                 case Direction.LEFT:
                     m_pointerLeft.style.display = DisplayStyle.Flex;
                     m_label.style.unityTextAlign = TextAnchor.MiddleRight;
+                    break;
+                case Direction.UP:
+                    m_pointerUp.style.display = DisplayStyle.Flex;
+                    m_label.style.unityTextAlign = TextAnchor.MiddleCenter;
+                    break;
+                case Direction.DOWN:
+                    m_pointerDown.style.display = DisplayStyle.Flex;
+                    m_label.style.unityTextAlign = TextAnchor.MiddleCenter;
                     break;
             }
         }
