@@ -77,32 +77,22 @@ public class GraphAxesController : VisualElement
         }
 
         Vector2 size = m_nodeGraphView.viewport.worldBound.size;
+        Vector2 topRight_GraphSpace = m_nodeGraphView.viewTransform.position;
+        Vector2 offset_GraphSpace = m_nodeGraphView.contentViewContainer.layout.position;
+        Vector2 center_ScreenSpace = new Vector2(
+            topRight_GraphSpace.x - offset_GraphSpace.x,
+            topRight_GraphSpace.y - offset_GraphSpace.y);
 
-        Vector2 center = new Vector2(
-            m_nodeGraphView.viewTransform.position.x - m_nodeGraphView.contentViewContainer.layout.x,
-            m_nodeGraphView.viewTransform.position.y - m_nodeGraphView.contentViewContainer.layout.y);
+        float xMax_ScreenSpace = size.x - HALF_AXIS_LINE_WIDTH;
+        float yMax_ScreenSpace = size.y - HALF_AXIS_LINE_WIDTH;
+        center_ScreenSpace.x = Mathf.Clamp(center_ScreenSpace.x, 0, xMax_ScreenSpace);
+        center_ScreenSpace.y = Mathf.Clamp(center_ScreenSpace.y, HALF_AXIS_LINE_WIDTH, yMax_ScreenSpace);
 
-        center.x = Mathf.Clamp(center.x, 3, size.x - HALF_AXIS_LINE_WIDTH); // hard coded min val for aesthetic. HALF_AXIS_LINE_WIDTH doesnt look as good.
-        center.y = Mathf.Clamp(center.y, HALF_AXIS_LINE_WIDTH, size.y - HALF_AXIS_LINE_WIDTH);
+        // Setting Axes bars
+        m_xAxis.SetPos(new Vector2(Mathf.Max(center_ScreenSpace.x, 3), 0));
+        m_yAxis.SetPos(new Vector2(0, center_ScreenSpace.y));
 
-        m_xAxis.SetPos(new Vector2(center.x, 0));
-        m_yAxis.SetPos(new Vector2(0, center.y));
-
-        RefreshCoordinateLabels();
-    }
-
-    private void RefreshPositions(GraphView graphView)
-    {
-        RefreshPositions();
-    }
-
-    private void RefreshPositions(Vector2 position)
-    {
-        RefreshPositions();
-    }
-
-    private void RefreshCoordinateLabels()
-    {
+        // Setting the coordinate indicators
         m_cachedCoordinateLabels.AddRange(m_coordinateLabels);
         foreach (CoordinateLabel label in m_coordinateLabels)
         {
@@ -115,7 +105,7 @@ public class GraphAxesController : VisualElement
             if (m_cachedCoordinateLabels.Count > 0)
             {
                 coordinateLabel = m_cachedCoordinateLabels[m_cachedCoordinateLabels.Count - 1];
-                m_cachedCoordinateLabels.RemoveAt(m_cachedCoordinateLabels.Count - 1); 
+                m_cachedCoordinateLabels.RemoveAt(m_cachedCoordinateLabels.Count - 1);
             }
             else
             {
@@ -126,37 +116,45 @@ public class GraphAxesController : VisualElement
             return coordinateLabel;
         }
 
-        Vector2 size = m_nodeGraphView.viewport.worldBound.size;
-        Vector2 topRight_graphSpace = m_nodeGraphView.viewTransform.position;
-        Vector2 offset_graphSpace = m_nodeGraphView.contentViewContainer.layout.position;
-        Vector2 center_ScreenSpace = new Vector2(
-            topRight_graphSpace.x - offset_graphSpace.x,
-            topRight_graphSpace.y - offset_graphSpace.y);
-
-        center_ScreenSpace.x = Mathf.Clamp(center_ScreenSpace.x, 0, size.x);
-        center_ScreenSpace.y = Mathf.Clamp(center_ScreenSpace.y, 0, size.y);
-
         float zoom = m_nodeGraphView.viewTransform.scale.x;
         float increment = 100;
-        float zoomedIncrement = increment * zoom;
-
-        Vector2 topLeft_GraphSpace = new Vector2(offset_graphSpace.x - topRight_graphSpace.x,
-            offset_graphSpace.y - topRight_graphSpace.y);
-        Vector2 bottomRight_GraphSpace = size + new Vector2(offset_graphSpace.x - topRight_graphSpace.x,
-            offset_graphSpace.y - topRight_graphSpace.y);
-
-        float lowerBound = (int)(topLeft_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
-        float upperBound = (int)(bottomRight_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
-
-        for(float i = lowerBound; i <= upperBound; i += zoomedIncrement)
+        if(zoom <= 0.35f)
         {
-            //if (i == 0) continue;
+            increment = 400;
+        }
+        else if(zoom <= 0.6f)
+        {
+            increment = 200;
+        }
+        float zoomedIncrement = increment * zoom;
+        Vector2 topLeft_GraphSpace = new Vector2(offset_GraphSpace.x - topRight_GraphSpace.x,
+            offset_GraphSpace.y - topRight_GraphSpace.y);
+        Vector2 bottomRight_GraphSpace = size + new Vector2(offset_GraphSpace.x - topRight_GraphSpace.x,
+            offset_GraphSpace.y - topRight_GraphSpace.y);
+
+        float lowerBound = Mathf.Floor(topLeft_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
+        float upperBound = Mathf.Ceil(bottomRight_GraphSpace.y / zoomedIncrement) * zoomedIncrement;
+
+        for (float i = lowerBound; i <= upperBound; i += zoomedIncrement)
+        {
+            if ((int)i == 0) continue;
 
             CoordinateLabel coordinateLabel = GetCoordinateLabel();
-            coordinateLabel.SetLabelXAxis((int)(i / zoom), new Vector2(center_ScreenSpace.x, i - offset_graphSpace.y + topRight_graphSpace.y), CoordinateLabel.Direction.RIGHT);
+            coordinateLabel.SetLabelXAxis((int)(Mathf.Round((i / zoom)/increment)*increment), 
+                new Vector2(center_ScreenSpace.x, i - offset_GraphSpace.y + topRight_GraphSpace.y), 
+                (center_ScreenSpace.x != xMax_ScreenSpace) ? CoordinateLabel.Direction.RIGHT : CoordinateLabel.Direction.LEFT);
         }
     }
 
+    private void RefreshPositions(GraphView graphView)
+    {
+        RefreshPositions();
+    }
+
+    private void RefreshPositions(Vector2 position)
+    {
+        RefreshPositions();
+    }
 
     private void RefreshSizes(GeometryChangedEvent geomChanged)
     {
@@ -174,14 +172,6 @@ public class GraphAxesController : VisualElement
         {
             Color color = new Color(0.098f, 0.098f, 0.098f);
             capabilities &= ~Capabilities.Movable;
-            //style.borderLeftColor = color;
-            //style.borderLeftWidth = AXIS_LINE_WIDTH;
-            //style.borderRightColor = color;
-            //style.borderRightWidth = AXIS_LINE_WIDTH;
-            //style.borderTopColor = color;
-            //style.borderTopWidth = AXIS_LINE_WIDTH;
-            //style.borderBottomColor = color;
-            //style.borderBottomWidth = AXIS_LINE_WIDTH;
             style.backgroundColor = color;
             SetVisible(false);
         }
@@ -204,7 +194,10 @@ public class GraphAxesController : VisualElement
 
     public class CoordinateLabel : GraphElement, IDisposable
     {
+        private static readonly float FULL_LABEL_WIDTH = 60;
         private static readonly string COORDINATE_LABEL = "coordinate-label";
+        private static readonly string POINTER_RIGHT = "pointer-right";
+        private static readonly string POINTER_LEFT = "pointer-left";
 
         public enum Direction
         {
@@ -214,20 +207,60 @@ public class GraphAxesController : VisualElement
             RIGHT,
         }
         private Label m_label = null;
+        private VisualElement m_pointerRight = null;
+        private VisualElement m_pointerLeft = null;
+
         public CoordinateLabel()
         {
             var xmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CoordinateLabel_UXML);
             xmlAsset.CloneTree(this);
 
             m_label = this.Q<Label>(COORDINATE_LABEL);
-            //Add(m_label);
+            m_pointerRight = this.Q<VisualElement>(POINTER_RIGHT);
+            m_pointerLeft = this.Q<VisualElement>(POINTER_LEFT);
         }
         
 
         public void SetLabelXAxis(int num, Vector2 position, Direction direction)
         {
+            if (float.IsNaN(position.x) || float.IsNaN(position.y))
+            {
+                return;
+            }
+
             m_label.text = num.ToString();
+            EnablePointer(direction);
+
+            // Kinda hacky way of adding offsets
+            if (direction == Direction.RIGHT)
+            {
+                position.y -= 9;
+            }
+            else if (direction == Direction.LEFT)
+            {
+                position.x -= FULL_LABEL_WIDTH;
+                position.y -= 9;
+            }
+
             SetPosition(new Rect(position, GetPosition().size));
+        }
+
+        private void EnablePointer(Direction dir)
+        {
+            m_pointerRight.style.display = DisplayStyle.None;
+            m_pointerLeft.style.display = DisplayStyle.None;
+
+            switch(dir)
+            {
+                case Direction.RIGHT:
+                    m_pointerRight.style.display = DisplayStyle.Flex;
+                    m_label.style.unityTextAlign = TextAnchor.MiddleLeft;
+                    break;
+                case Direction.LEFT:
+                    m_pointerLeft.style.display = DisplayStyle.Flex;
+                    m_label.style.unityTextAlign = TextAnchor.MiddleRight;
+                    break;
+            }
         }
 
         public void Dispose()
