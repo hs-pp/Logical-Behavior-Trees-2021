@@ -5,6 +5,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// Manages the coordinate axes and coodinate labels.
+/// </summary>
 public class GraphAxesController : VisualElement
 {
     public static float AXIS_LINE_WIDTH = 4;
@@ -50,16 +53,7 @@ public class GraphAxesController : VisualElement
         m_nodeGraphView?.Remove(m_xAxis);
         m_nodeGraphView?.Remove(m_yAxis);
 
-        foreach (CoordinateLabel label in m_coordinateLabels)
-        {
-            Remove(label); 
-        }
-        m_coordinateLabels.Clear();
-        foreach (CoordinateLabel label in m_cachedCoordinateLabels)
-        {
-            Remove(label);
-        }
-        m_cachedCoordinateLabels.Clear();
+        ClearCoordinateLabels();
     }
 
     public void SetEnable(bool isEnabled)
@@ -67,6 +61,11 @@ public class GraphAxesController : VisualElement
         m_isEnabled = isEnabled;
         m_xAxis.SetVisible(isEnabled);
         m_yAxis.SetVisible(isEnabled);
+
+        if(!isEnabled)
+        {
+            ClearCoordinateLabels();
+        }
     }
 
     public void RefreshPositions()
@@ -76,23 +75,20 @@ public class GraphAxesController : VisualElement
             return;
         }
 
-        Vector2 size = m_nodeGraphView.viewport.worldBound.size;
-        Vector2 topRight_GraphSpace = m_nodeGraphView.viewTransform.position;
+        Vector2 min_GraphSpace = m_nodeGraphView.viewTransform.position;
         Vector2 offset_GraphSpace = m_nodeGraphView.contentViewContainer.layout.position;
-        Vector2 center_ScreenSpace = new Vector2(
-            topRight_GraphSpace.x - offset_GraphSpace.x,
-            topRight_GraphSpace.y - offset_GraphSpace.y);
+        Vector2 center_ScreenSpace = new Vector2(min_GraphSpace.x - offset_GraphSpace.x, min_GraphSpace.y - offset_GraphSpace.y);
+        Vector2 max_ScreenSpace = new Vector2(m_nodeGraphView.viewport.worldBound.size.x - HALF_AXIS_LINE_WIDTH, 
+            m_nodeGraphView.viewport.worldBound.size.y - HALF_AXIS_LINE_WIDTH);
 
-        float xMax_ScreenSpace = size.x - HALF_AXIS_LINE_WIDTH;
-        float yMax_ScreenSpace = size.y - HALF_AXIS_LINE_WIDTH;
-        center_ScreenSpace.x = Mathf.Clamp(center_ScreenSpace.x, 0, xMax_ScreenSpace);
-        center_ScreenSpace.y = Mathf.Clamp(center_ScreenSpace.y, HALF_AXIS_LINE_WIDTH, yMax_ScreenSpace);
+        center_ScreenSpace.x = Mathf.Clamp(center_ScreenSpace.x, 0, max_ScreenSpace.x);
+        center_ScreenSpace.y = Mathf.Clamp(center_ScreenSpace.y, HALF_AXIS_LINE_WIDTH, max_ScreenSpace.y);
 
         // Setting Axes bars
-        m_xAxis.SetPos(new Vector2(Mathf.Max(center_ScreenSpace.x, 3), 0));
+        m_xAxis.SetPos(new Vector2(Mathf.Max(center_ScreenSpace.x, AXIS_LINE_WIDTH - 1), 0));
         m_yAxis.SetPos(new Vector2(0, center_ScreenSpace.y));
 
-        // Setting the coordinate indicators
+        // Setting the coordinate labels
         m_cachedCoordinateLabels.AddRange(m_coordinateLabels);
         foreach (CoordinateLabel label in m_coordinateLabels)
         {
@@ -124,29 +120,30 @@ public class GraphAxesController : VisualElement
             increment = 200;
         else
             increment = 100;
-        float zoomedIncrement = increment * zoom;
+        float pixelsPerIncrement = increment * zoom;
 
-        Vector2 lowerBound = new Vector2(Mathf.Floor((offset_GraphSpace.x - topRight_GraphSpace.x) / zoomedIncrement) * zoomedIncrement,
-            Mathf.Floor((offset_GraphSpace.y - topRight_GraphSpace.y) / zoomedIncrement) * zoomedIncrement);
-        Vector2 upperBound = new Vector2(Mathf.Ceil((size.x + offset_GraphSpace.x - topRight_GraphSpace.x) / zoomedIncrement) * zoomedIncrement,
-            Mathf.Ceil((size.y + offset_GraphSpace.y - topRight_GraphSpace.y) / zoomedIncrement) * zoomedIncrement);
+        Vector2 lowerBound = new Vector2(
+            Mathf.Floor((offset_GraphSpace.x - min_GraphSpace.x) / pixelsPerIncrement) * pixelsPerIncrement,
+            Mathf.Floor((offset_GraphSpace.y - min_GraphSpace.y) / pixelsPerIncrement) * pixelsPerIncrement);
+        Vector2 upperBound = new Vector2(
+            Mathf.Ceil((max_ScreenSpace.x + offset_GraphSpace.x - min_GraphSpace.x) / pixelsPerIncrement) * pixelsPerIncrement,
+            Mathf.Ceil((max_ScreenSpace.y + offset_GraphSpace.y - min_GraphSpace.y) / pixelsPerIncrement) * pixelsPerIncrement);
 
-        // X-Axis coordinate labels
-        for (float i = lowerBound.y; i <= upperBound.y; i += zoomedIncrement)
+        for (float i = lowerBound.y; i <= upperBound.y; i += pixelsPerIncrement)
         {
             if ((int)i == 0) continue;
 
-            GetCoordinateLabel().SetLabelXAxis((int)(Mathf.Round((i / zoom)/increment)*increment), 
-                new Vector2(Mathf.Max(center_ScreenSpace.x, 3), i - offset_GraphSpace.y + topRight_GraphSpace.y), 
-                (center_ScreenSpace.x < xMax_ScreenSpace) ? CoordinateLabel.Direction.RIGHT : CoordinateLabel.Direction.LEFT);
+            GetCoordinateLabel().SetLabel((int)(Mathf.Round((i / zoom) / increment) * increment), 
+                new Vector2(Mathf.Max(center_ScreenSpace.x, AXIS_LINE_WIDTH - 1), i - offset_GraphSpace.y + min_GraphSpace.y), 
+                (center_ScreenSpace.x < max_ScreenSpace.x) ? CoordinateLabel.Direction.RIGHT : CoordinateLabel.Direction.LEFT);
         }
-        for(float i = lowerBound.x; i <= upperBound.x; i += zoomedIncrement)
+        for(float i = lowerBound.x; i <= upperBound.x; i += pixelsPerIncrement)
         {
             if ((int)i == 0) continue;
 
-            GetCoordinateLabel().SetLabelXAxis((int)(Mathf.Round((i / zoom) / increment) * increment),
-                new Vector2(i - offset_GraphSpace.x + topRight_GraphSpace.x, center_ScreenSpace.y),
-                (center_ScreenSpace.y != yMax_ScreenSpace) ? CoordinateLabel.Direction.DOWN : CoordinateLabel.Direction.UP);
+            GetCoordinateLabel().SetLabel((int)(Mathf.Round((i / zoom) / increment) * increment),
+                new Vector2(i - offset_GraphSpace.x + min_GraphSpace.x, center_ScreenSpace.y),
+                (center_ScreenSpace.y != max_ScreenSpace.y) ? CoordinateLabel.Direction.DOWN : CoordinateLabel.Direction.UP);
         }
     }
 
@@ -164,6 +161,21 @@ public class GraphAxesController : VisualElement
     {
         m_xAxis.SetSize(new Vector2(AXIS_LINE_WIDTH, geomChanged.newRect.height));
         m_yAxis.SetSize(new Vector2(geomChanged.newRect.width, AXIS_LINE_WIDTH));
+        RefreshPositions();
+    }
+
+    private void ClearCoordinateLabels()
+    {
+        foreach (CoordinateLabel label in m_coordinateLabels)
+        {
+            Remove(label);
+        }
+        m_coordinateLabels.Clear();
+        foreach (CoordinateLabel label in m_cachedCoordinateLabels)
+        {
+            Remove(label);
+        }
+        m_cachedCoordinateLabels.Clear();
     }
 
     /// <summary>
@@ -229,7 +241,7 @@ public class GraphAxesController : VisualElement
             m_pointerDown = this.Q<VisualElement>(POINTER_DOWN);
         }
 
-        public void SetLabelXAxis(int num, Vector2 position, Direction direction)
+        public void SetLabel(int num, Vector2 position, Direction direction)
         {
             if (float.IsNaN(position.x) || float.IsNaN(position.y))
             {
