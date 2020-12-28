@@ -50,23 +50,18 @@ namespace Logical.Editor
                 blackboardElementImps.AddRange(assemblies[i].GetTypes().Where(x
                     => typeof(BlackboardElement).IsAssignableFrom(x)
                     && x != typeof(BlackboardElement)
+                    && x != typeof(ABlackboardElement<>)
                     && !x.IsAbstract));
             }
 
             for (int i = 0; i < blackboardElementImps.Count; i++)
             {
-                BlackboardElementTypeAttribute attr = blackboardElementImps[i].GetCustomAttribute<BlackboardElementTypeAttribute>();
-
-                if (attr == null)
-                    continue;
-
                 //TODO: sort the element types!!!
 
-                Type elementType = attr.ElementType;
+                Type elementType = blackboardElementImps[i].BaseType.GetGenericArguments()[0];
                 if (!m_blackboardElementLookup.ContainsKey(elementType))
                 {
                     m_blackboardElementLookup.Add(elementType, blackboardElementImps[i]);
-                    //Debug.Log(elementType.ToString() + " => " + blackboardElementImps[i].ToString());
                 }
             }
         }

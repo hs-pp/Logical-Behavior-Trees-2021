@@ -30,7 +30,7 @@ MonoBehaviour:
         m_outports:
         - Id: b272e2e4-4aa2-4941-889a-88c14350e6b1
           ConnectedNodeId: 
-        m_position: {x: 156, y: 101}
+        m_position: {x: 57, y: 61}
         m_comment: 
     00000001:
       type: {class: AxisTesterNode, ns: , asm: Assembly-CSharp-Editor}
@@ -39,7 +39,7 @@ MonoBehaviour:
         m_outports:
         - Id: 0e52c53f-3d1f-4189-9ab7-e6b0112f34b5
           ConnectedNodeId: 
-        m_position: {x: 227, y: -43}
+        m_position: {x: 223, y: -95}
         m_comment: 
     00000002:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}

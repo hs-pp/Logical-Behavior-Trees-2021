@@ -9,5 +9,12 @@
     /// Each implementation of NodeGraph should have it's own AGraphProperties implementation
     /// to go with it.
     /// </summary>
-    public abstract class AGraphProperties {}
+    public abstract class AGraphProperties 
+    {
+        /// <summary>
+        /// Set this property to true if you wish to use the IMGUI property drawer when drawing it
+        /// in the editor window's graph inspector panel.
+        /// </summary>
+        public virtual bool UseIMGUIPropertyDrawer { get { return false; } }
+    }
 }

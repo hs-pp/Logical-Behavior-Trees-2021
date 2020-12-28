@@ -39,7 +39,7 @@ MonoBehaviour:
         m_outports:
         - Id: 5a80ff70-8c74-45a6-bc1d-7772f05b16e2
           ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
-        m_position: {x: -472, y: -145}
+        m_position: {x: 254, y: 381}
         m_comment: 
     00000001:
       type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
@@ -50,7 +50,7 @@ MonoBehaviour:
           ConnectedNodeId: ed5b09de-9c34-4512-ae83-575a00019318
         - Id: becf95d8-08c8-48c0-a641-180dc115faf3
           ConnectedNodeId: 1d5f528d-c5c7-46a1-9183-c4c8ccaf9bd9
-        m_position: {x: -348, y: -267}
+        m_position: {x: 412, y: 321}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_conditionals:
@@ -63,7 +63,7 @@ MonoBehaviour:
         m_outports:
         - Id: 57c7a062-0b3e-4af1-8c84-0b7469cb749f
           ConnectedNodeId: 0e6a9ca0-f171-424b-b871-690c778385ee
-        m_position: {x: -70, y: 29}
+        m_position: {x: 656, y: 555}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_setterValue:
@@ -75,7 +75,7 @@ MonoBehaviour:
         m_outports:
         - Id: caf09798-3f8d-486e-9a79-fccfadbb79ff
           ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
-        m_position: {x: -252, y: 149}
+        m_position: {x: 464, y: 678}
         m_comment: 
         Message: new Single is ah
     00000004:
@@ -85,7 +85,7 @@ MonoBehaviour:
         m_outports:
         - Id: 5f88db00-e3f4-486a-ada8-98586a962c18
           ConnectedNodeId: 
-        m_position: {x: -169, y: -361}
+        m_position: {x: 557, y: 165}
         m_comment: 
         Message: Yay we finished!
     00000005:
@@ -95,7 +95,7 @@ MonoBehaviour:
         m_outports:
         - Id: 1fc67313-ee11-4403-a8b0-9947c5c72ac9
           ConnectedNodeId: 
-        m_position: {x: -452, y: -45}
+        m_position: {x: 286, y: 626}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_setterValue:
@@ -111,7 +111,7 @@ MonoBehaviour:
           ConnectedNodeId: 
         - Id: daf63c3f-2e5d-46b9-abc6-9e907ee5f2ea
           ConnectedNodeId: 
-        m_position: {x: -553, y: -366}
+        m_position: {x: 173, y: 160}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_conditionals:

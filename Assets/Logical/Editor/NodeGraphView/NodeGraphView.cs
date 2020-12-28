@@ -36,7 +36,7 @@ namespace Logical.Editor
         //private AxisGraphElement m_xAxisIndicator = null;
         private GraphAxesController m_graphAxesController = null;
 
-        public NodeGraphView() 
+        public NodeGraphView(GraphTypeMetadata graphTypeMetadata) 
         {
             styleSheets.Add(Resources.Load<StyleSheet>(ResourceAssetPaths.NodeGraphView_StyleSheet));
 
@@ -59,7 +59,7 @@ namespace Logical.Editor
             this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent evt) => { m_miniMap.SetPosition(new Rect(evt.newRect.xMax - 210, evt.newRect.yMax - 210, 200, 200)); });
             Add(m_miniMap);
 
-            m_graphTypeMetadata = new GraphTypeMetadata();
+            m_graphTypeMetadata = graphTypeMetadata;
             m_nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
             m_nodeCreationWindow.Setup(this, m_graphTypeMetadata);
 

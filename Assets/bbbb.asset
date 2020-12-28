@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f71c17646588c0e4bbadefdda3ca4159, type: 3}
-  m_Name: CoolDialogueGraph
+  m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
+  m_Name: bbbb
   m_EditorClassIdentifier: 
   m_nodeCollection:
     m_nodes:
     - id: 0
-    m_entryNodeId: 507f4a4d-da60-4659-af1b-c8928c191fd9
+    m_entryNodeId: 07c4c363-84b5-4d0f-96b5-0a3373a25ae5
   GraphProperties:
     id: 1
   m_blackboardProperties:
@@ -25,17 +25,14 @@ MonoBehaviour:
     00000000:
       type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
-        m_id: 507f4a4d-da60-4659-af1b-c8928c191fd9
+        m_id: 07c4c363-84b5-4d0f-96b5-0a3373a25ae5
         m_outports:
-        - Id: d74e85a5-0ac0-49dc-ba71-f1b9ab56ce26
+        - Id: de884e54-1d44-412c-8da0-2d091449fce0
           ConnectedNodeId: 
-        m_position: {x: 113, y: -125}
+        m_position: {x: 0, y: 0}
         m_comment: 
     00000001:
-      type: {class: DialogueGraph/DialogueGraphProperties, ns: DialogueSystem, asm: Assembly-CSharp}
+      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
-        hey: 0
-        heeee: 0
-        serializedclass:
-          yes: 0
-          gah: ' dsfsdfs d'
+        thisint: 6
+        thisstring: 

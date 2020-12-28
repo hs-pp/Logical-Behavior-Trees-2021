@@ -32,14 +32,14 @@ MonoBehaviour:
         m_outports:
         - Id: 9ca3f029-4f60-4f60-bcb7-58c49135ad24
           ConnectedNodeId: d1ecbccb-568a-465e-be76-c373870626f8
-        m_position: {x: -334, y: -28}
+        m_position: {x: 96, y: 151}
         m_comment: 
     00000001:
       type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_id: d1ecbccb-568a-465e-be76-c373870626f8
         m_outports: []
-        m_position: {x: -85, y: -142}
+        m_position: {x: 402, y: 263}
         m_comment: 
         m_blackboardElementId: 
         m_conditionals: []

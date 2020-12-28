@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Logical.BuiltInNodes
 {
-    [BlackboardElementType(typeof(FloatBlackboardElement))]
+    [BlackboardElement(typeof(FloatBlackboardElement))]
     public class BlackboardSetterFloat : IBlackboardSetterElement
     {
         [Serializable]

@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Logical.BuiltInNodes
 {
-    [BlackboardElementType(typeof(StringBlackboardElement))]
+    [BlackboardElement(typeof(StringBlackboardElement))]
     public class BlackboardSetterString : IBlackboardSetterElement
     {
         [Serializable]

@@ -33,6 +33,7 @@ namespace Logical.Editor
         private CreateGraphInstanceElement m_createGraphInstanceElement = null;
 
         private NodeGraph m_openedGraphInstance = null;
+        private GraphTypeMetadata m_graphTypeMetadata = null;
         
         /// <summary>
         /// Temp method to clear graph data for testing.
@@ -62,6 +63,7 @@ namespace Logical.Editor
             var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.LogicalGraphWindow_UXML);
             uxmlAsset.CloneTree(rootVisualElement);
             m_mainSplitView = rootVisualElement.Q<UIElements.TwoPaneSplitView>(MAIN_SPLITVIEW);
+            m_graphTypeMetadata = new GraphTypeMetadata();
             //=========================================================================================//=
 
             //==================================Register Toolbar=======================================//
@@ -86,7 +88,7 @@ namespace Logical.Editor
             VisualElement mainPanelLeft = rootVisualElement.Q<VisualElement>(MAIN_PANEL_LEFT);
 
             // Populate right panel
-            m_nodeGraphView = new NodeGraphView();
+            m_nodeGraphView = new NodeGraphView(m_graphTypeMetadata);
             m_nodeGraphView.StretchToParentSize();
             m_nodeGraphView.OnAddToSelection += OnGraphElementSelectionAdded;
             m_nodeGraphView.OnRemoveFromSelection += OnGraphElementSelectionRemoved;
@@ -94,7 +96,7 @@ namespace Logical.Editor
             mainPanelRight.Add(m_nodeGraphView);
 
             // Instantiate and hide the create new graph window
-            m_createGraphInstanceElement = new CreateGraphInstanceElement(() => { CloseCreateGraphInstanceWindow(); });
+            m_createGraphInstanceElement = new CreateGraphInstanceElement(m_graphTypeMetadata, () => { CloseCreateGraphInstanceWindow(); });
             m_createGraphInstanceElement.style.display = DisplayStyle.None;
             mainPanelRight.Add(m_createGraphInstanceElement);
 

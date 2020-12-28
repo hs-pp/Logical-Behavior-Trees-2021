@@ -56,15 +56,10 @@ namespace Logical
     }
 
     // Default element types
-    [BlackboardElementType(typeof(string))]
     public class StringBlackboardElement : ABlackboardElement<string> { }
-    [BlackboardElementType(typeof(bool))]
     public class BoolBlackboardElement : ABlackboardElement<bool> { }
-    [BlackboardElementType(typeof(int))]
     public class IntBlackboardElement : ABlackboardElement<int> { }
-    [BlackboardElementType(typeof(float))]
     public class FloatBlackboardElement : ABlackboardElement<float> { }
-    [BlackboardElementType(typeof(serializablecoolclass))]
     public class sccBlackboardElement : ABlackboardElement<serializablecoolclass> { }
 
     [Serializable]

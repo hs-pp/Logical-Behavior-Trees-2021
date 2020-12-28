@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Logical.BuiltInNodes
 {
-    [BlackboardElementType(typeof(IntBlackboardElement))]
+    [BlackboardElement(typeof(IntBlackboardElement))]
     public class BlackboardConditionalInt : IBlackboardConditionalElement
     {
         [Serializable]

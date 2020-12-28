@@ -15,10 +15,10 @@ namespace Logical.Editor
         public List<Type> UniversalNodeTypes { get; private set; } = new List<Type>();
         public List<Type> ValidNodeTypes { get; private set; } = new List<Type>();
 
+        private Dictionary<Type, Type> m_graphPropertiesToGraphType = new Dictionary<Type, Type>();
         private List<Type> m_allNodeDrawers = new List<Type>();
         private Dictionary<Type, Type> m_universalNodeViewDrawers = new Dictionary<Type, Type>();
         private Dictionary<Type, Type> m_validNodeViewDrawers = new Dictionary<Type, Type>();
-
 
         public GraphTypeMetadata()
         {
@@ -33,6 +33,15 @@ namespace Logical.Editor
                 m_allNodeDrawers.AddRange(assemblies[i].GetTypes().Where(x => typeof(NodeViewDrawer).IsAssignableFrom(x)
                     && !x.IsAbstract
                     && x.GetCustomAttribute<CustomNodeViewDrawerAttribute>() != null));
+
+                List<Type> graphPropertyTypes = new List<Type>();
+                graphPropertyTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(AGraphProperties).IsAssignableFrom(x)
+                    && !x.IsAbstract
+                    && x.GetCustomAttribute<GraphPropertiesAttribute>() != null));
+                foreach(Type graphPropType in graphPropertyTypes)
+                {
+                    m_graphPropertiesToGraphType.Add(graphPropType.GetCustomAttribute<GraphPropertiesAttribute>().GraphType, graphPropType);
+                }
             }
 
             FindNodeDrawerTypes(UniversalNodeTypes, m_universalNodeViewDrawers);
@@ -91,6 +100,11 @@ namespace Logical.Editor
                 nodeViewDrawerType = m_validNodeViewDrawers[nodeType];
             }
             return nodeViewDrawerType;
+        }
+
+        public Type GetGraphPropertiesType(Type graphType)
+        {
+            return m_graphPropertiesToGraphType[graphType];
         }
     }
 }

@@ -6,8 +6,7 @@ namespace DialogueSystem
 {
     public class DialogueGraph : NodeGraph
     {
-        protected override Type GraphPropertiesType => typeof(DialogueGraphProperties);
-
+        [GraphProperties(typeof(DialogueGraph))]
         public class DialogueGraphProperties : AGraphProperties
         {
             public bool hey;

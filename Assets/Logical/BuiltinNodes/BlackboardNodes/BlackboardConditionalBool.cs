@@ -10,7 +10,7 @@ using UnityEditor.UIElements;
 
 namespace Logical.BuiltInNodes
 {
-    [BlackboardElementType(typeof(BoolBlackboardElement))]
+    [BlackboardElement(typeof(BoolBlackboardElement))]
     public class BlackboardConditionalBool : IBlackboardConditionalElement
     {
         [Serializable]

@@ -107,11 +107,11 @@ namespace Logical.BuiltInNodes
             {
                 conditionalElementTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(IBlackboardConditionalElement).IsAssignableFrom(x)
                     && !x.IsAbstract
-                    && x.GetCustomAttribute<BlackboardElementTypeAttribute>() != null));
+                    && x.GetCustomAttribute<BlackboardElementAttribute>() != null));
             }
             for(int i = 0; i < conditionalElementTypes.Count; i ++)
             {
-                Type relatedElementType = conditionalElementTypes[i].GetCustomAttribute<BlackboardElementTypeAttribute>().ElementType;
+                Type relatedElementType = conditionalElementTypes[i].GetCustomAttribute<BlackboardElementAttribute>().ElementType;
                 if(!m_blackboardConditionalElementTypes.ContainsKey(relatedElementType))
                 {
                     m_blackboardConditionalElementTypes.Add(relatedElementType, conditionalElementTypes[i]);

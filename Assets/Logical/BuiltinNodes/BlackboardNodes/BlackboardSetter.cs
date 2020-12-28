@@ -108,11 +108,11 @@ namespace Logical.BuiltInNodes
             {
                 setterElementTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(IBlackboardSetterElement).IsAssignableFrom(x)
                     && !x.IsAbstract
-                    && x.GetCustomAttribute<BlackboardElementTypeAttribute>() != null));
+                    && x.GetCustomAttribute<BlackboardElementAttribute>() != null));
             }
             for (int i = 0; i < setterElementTypes.Count; i++)
             {
-                Type relatedElementType = setterElementTypes[i].GetCustomAttribute<BlackboardElementTypeAttribute>().ElementType;
+                Type relatedElementType = setterElementTypes[i].GetCustomAttribute<BlackboardElementAttribute>().ElementType;
                 if (!m_blackboardSetterElementTypes.ContainsKey(relatedElementType))
                 {
                     m_blackboardSetterElementTypes.Add(relatedElementType, setterElementTypes[i]);

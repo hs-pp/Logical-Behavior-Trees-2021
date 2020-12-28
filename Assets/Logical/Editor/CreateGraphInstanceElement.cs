@@ -23,15 +23,18 @@ public class CreateGraphInstanceElement : VisualElement
     private Button m_createButton = null;
     private Button m_closeButton = null;
 
+    private GraphTypeMetadata m_graphTypeMetaData = null;
     private Action m_onClosePressed = null;
     private Type[] m_allGraphTypes = new Type[0];
     private string[] m_allGraphTypeNames = new string[0];
     private int m_selectedIndex = -1;
 
-    public CreateGraphInstanceElement(Action onClosePressed)
+    public CreateGraphInstanceElement(GraphTypeMetadata graphTypeMetadata, Action onClosePressed)
     {
         var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CreateGraphInstanceElement_UXML);
         uxmlAsset.CloneTree(this);
+
+        m_graphTypeMetaData = graphTypeMetadata;
 
         m_graphTypeDropdownDrawer = this.Q<IMGUIContainer>(GRAPH_TYPE_DROPDOWN);
         m_graphNameField = this.Q<TextField>(GRAPH_NAME_FIELD);
@@ -97,6 +100,8 @@ public class CreateGraphInstanceElement : VisualElement
         }
 
         NodeGraph createdGraph = ScriptableObject.CreateInstance(m_allGraphTypes[m_selectedIndex]) as NodeGraph;
+        createdGraph.GraphProperties = (AGraphProperties)Activator.CreateInstance(m_graphTypeMetaData.GetGraphPropertiesType(m_allGraphTypes[m_selectedIndex]));
+
         AssetDatabase.CreateAsset(createdGraph, GetFullAssetPath(m_graphNameField.value));
         GraphModificationProcessor.OnAssetCreated(createdGraph);
         OnCloseButtonPressed();

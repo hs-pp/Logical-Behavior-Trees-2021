@@ -23,9 +23,6 @@ namespace Logical
         private BlackboardProperties m_blackboardProperties; // Properties associated to a specific instance of the graph.
 
 #if UNITY_EDITOR
-        protected abstract Type GraphPropertiesType { get; } // Only necessary to determine what class to instantiate.
-        public virtual bool UseIMGUIPropertyDrawer { get { return false; } } // Toggle on for LogicalGraphWindow to draw these using IMGUI. Defaulted to use UIToolkit.
-
         public NodeCollection NodeCollection { get { return m_nodeCollection; } }
         public BlackboardProperties BlackboardProperties { get { return m_blackboardProperties; } }
         public Action<string> OnNodeOutportAdded = null;
@@ -40,7 +37,7 @@ namespace Logical
             m_nodeCollection = new NodeCollection();
             ANode entryNode = m_nodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             m_nodeCollection.SetEntryNode(entryNode.Id);
-            GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
+            //GraphProperties = Activator.CreateInstance(GraphPropertiesType) as AGraphProperties;
             m_blackboardProperties = new BlackboardProperties();
         }
 
