@@ -26,18 +26,6 @@ namespace DialogueSystem
 
         }
 
-        public override void OnNodeEnter(GraphRunner graphRunner)
-        {
-        }
-
-        public override void OnNodeUpdate(GraphRunner graphRunner)
-        {
-        }
-
-        public override void OnNodeExit(GraphRunner graphRunner)
-        {
-        }
-
 #if UNITY_EDITOR
         //public override void DrawNodeView(NodeDisplayContainers nodeDisplayContainers, SerializedProperty serializedNode)
         //{

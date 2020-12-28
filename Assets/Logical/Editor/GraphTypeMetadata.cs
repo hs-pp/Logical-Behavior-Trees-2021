@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Logical.Editor
 {
@@ -104,6 +105,11 @@ namespace Logical.Editor
 
         public Type GetGraphPropertiesType(Type graphType)
         {
+            if(!m_graphPropertiesToGraphType.ContainsKey(graphType))
+            {
+                Debug.LogError("Problem creating graph instance! Could not find associated GraphProperties. Ensure that your GraphProperties class has the GraphProperties Attribute on it!");
+                return null;
+            }
             return m_graphPropertiesToGraphType[graphType];
         }
     }

@@ -21,6 +21,8 @@ namespace Logical
         public AGraphProperties GraphProperties { get; private set; }
         public BlackboardProperties BlackboardProperties { get; private set; }
 
+        private GraphControls graphControls = null;
+
         [NonSerialized]
         public Action OnGraphStart = null;
         [NonSerialized]
@@ -34,6 +36,8 @@ namespace Logical
             m_nodeCollection = nodeGraph.NodeCollection;
             GraphProperties = graphProperties;
             BlackboardProperties = blackboardProperties;
+
+            graphControls = new GraphControls(GraphProperties, BlackboardProperties, TraverseEdge);
 
             if (m_nodeCollection == null)
             {
@@ -52,21 +56,21 @@ namespace Logical
         {
             OnGraphStart?.Invoke();
             m_currentNode = m_nodeCollection.GetEntryNode();
-            m_currentNode?.OnNodeEnter(this);
+            m_currentNode?.OnNodeEnter(graphControls);
         }
 
         public void StopGraph()
         {
-            m_currentNode?.OnNodeExit(this);
+            m_currentNode?.OnNodeExit(graphControls);
             OnGraphStop?.Invoke();
         }
 
         public void UpdateGraph()
         {
-            m_currentNode?.OnNodeUpdate(this);
+            m_currentNode?.OnNodeUpdate(graphControls);
         }
 
-        public void TraverseEdge(OutportEdge edge)
+        private void TraverseEdge(OutportEdge edge)
         {
             if(!m_currentNode.ContainsOutport(edge))
             {
@@ -74,7 +78,7 @@ namespace Logical
                 return;
             }
 
-            m_currentNode?.OnNodeExit(this);
+            m_currentNode?.OnNodeExit(graphControls);
 
             if (edge == null)
             {
@@ -83,7 +87,40 @@ namespace Logical
             }
 
             m_currentNode = m_nodeCollection.GetNodeById(edge.ConnectedNodeId);
-            m_currentNode?.OnNodeEnter(this);
+            m_currentNode?.OnNodeEnter(graphControls);
         }
+    }
+
+    /// <summary>
+    /// Nodes do not have a reference to its parent graph by design and instead is provided this class
+    /// when the node is being run. This data class contains all the functionality needed for a node 
+    /// when being run within a graph.
+    /// </summary>
+    public class GraphControls
+    {
+        public AGraphProperties GraphProperties { get; private set; }
+        public BlackboardProperties BlackboardProperties { get; private set; }
+
+        private Action<OutportEdge> m_onTraverseEdge = null;
+
+        public GraphControls(AGraphProperties graphProperties, 
+            BlackboardProperties blackboardProperties, 
+            Action<OutportEdge> onTraverseEdge)
+        {
+            GraphProperties = graphProperties;
+            BlackboardProperties = blackboardProperties;
+            m_onTraverseEdge = onTraverseEdge;
+        }
+
+        /// <summary>
+        /// Call this method from any of a node's methods to traverse a particular edge and enter another node.
+        /// </summary>
+        /// <param name="node"> The current node. </param>
+        /// <param name="index"> The index of the edge (aka outport) we want to traverse. </param>
+        public void TraverseEdge(ANode node, int index)
+        {
+            m_onTraverseEdge?.Invoke(node.GetOutportEdge(index));
+        }
+
     }
 }

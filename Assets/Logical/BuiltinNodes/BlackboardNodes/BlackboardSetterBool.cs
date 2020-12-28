@@ -52,7 +52,6 @@ namespace Logical.BuiltInNodes
                 string comparedVal = setterProp.FindPropertyRelative(NewValueVarName).boolValue.ToString();
                 return $"{selectedEnum.ToString()} to {comparedVal}";
             }
-
         }
 #endif
     }

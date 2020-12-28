@@ -1,7 +1,5 @@
 using Logical;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -10,9 +8,9 @@ public class DebugLogNode : ANode
 {
     [SerializeField]
     public string Message;
-    public override void OnNodeEnter(GraphRunner graphRunner)
+    public override void OnNodeEnter(GraphControls graphControls)
     {
         Debug.Log(Message);
-        TraverseEdge(graphRunner, 0);
+        graphControls.TraverseEdge(this, 0);
     }
 }

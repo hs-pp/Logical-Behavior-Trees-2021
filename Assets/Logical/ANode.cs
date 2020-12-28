@@ -20,18 +20,18 @@ namespace Logical
         public string Id { get { return m_id; } }
 
         // These methods should be implemented to make the node do whatever it needs to do.
-        public virtual void OnNodeEnter(GraphRunner graphRunner) { }
-        public virtual void OnNodeUpdate(GraphRunner graphRunner) { }
-        public virtual void OnNodeExit(GraphRunner graphRunner) { }
+        public virtual void OnNodeEnter(GraphControls graphControls) { }
+        public virtual void OnNodeUpdate(GraphControls graphControls) { }
+        public virtual void OnNodeExit(GraphControls graphControls) { }
 
         public bool ContainsOutport(OutportEdge outportEdge)
         {
             return m_outports.Exists(x => x.Id == outportEdge.Id);
         }
 
-        protected void TraverseEdge(GraphRunner graphRunner, int edgeIndex)
+        public OutportEdge GetOutportEdge(int index)
         {
-            graphRunner.TraverseEdge(m_outports[edgeIndex]);
+            return m_outports[index];
         }
 
         [SerializeField, HideInInspector]

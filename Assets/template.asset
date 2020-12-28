@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf087ca602851b446bcd38f9d35ea165, type: 3}
+  m_Name: template
+  m_EditorClassIdentifier: 
+  m_nodeCollection:
+    m_nodes:
+    - id: 0
+    m_entryNodeId: 0c61bf01-c688-485a-b1f3-64c5e5689828
+  GraphProperties:
+    id: 1
+  m_blackboardProperties:
+    m_allElements: []
+  references:
+    version: 1
+    00000000:
+      type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: 0c61bf01-c688-485a-b1f3-64c5e5689828
+        m_outports:
+        - Id: 6f0e3de4-db73-4971-8c2c-827374662f4b
+          ConnectedNodeId: 
+        m_position: {x: 0, y: 0}
+        m_comment: 
+    00000001:
+      type: {class: TemplateGraphProperties, ns: , asm: Assembly-CSharp}
+      data:
+        ExampleInt: 0
+        ExampleString: 
+        ExampleClass:
+          ExampleClassSampleInt: 1

@@ -22,20 +22,20 @@ namespace Logical.BuiltInNodes
         [SerializeReference]
         private List<IBlackboardConditionalElement> m_conditionals = new List<IBlackboardConditionalElement>();
 
-        public override void OnNodeEnter(GraphRunner graphRunner)
+        public override void OnNodeEnter(GraphControls graphControls)
         {
-            base.OnNodeEnter(graphRunner);
+            base.OnNodeEnter(graphControls);
             if(string.IsNullOrEmpty(m_blackboardElementId))
             {
                 Debug.LogError("BlackboardConditional: Blackboard element is not set!");
                 return;
             }
-            BlackboardElement element = graphRunner.BlackboardProperties.GetElementById(m_blackboardElementId);
+            BlackboardElement element = graphControls.BlackboardProperties.GetElementById(m_blackboardElementId);
             for(int i = 0; i < m_conditionals.Count; i++)
             {
                 if (m_conditionals[i].Evaluate(element))
                 {
-                    TraverseEdge(graphRunner, i);
+                    graphControls.TraverseEdge(this, i);
                     return;
                 }
             }

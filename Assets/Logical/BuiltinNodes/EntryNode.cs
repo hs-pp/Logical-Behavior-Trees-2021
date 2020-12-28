@@ -12,18 +12,18 @@ namespace Logical.BuiltInNodes
     [Serializable]
     public class EntryNode : ANode
     {
-        public override void OnNodeEnter(GraphRunner graphRunner)
+        public override void OnNodeEnter(GraphControls graphControls)
         {
             Debug.Log("EntryNode Enter");
-            TraverseEdge(graphRunner, 0);
+            graphControls.TraverseEdge(this, 0);
         }
 
-        public override void OnNodeUpdate(GraphRunner graphRunner)
+        public override void OnNodeUpdate(GraphControls graphControls)
         {
             Debug.Log("EntryNode Update");
         }
 
-        public override void OnNodeExit(GraphRunner graphRunner)
+        public override void OnNodeExit(GraphControls graphControls)
         {
             Debug.Log("EntryNode Exit");
         }

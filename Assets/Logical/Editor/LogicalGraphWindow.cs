@@ -44,16 +44,6 @@ namespace Logical.Editor
             EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(new GraphWindowData(), true));
         }
 
-        private void OpenCreateGraphInstanceWindow()
-        {
-            m_nodeGraphView.style.display = DisplayStyle.None;
-            m_createGraphInstanceElement.style.display = DisplayStyle.Flex;
-        }
-        private void CloseCreateGraphInstanceWindow()
-        {
-            m_nodeGraphView.style.display = DisplayStyle.Flex;
-            m_createGraphInstanceElement.style.display = DisplayStyle.None;
-        }
         /// <summary>
         /// When the UI is enabled, it sets up all the VisualElement references and loads in the window data.
         /// </summary>
@@ -281,6 +271,24 @@ namespace Logical.Editor
         {
             m_graphWindowData.SelectedGraphElements.Clear();
             m_inspectorTab.SetNode(null, null);
+        }
+
+        /// <summary>
+        /// When opening the graph creation window, also hide the node graph view.
+        /// </summary>
+        private void OpenCreateGraphInstanceWindow()
+        {
+            m_nodeGraphView.style.display = DisplayStyle.None;
+            m_createGraphInstanceElement.style.display = DisplayStyle.Flex;
+        }
+
+        /// <summary>
+        /// When closing the graph creation window, also reenable the node graph view.
+        /// </summary>
+        private void CloseCreateGraphInstanceWindow()
+        {
+            m_nodeGraphView.style.display = DisplayStyle.Flex;
+            m_createGraphInstanceElement.style.display = DisplayStyle.None;
         }
 
         public void AddItemsToMenu(GenericMenu menu)

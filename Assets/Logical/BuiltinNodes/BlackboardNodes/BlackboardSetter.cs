@@ -19,18 +19,18 @@ namespace Logical.BuiltInNodes
         [SerializeReference]
         private IBlackboardSetterElement m_setterValue = null;
 
-        public override void OnNodeEnter(GraphRunner graphRunner)
+        public override void OnNodeEnter(GraphControls graphControls)
         {
-            base.OnNodeEnter(graphRunner);
+            base.OnNodeEnter(graphControls);
 
             if (string.IsNullOrEmpty(m_blackboardElementId))
             {
                 Debug.LogError("BlackboardSetter: Blackboard element is not set!");
                 return;
             }
-            BlackboardElement element = graphRunner.BlackboardProperties.GetElementById(m_blackboardElementId);
+            BlackboardElement element = graphControls.BlackboardProperties.GetElementById(m_blackboardElementId);
             m_setterValue.Evaluate(element);
-            TraverseEdge(graphRunner, 0);
+            graphControls.TraverseEdge(this, 0);
         }
 
 #if UNITY_EDITOR
