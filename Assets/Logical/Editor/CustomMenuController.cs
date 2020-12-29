@@ -40,7 +40,6 @@ public class CustomMenuController : MonoBehaviour
 
     public void HideCustomMenu(string menuName)
     {
-        Debug.Log("Hiding " + menuName);
         m_allCustomMenus[menuName].style.display = DisplayStyle.None;
         m_nodeGraphView.style.display = DisplayStyle.Flex;
     }
