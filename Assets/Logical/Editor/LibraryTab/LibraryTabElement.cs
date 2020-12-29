@@ -20,7 +20,7 @@ namespace Logical.Editor
         private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string SEARCH_FIELD = "graphs-search-bar";
         private const string CREATE_GRAPH_INSTANCE_BUTTON = "new-graph-button";
-        private const string GENERATE_GRAPH_TYPE_BUTTON = "generate-graph-button";
+        private const string GENERATE_GRAPH_TYPE_BUTTON = "generate-graph-type-button";
 
         private string m_currentGraphGuid = "";
         private ObjectDisplayField m_currentGraphDisplay = null;

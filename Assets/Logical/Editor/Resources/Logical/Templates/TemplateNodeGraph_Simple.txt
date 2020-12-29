@@ -1,0 +1,18 @@
+using Logical;
+using System;
+using UnityEngine;
+
+public class GRAPHNAME: NodeGraph
+{
+}
+
+[GraphProperties(typeof(GRAPHNAME))]
+public class GRAPHNAMEProperties : AGraphProperties
+{
+    public override bool UseIMGUIPropertyDrawer { get { return false; } }
+
+    //====================== Custom Variables Area ======================//
+
+
+    //===================================================================//
+}

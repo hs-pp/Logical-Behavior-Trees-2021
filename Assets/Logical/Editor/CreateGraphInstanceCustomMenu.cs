@@ -30,7 +30,7 @@ public class CreateGraphInstanceCustomMenu : CustomMenuElement
 
     public CreateGraphInstanceCustomMenu(GraphTypeMetadata graphTypeMetadata)
     {
-        var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CreateGraphInstanceElement_UXML);
+        var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CreateGraphInstanceCustomMenu_UXML);
         uxmlAsset.CloneTree(this);
 
         m_graphTypeMetaData = graphTypeMetadata;

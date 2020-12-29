@@ -22,7 +22,7 @@
         <ui:Button text="New Graph Instance" display-tooltip-when-elided="True" name="new-graph-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;" />
         <ui:Label text="Generate" display-tooltip-when-elided="True" name="generate-label" style="-unity-text-align: upper-center; margin-top: 4px; overflow: hidden;" />
         <ui:VisualElement name="horizontal-layout" style="flex-direction: row; flex-shrink: 0; overflow: hidden; justify-content: space-around;">
-            <ui:Button text="Graph Class" display-tooltip-when-elided="True" name="generate-graph-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; flex-grow: 1; padding-right: 6px; margin-right: 1px;" />
+            <ui:Button text="Graph Class" display-tooltip-when-elided="True" name="generate-graph-type-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; flex-grow: 1; padding-right: 6px; margin-right: 1px;" />
             <ui:Button text="Node Class" display-tooltip-when-elided="True" name="generate-node-button" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; flex-grow: 1; padding-left: 6px; margin-left: 1px;" />
         </ui:VisualElement>
     </ui:VisualElement>
