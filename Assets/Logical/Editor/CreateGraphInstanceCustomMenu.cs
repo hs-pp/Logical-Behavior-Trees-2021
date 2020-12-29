@@ -9,7 +9,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CreateGraphInstanceElement : VisualElement
+public class CreateGraphInstanceCustomMenu : CustomMenuElement
 {
     public const string GRAPH_TYPE_DROPDOWN = "graph-type-enum-area";
     public const string GRAPH_NAME_FIELD = "graph-name-textfield";
@@ -24,12 +24,11 @@ public class CreateGraphInstanceElement : VisualElement
     private Button m_closeButton = null;
 
     private GraphTypeMetadata m_graphTypeMetaData = null;
-    private Action m_onClosePressed = null;
     private Type[] m_allGraphTypes = new Type[0];
     private string[] m_allGraphTypeNames = new string[0];
     private int m_selectedIndex = -1;
 
-    public CreateGraphInstanceElement(GraphTypeMetadata graphTypeMetadata, Action onClosePressed)
+    public CreateGraphInstanceCustomMenu(GraphTypeMetadata graphTypeMetadata)
     {
         var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.CreateGraphInstanceElement_UXML);
         uxmlAsset.CloneTree(this);
@@ -46,7 +45,6 @@ public class CreateGraphInstanceElement : VisualElement
         m_graphTypeDropdownDrawer.onGUIHandler += DrawGraphTypeDropdown;
         m_createButton.clicked += OnCreateButtonPressed;
         m_closeButton.clicked += OnCloseButtonPressed;
-        m_onClosePressed = onClosePressed;
 
         UpdatePath();
         Selection.selectionChanged -= UpdatePath;
@@ -58,7 +56,7 @@ public class CreateGraphInstanceElement : VisualElement
             m_allGraphTypeNames = m_allGraphTypes.Select(x => x.Name).ToArray();
     }
 
-    ~CreateGraphInstanceElement()
+    ~CreateGraphInstanceCustomMenu()
     {
         Selection.selectionChanged -= UpdatePath;
     }
@@ -109,6 +107,6 @@ public class CreateGraphInstanceElement : VisualElement
 
     private void OnCloseButtonPressed()
     {
-        m_onClosePressed?.Invoke();
+        OnCloseClicked?.Invoke();
     }
 }

@@ -30,7 +30,7 @@ namespace Logical.Editor
         private InspectorTabElement m_inspectorTab = null;
         private NodeGraphView m_nodeGraphView = null;
         private ToolbarButton m_saveGraphButton = null;
-        private CreateGraphInstanceElement m_createGraphInstanceElement = null;
+        private CustomMenuController m_customMenuController = null;
 
         private NodeGraph m_openedGraphInstance = null;
         private GraphTypeMetadata m_graphTypeMetadata = null;
@@ -85,14 +85,11 @@ namespace Logical.Editor
             m_nodeGraphView.OnClearSelection += OnGraphElementSelectionCleared;
             mainPanelRight.Add(m_nodeGraphView);
 
-            // Instantiate and hide the create new graph window
-            m_createGraphInstanceElement = new CreateGraphInstanceElement(m_graphTypeMetadata, () => { CloseCreateGraphInstanceWindow(); });
-            m_createGraphInstanceElement.style.display = DisplayStyle.None;
-            mainPanelRight.Add(m_createGraphInstanceElement);
+            m_customMenuController = new CustomMenuController(mainPanelRight, m_nodeGraphView);
 
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
-            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); } , OpenCreateGraphInstanceWindow)));
+            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); }, m_customMenuController, m_graphTypeMetadata)));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement(m_nodeGraphView)));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
@@ -271,24 +268,6 @@ namespace Logical.Editor
         {
             m_graphWindowData.SelectedGraphElements.Clear();
             m_inspectorTab.SetNode(null, null);
-        }
-
-        /// <summary>
-        /// When opening the graph creation window, also hide the node graph view.
-        /// </summary>
-        private void OpenCreateGraphInstanceWindow()
-        {
-            m_nodeGraphView.style.display = DisplayStyle.None;
-            m_createGraphInstanceElement.style.display = DisplayStyle.Flex;
-        }
-
-        /// <summary>
-        /// When closing the graph creation window, also reenable the node graph view.
-        /// </summary>
-        private void CloseCreateGraphInstanceWindow()
-        {
-            m_nodeGraphView.style.display = DisplayStyle.Flex;
-            m_createGraphInstanceElement.style.display = DisplayStyle.None;
         }
 
         public void AddItemsToMenu(GenericMenu menu)

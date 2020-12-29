@@ -13,6 +13,7 @@ namespace Logical.Editor
         // UXML
         public static string CoordinateLabel_UXML = "Logical/NodeGraph/CoordinateLabel";
         public static string CreateGraphInstanceElement_UXML = "Logical/CreateGraphInstanceElement";
+        public static string GenerateGraphTypeElement_UXML = "Logical/GenerateGraphTypeElement";
         public static string GraphInspector_UXML = "Logical/GraphInspector";
         public static string ImportContainer_UXML = "Logical/NodeGraph/InportContainer";
         public static string LibraryTabElement_UXML = "Logical/LibraryTabElement";

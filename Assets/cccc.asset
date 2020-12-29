@@ -19,7 +19,10 @@ MonoBehaviour:
   GraphProperties:
     id: 1
   m_blackboardProperties:
-    m_allElements: []
+    m_allElements:
+    - id: 2
+    - id: 3
+    - id: 4
   references:
     version: 1
     00000000:
@@ -39,3 +42,30 @@ MonoBehaviour:
         serializedclass:
           yes: 0
           gah: ' dsfsdfs d'
+    00000002:
+      type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 86baee11-43f9-495a-bdeb-9577f1cf3139
+        m_name: new Boolean
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0
+    00000003:
+      type: {class: FloatBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: c35b9651-64bb-402d-8c01-b74496c397c3
+        m_name: new Single
+        m_serializedType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 0
+    00000004:
+      type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 7d79703d-8c38-4d8f-bbff-364255721f90
+        m_name: vvb
+        m_serializedType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 1
