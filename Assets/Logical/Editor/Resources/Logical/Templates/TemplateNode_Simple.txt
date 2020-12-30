@@ -1,0 +1,23 @@
+using Logical;
+using System;
+
+[Serializable]
+[SupportedGraphTypes(typeof(GRAPHNAME))]
+public class NODENAME : ANode
+{
+    public override void OnNodeEnter(GraphControls graphControls)
+    {
+    }
+    public override void OnNodeUpdate(GraphControls graphControls)
+    {
+    }
+    public override void OnNodeExit(GraphControls graphControls)
+    {
+    }
+
+#if UNITY_EDITOR
+    public override int DefaultNumOutports { get { return 1; } }
+    public override bool UseIMGUIPropertyDrawer { get { return false; } }
+#endif
+
+}

@@ -28,7 +28,7 @@ public class GenerateGraphTypeCustomMenu : CustomMenuElement
 
     public GenerateGraphTypeCustomMenu()
     {
-        var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.GenerateGraphTypeCustomMenu_UXML);
+        var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.GenerateGraphClassCustomMenu_UXML);
         uxmlAsset.CloneTree(this);
 
         m_closeButton = this.Q<Button>(CLOSE_BUTTON);
@@ -41,9 +41,11 @@ public class GenerateGraphTypeCustomMenu : CustomMenuElement
         m_closeButton.clicked += OnCloseButtonPressed;
         m_createButton.clicked += OnCreateButtonPressed;
 
+
         m_includeComments.RegisterValueChangedCallback(ChangeTemplate);
         m_graphTypeName.RegisterValueChangedCallback(OnGraphTypeNameChanged);
 
+        m_includeComments.value = true;
         ChangeTemplate(m_includeComments.value);
 
         UpdatePath();
@@ -54,16 +56,8 @@ public class GenerateGraphTypeCustomMenu : CustomMenuElement
     private void ChangeTemplate(ChangeEvent<bool> changeEvent) { ChangeTemplate(changeEvent.newValue); }
     private void ChangeTemplate(bool includeComments)
     {
-        if(includeComments)
-        {
-            m_template = Resources.Load<TextAsset>(ResourceAssetPaths.NodeGraph_Template_Simple);
-        }
-        else
-        {
-            m_template = Resources.Load<TextAsset>(ResourceAssetPaths.NodeGraph_Template);
-        }
+        m_template = Resources.Load<TextAsset>(includeComments ? ResourceAssetPaths.NodeGraph_Template : ResourceAssetPaths.NodeGraph_Template_Simple);
         OnGraphTypeNameChanged(m_graphTypeName.value);
-
     }
 
     private void OnGraphTypeNameChanged(ChangeEvent<string> changeEvent) { OnGraphTypeNameChanged(changeEvent.newValue); }

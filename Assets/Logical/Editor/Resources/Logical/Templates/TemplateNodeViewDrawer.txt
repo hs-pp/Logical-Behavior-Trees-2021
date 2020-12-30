@@ -1,0 +1,109 @@
+using Logical;
+using Logical.Editor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+/// <summary>
+/// This is the node view's drawer class! A NodeView is the visual representation of a node in the graph editor.
+/// The NodeView is broken up into many smaller parts for maximum control in customization.
+/// The overridable methods provide the base VisualElement to be added to. If you prefer IMGUI, you can easily
+/// add an IMGUIContainer to the base VisualElement and work from there.
+/// </summary>
+[CustomNodeViewDrawer(typeof(NODENAME))]
+public class NODEVIEWDRAWERNAME : NodeViewDrawer
+{
+    /// <summary>
+    /// The display nade of the node in the NodeView's title.
+    /// </summary>
+    public override string DisplayName { get { return "NODENAME"; } }
+
+    /// <summary>
+    /// The color of the node as well as the color of the edges connected to the node.
+    /// </summary>
+    public override Color NodeColor { get { return new Color(0.58f, 0.22f, 0.22f); } }
+
+    public override void OnDrawHeader(VisualElement headerContainer)
+    {
+        headerContainer.Add(new Label("Header"));
+    }
+
+    public override void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer)
+    {
+        preTitleContainer.Add(GetPlaceholderElement("Pre-Title", 36));
+        postTitleContainer.Add(GetPlaceholderElement("Post-Title", 36));
+    }
+
+    public override void OnDrawPrimaryBody(VisualElement primaryBodyContainer)
+    {
+        primaryBodyContainer.Add(GetPlaceholderElement("Primary Body", 36));
+    }
+
+    public override void OnDrawInport(InportContainer inportContainer)
+    {
+        inportContainer.InportBody.Add(GetPlaceholderElement("Inport body", 20));
+        inportContainer.InportHeader.Add(GetPlaceholderElement("Inport header", 20));
+        inportContainer.InportFooter.Add(GetPlaceholderElement("Inport footer", 20));
+    }
+
+    public override void OnDrawOutport(int outportIndex, OutportContainer outportContainer)
+    {
+        outportContainer.OutportBody.Add(GetPlaceholderElement("Outport body", 20));
+        outportContainer.OutportHeader.Add(GetPlaceholderElement("Outport header", 20));
+        outportContainer.OutportFooter.Add(GetPlaceholderElement("Outport footer", 20));
+    }
+
+    public override void OnDrawSecondaryBody(VisualElement secondaryBodyContainer)
+    {
+        VisualElement body = GetPlaceholderElement("Secondary Body", -1);
+        Button addOutportButton = new Button();
+        addOutportButton.text = "Add Outport";
+        addOutportButton.clickable.clicked += () => { NodeGraph.AddOutportToNode(TargetProperty); };
+        body.Add(addOutportButton);
+        Button removeOutportButton = new Button();
+        removeOutportButton.text = "Remove Outport";
+        removeOutportButton.clickable.clicked += () => { NodeGraph.RemoveOutportFromNode(TargetProperty); };
+        body.Add(removeOutportButton);
+        secondaryBodyContainer.Add(body);
+    }
+
+    public override void OnDrawFooter(VisualElement footerContainer)
+    {
+        footerContainer.Add(new Label("Footer"));
+    }
+
+    /// <summary>
+    /// Super simple helper method to create a bordered VisualElement with a label.
+    /// </summary>
+    private VisualElement GetPlaceholderElement(string name, float height)
+    {
+        VisualElement placeholder = new VisualElement();
+        placeholder.style.borderLeftColor = Color.white;
+        placeholder.style.borderRightColor = Color.white;
+        placeholder.style.borderTopColor = Color.white;
+        placeholder.style.borderBottomColor = Color.white;
+        placeholder.style.borderLeftWidth = 1;
+        placeholder.style.borderRightWidth = 1;
+        placeholder.style.borderTopWidth = 1;
+        placeholder.style.borderBottomWidth = 1;
+        placeholder.style.borderTopLeftRadius = 5;
+        placeholder.style.borderTopRightRadius = 5;
+        placeholder.style.borderBottomLeftRadius = 5;
+        placeholder.style.borderBottomRightRadius = 5;
+        placeholder.style.marginLeft = 5;
+        placeholder.style.marginRight = 5;
+        placeholder.style.marginTop = 5;
+        placeholder.style.marginBottom = 5;
+
+        placeholder.style.justifyContent = Justify.Center;
+        if (height != -1)
+        {
+            placeholder.style.height = height;
+        }
+
+        Label label = new Label(name);
+        label.style.unityTextAlign = TextAnchor.MiddleCenter;
+        placeholder.Add(label);
+
+        return placeholder;
+    }
+}

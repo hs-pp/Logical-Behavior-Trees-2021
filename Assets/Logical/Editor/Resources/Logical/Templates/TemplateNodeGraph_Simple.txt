@@ -11,8 +11,4 @@ public class GRAPHNAMEProperties : AGraphProperties
 {
     public override bool UseIMGUIPropertyDrawer { get { return false; } }
 
-    //====================== Custom Variables Area ======================//
-
-
-    //===================================================================//
 }

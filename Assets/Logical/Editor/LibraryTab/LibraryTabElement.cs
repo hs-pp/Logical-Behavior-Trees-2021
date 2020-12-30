@@ -20,12 +20,14 @@ namespace Logical.Editor
         private const string RECENTS_FOLDOUT = "recents-foldout";
         private const string SEARCH_FIELD = "graphs-search-bar";
         private const string CREATE_GRAPH_INSTANCE_BUTTON = "new-graph-button";
-        private const string GENERATE_GRAPH_TYPE_BUTTON = "generate-graph-type-button";
+        private const string GENERATE_GRAPH_CLASS_BUTTON = "generate-graph-class-button";
+        private const string GENERATE_NODE_CLASS_BUTTON = "generate-node-class-button";
 
         private string m_currentGraphGuid = "";
         private ObjectDisplayField m_currentGraphDisplay = null;
         private Button m_createGraphInstanceButton = null;
-        private Button m_generateGraphTypeButton = null;
+        private Button m_generateGraphClassButton = null;
+        private Button m_generateNodeClassButton = null;
 
         private GraphTypeMetadata m_graphTypeMetadata = null;
         private RecentsController m_recentsController = null;
@@ -45,7 +47,8 @@ namespace Logical.Editor
 
             m_currentGraphDisplay = this.Q<ObjectDisplayField>(OPENED_GRAPH_FIELD);
             m_createGraphInstanceButton = this.Q<Button>(CREATE_GRAPH_INSTANCE_BUTTON);
-            m_generateGraphTypeButton = this.Q<Button>(GENERATE_GRAPH_TYPE_BUTTON);
+            m_generateGraphClassButton = this.Q<Button>(GENERATE_GRAPH_CLASS_BUTTON);
+            m_generateNodeClassButton = this.Q<Button>(GENERATE_NODE_CLASS_BUTTON);
 
             m_graphTypeMetadata = graphTypeMetadata;
             m_recentsController = new RecentsController(this);
@@ -54,10 +57,12 @@ namespace Logical.Editor
             m_customMenuController = customMenuController;
 
             m_customMenuController.AddCustomMenu("CreateGraphInstance", new CreateGraphInstanceCustomMenu(m_graphTypeMetadata));
-            m_customMenuController.AddCustomMenu("GenerateGraphType", new GenerateGraphTypeCustomMenu());
+            m_customMenuController.AddCustomMenu("GenerateGraphClass", new GenerateGraphTypeCustomMenu());
+            m_customMenuController.AddCustomMenu("GenerateNodeClass", new GenerateNodeClassCustomMenu());
 
             m_createGraphInstanceButton.clicked += () => { m_customMenuController.ShowCustomMenu("CreateGraphInstance"); };
-            m_generateGraphTypeButton.clicked += () => { m_customMenuController.ShowCustomMenu("GenerateGraphType"); };
+            m_generateGraphClassButton.clicked += () => { m_customMenuController.ShowCustomMenu("GenerateGraphClass"); };
+            m_generateNodeClassButton.clicked += () => { m_customMenuController.ShowCustomMenu("GenerateNodeClass"); };
         }
 
         private Manipulator GetAddToFavManip(string graphGUID)

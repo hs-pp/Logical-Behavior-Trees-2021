@@ -39,7 +39,7 @@ MonoBehaviour:
         m_outports:
         - Id: cdabb3de-8144-4e3a-9060-36066528c1ad
           ConnectedNodeId: 
-        m_position: {x: -433, y: -87}
+        m_position: {x: -348, y: -152}
         m_comment: 
     00000002:
       type: {class: TemplateGraphProperties, ns: , asm: Assembly-CSharp}

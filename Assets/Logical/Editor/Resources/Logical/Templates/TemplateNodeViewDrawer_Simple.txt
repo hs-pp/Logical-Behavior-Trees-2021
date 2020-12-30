@@ -1,0 +1,39 @@
+using Logical;
+using Logical.Editor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[CustomNodeViewDrawer(typeof(NODENAME))]
+public class NODEVIEWDRAWERNAME : NodeViewDrawer
+{
+    public override string DisplayName { get { return "NODENAME"; } }
+    public override Color NodeColor { get { return new Color(0.58f, 0.22f, 0.22f); } }
+
+    public override void OnDrawHeader(VisualElement headerContainer)
+    {
+    }
+
+    public override void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer)
+    {
+    }
+
+    public override void OnDrawPrimaryBody(VisualElement primaryBodyContainer)
+    {
+    }
+
+    public override void OnDrawInport(InportContainer inportContainer)
+    {
+    }
+
+    public override void OnDrawOutport(int outportIndex, OutportContainer outportContainer)
+    {
+    }
+
+    public override void OnDrawSecondaryBody(VisualElement secondaryBodyContainer)
+    {
+    }
+
+    public override void OnDrawFooter(VisualElement footerContainer)
+    {
+    }
+}

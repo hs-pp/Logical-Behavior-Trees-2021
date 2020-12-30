@@ -16,9 +16,9 @@
                     <ui:Label text="Assets/.cs" display-tooltip-when-elided="True" name="asset-path-label" style="-unity-text-align: middle-left; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:Label text="   Preview" display-tooltip-when-elided="True" name="preview-label" style="-unity-font-style: italic; font-size: 9px;" />
-                <ui:TextField picking-mode="Ignore" readonly="true" multiline="true" name="preview-area-textfield" style="height: auto; align-items: stretch; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                <ui:TextField picking-mode="Ignore" readonly="true" multiline="true" name="preview-area-textfield" style="height: auto; align-items: stretch; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 600px;" />
             </ui:ScrollView>
-            <ui:Button text="Create" display-tooltip-when-elided="True" name="create-button" />
+            <ui:Button text="Create" display-tooltip-when-elided="True" name="create-button" style="margin-top: 16px; margin-bottom: 20px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
