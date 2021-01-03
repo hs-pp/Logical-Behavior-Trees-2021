@@ -1,220 +1,137 @@
 using Logical.Editor;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-/// <summary>
-/// A bit of duplicate code here but not really worth cleaning up. Whatev
-/// </summary>
 public class GenerateNodeClassCustomMenu : CustomMenuElement
 {
     private const string CREATE_BUTTON = "create-button";
     private const string CLOSE_BUTTON = "close-button";
+    private const string NODEVIEWDRAWER_CLASS_NAME = "class-name-textfield";
+    private const string GRAPH_CLASS_NAME_IMGUI = "related-graph-class-imgui";
+    private const string INCLUDE_COMMENTS_TOGGLE = "include-comments-toggle";
+    private const string PREVIEW_AREA = "preview-area-textfield";
+    private const string ASSET_PATH_LABEL = "asset-path-label";
 
-    private const string GENERATE_NODE_TOGGLE = "generate-node-toggle";
-    private const string NODE_CLASS_CONTAINER = "node-class-container";
-    private const string NODE_NAME_TEXTFIELD = "node-name-textfield";
-    private const string NODE_INCLUDE_COMMENTS_TOGGLE = "node-include-comments-toggle";
-    private const string NODE_ASSET_PATH_LABEL = "node-asset-path-label";
-    private const string NODE_PREVIEW_AREA = "node-preview-area-textfield";
-
-    private const string GENERATE_NODEVIEWDRAWER_TOGGLE = "generate-nodeviewdrawer-toggle";
-    private const string NODEVIEWDRAWER_CLASS_CONTAINER = "nodeviewdrawer-class-container";
-    private const string NODEVIEWDRAWER_NAME_TEXTFIELD = "nodeviewdrawer-name-textfield";
-    private const string NODEVIEWDRAWER_NODE_NAME_TEXTFIELD = "nodeviewdrawer-node-name-textfield";
-    private const string NODEVIEWDRAWER_INCLUDE_COMMENTS_TOGGLE = "nodeviewdrawer-include-comments-toggle";
-    private const string NODEVIEWDRAWER_PREVIEW_AREA = "nodeviewdrawer-preview-area-textfield";
-    private const string NODEVIEWDRAWER_ASSET_PATH_LABEL = "nodeviewdrawer-asset-path-label";
-
-    private const string NODENAME_PLACEHOLDER = "NODENAME";
-    private const string NODEVIEWDRAWERNAME_PLACEHOLDER = "NODEVIEWDRAWERNAME";
+    private GraphTypeMetadata m_graphTypeMetadata;
+    private List<string> m_graphClassPopupOptions = new List<string>();
+    private HashSet<int> m_unselectablePopupOptions = new HashSet<int>();
 
     private Button m_closeButton = null;
     private Button m_createButton = null;
+    private TextField m_className = null;
+    private IMGUIContainer m_relatedGraphClassNameIMGUI = null;
+    private Toggle m_includeComments = null;
+    private TextField m_previewArea = null;
+    private Label m_assetPathLabel = null;
 
-    private Toggle m_generateClass_Node = null;
-    private VisualElement m_classContainer_Node = null;
-    private TextField m_className_Node = null;
-    private Toggle m_includeComments_Node = null;
-    private TextField m_previewArea_Node = null;
-    private Label m_assetPathLabel_Node = null;
-    private TextAsset m_node_Template = null;
-    private string m_pendingGeneratedCode_Node = "";
-    private string m_pendingAssetPath_Node = "";
+    private TextAsset m_template = null;
+    private string m_pendingGeneratedCode = "";
+    private string m_pendingAssetPath = "";
 
-    private Toggle m_generateClass_NodeViewDrawer = null;
-    private VisualElement m_classContainer_NodeViewDrawer = null;
-    private TextField m_className_NodeViewDrawer = null;
-    private TextField m_nodeClassName_NodeViewDrawer = null;
-    private Toggle m_includeComments_NodeViewDrawer = null;
-    private TextField m_previewArea_NodeViewDrawer = null;
-    private Label m_assetPathLabel_NodeViewDrawer = null;
-    private TextAsset m_nodeViewDrawer_Template = null;
-    private string m_pendingGeneratedCode_NodeViewDrawer = "";
-    private string m_pendingAssetPath_NodeViewDrawer = "";
-
-    public GenerateNodeClassCustomMenu()
+    public GenerateNodeClassCustomMenu(GraphTypeMetadata graphTypeMetadata)
     {
+        m_graphTypeMetadata = graphTypeMetadata;
+
         var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.GenerateNodeClassCustomMenu_UXML);
         uxmlAsset.CloneTree(this);
 
-        m_createButton = this.Q<Button>(CREATE_BUTTON);
         m_closeButton = this.Q<Button>(CLOSE_BUTTON);
-
-        m_generateClass_Node = this.Q<Toggle>(GENERATE_NODE_TOGGLE);
-        m_classContainer_Node = this.Q<VisualElement>(NODE_CLASS_CONTAINER);
-        m_className_Node = this.Q<TextField>(NODE_NAME_TEXTFIELD);
-        m_includeComments_Node = this.Q<Toggle>(NODE_INCLUDE_COMMENTS_TOGGLE);
-        m_previewArea_Node = this.Q<TextField>(NODE_PREVIEW_AREA);
-        m_assetPathLabel_Node = this.Q<Label>(NODE_ASSET_PATH_LABEL);
-
-        m_generateClass_NodeViewDrawer = this.Q<Toggle>(GENERATE_NODEVIEWDRAWER_TOGGLE);
-        m_classContainer_NodeViewDrawer = this.Q<VisualElement>(NODEVIEWDRAWER_CLASS_CONTAINER);
-        m_className_NodeViewDrawer = this.Q<TextField>(NODEVIEWDRAWER_NAME_TEXTFIELD);
-        m_nodeClassName_NodeViewDrawer = this.Q<TextField>(NODEVIEWDRAWER_NODE_NAME_TEXTFIELD);
-        m_includeComments_NodeViewDrawer = this.Q<Toggle>(NODEVIEWDRAWER_INCLUDE_COMMENTS_TOGGLE);
-        m_previewArea_NodeViewDrawer = this.Q<TextField>(NODEVIEWDRAWER_PREVIEW_AREA);
-        m_assetPathLabel_NodeViewDrawer = this.Q<Label>(NODEVIEWDRAWER_ASSET_PATH_LABEL);
+        m_createButton = this.Q<Button>(CREATE_BUTTON);
+        m_className = this.Q<TextField>(NODEVIEWDRAWER_CLASS_NAME);
+        m_relatedGraphClassNameIMGUI = this.Q<IMGUIContainer>(GRAPH_CLASS_NAME_IMGUI);
+        m_includeComments = this.Q<Toggle>(INCLUDE_COMMENTS_TOGGLE);
+        m_previewArea = this.Q<TextField>(PREVIEW_AREA);
+        m_assetPathLabel = this.Q<Label>(ASSET_PATH_LABEL);
 
         m_closeButton.clicked += OnCloseButtonPressed;
         m_createButton.clicked += OnCreateButtonPressed;
 
-        m_generateClass_Node.RegisterValueChangedCallback(ToggleNodeContainer);
-        m_generateClass_NodeViewDrawer.RegisterValueChangedCallback(ToggleNodeViewDrawerContainer);
-        m_includeComments_Node.RegisterValueChangedCallback(ChangeNodeTemplate);
-        m_includeComments_NodeViewDrawer.RegisterValueChangedCallback(ChangeNodeViewDrawerTemplate);
-        m_className_Node.RegisterValueChangedCallback(OnNodeClassNameChanged);
-        m_className_NodeViewDrawer.RegisterValueChangedCallback(OnNodeViewDrawerClassNameChanged);
-        m_nodeClassName_NodeViewDrawer.RegisterValueChangedCallback(OnNodeViewDrawerNodeClassNameChanged);
+        m_includeComments.RegisterValueChangedCallback(ChangeTemplate);
+        m_className.RegisterValueChangedCallback(OnGraphClassNameChanged);
 
-        ToggleContainer(m_generateClass_Node.value, false);
-        ToggleContainer(m_generateClass_NodeViewDrawer.value, true);
+        m_includeComments.value = true;
+        ChangeTemplate(m_includeComments.value);
 
-        m_includeComments_Node.value = true;
-        ChangeTemplate(true, false);
-        m_includeComments_NodeViewDrawer.value = true;
-        ChangeTemplate(true, true);
+        UpdatePath();
+        Selection.selectionChanged -= UpdatePath;
+        Selection.selectionChanged += UpdatePath;
+        m_relatedGraphClassNameIMGUI.onGUIHandler += OnRelatedNodeClassDraw;
 
+        SetupPopupOptions();
     }
 
-    private void ToggleNodeContainer(ChangeEvent<bool> changeEvent) 
-    { 
-        ToggleContainer(changeEvent.newValue, false);
-        OnClassNameChanged(m_className_NodeViewDrawer.value, true);
-    }
-    private void ToggleNodeViewDrawerContainer(ChangeEvent<bool> changeEvent) { ToggleContainer(changeEvent.newValue, true); }
-    private void ToggleContainer(bool toggle, bool isNodeViewDrawer)
+    private void SetupPopupOptions()
     {
-        if(isNodeViewDrawer)
+        m_graphClassPopupOptions.Clear();
+        m_unselectablePopupOptions.Clear();
+
+        m_graphClassPopupOptions.Add("---");
+        foreach (Type graphType in m_graphTypeMetadata.GraphToNodes.Keys)
         {
-            m_classContainer_NodeViewDrawer.style.display = toggle ? DisplayStyle.Flex : DisplayStyle.None;
-        }
-        else
-        {
-            m_classContainer_Node.style.display = toggle ? DisplayStyle.Flex : DisplayStyle.None;
-            m_nodeClassName_NodeViewDrawer.style.display = toggle ? DisplayStyle.None : DisplayStyle.Flex;
+            m_graphClassPopupOptions.Add(graphType.Name);
         }
     }
 
-    private void ChangeNodeTemplate(ChangeEvent<bool> changeEvent) { ChangeTemplate(changeEvent.newValue, false); }
-    private void ChangeNodeViewDrawerTemplate(ChangeEvent<bool> changeEvent) { ChangeTemplate(changeEvent.newValue, true); }
-    private void ChangeTemplate(bool includeComments, bool isNodeViewDrawer)
+    private void ChangeTemplate(ChangeEvent<bool> changeEvent) { ChangeTemplate(changeEvent.newValue); }
+    private void ChangeTemplate(bool includeComments)
     {
-        if (isNodeViewDrawer)
-        {
-            m_nodeViewDrawer_Template = Resources.Load<TextAsset>(includeComments
-                ? ResourceAssetPaths.NodeViewDrawer_Template
-                : ResourceAssetPaths.NodeViewDrawer_Template_Simple);
-            OnClassNameChanged(m_className_NodeViewDrawer.value, isNodeViewDrawer);
-        }
-        else
-        {
-            m_node_Template = Resources.Load<TextAsset>(includeComments
-                ? ResourceAssetPaths.Node_Template
-                : ResourceAssetPaths.Node_Template_Simple);
-            OnClassNameChanged(m_className_Node.value, isNodeViewDrawer);
-        }
+        m_template = Resources.Load<TextAsset>(includeComments
+            ? ResourceAssetPaths.Node_Template
+            : ResourceAssetPaths.Node_Template_Simple);
+        OnGraphClassNameChanged(m_className.value);
     }
 
-    private void OnNodeClassNameChanged(ChangeEvent<string> changeEvent) { OnClassNameChanged(changeEvent.newValue, false); }
-    private void OnNodeViewDrawerClassNameChanged(ChangeEvent<string> changeEvent) { OnClassNameChanged(changeEvent.newValue, true); }
-    private void OnNodeViewDrawerNodeClassNameChanged(ChangeEvent<string> changeEvent) { OnClassNameChanged(m_className_NodeViewDrawer.value, true); }
-    private void OnClassNameChanged(string newName, bool isNodeViewDrawer)
+    private void OnGraphClassNameChanged(ChangeEvent<string> changeEvent) { OnGraphClassNameChanged(changeEvent.newValue); }
+    private void OnGraphClassNameChanged(string className)
     {
-        if (string.IsNullOrEmpty(newName))
+        bool nameIsEmpty = string.IsNullOrEmpty(className);
+        if (nameIsEmpty)
         {
-            newName = "***NO*NAME***";
+            className = "***NO*NAME***";
         }
-        if(isNodeViewDrawer)
-        {
-            string pendingCode = m_nodeViewDrawer_Template.text;
-            pendingCode = pendingCode.Replace(NODEVIEWDRAWERNAME_PLACEHOLDER, newName);
-            string nodeName = m_generateClass_Node.value ? m_className_Node.value : m_nodeClassName_NodeViewDrawer.value;
-            if (string.IsNullOrEmpty(nodeName))
-            {
-                nodeName = "***NO*NAME***";
-            }
-            pendingCode = pendingCode.Replace(NODENAME_PLACEHOLDER, nodeName);
-            m_pendingGeneratedCode_NodeViewDrawer = pendingCode;
-            m_previewArea_NodeViewDrawer.value = m_pendingGeneratedCode_NodeViewDrawer;
-            UpdatePath(isNodeViewDrawer);
-        }
-        else
-        {
-            string pendingCode = m_node_Template.text;
-            pendingCode = pendingCode.Replace(NODENAME_PLACEHOLDER, newName);
-            m_pendingGeneratedCode_Node = pendingCode;
-            m_previewArea_Node.value = m_pendingGeneratedCode_Node;
-            UpdatePath(isNodeViewDrawer);
+        m_createButton.SetEnabled(!nameIsEmpty);
 
-            if(m_generateClass_NodeViewDrawer.value == true)
-            {
-                OnClassNameChanged(m_className_NodeViewDrawer.value, true);
-            }
+        string graphClassName = "***NO*NAME***";
+        if (m_relatedNodeSelectedIndex > 0)
+        {
+            graphClassName = m_graphClassPopupOptions[m_relatedNodeSelectedIndex];
         }
+
+        m_pendingGeneratedCode = m_template.text.Replace("NODENAME", className);
+        m_pendingGeneratedCode = m_pendingGeneratedCode.Replace("GRAPHNAME", graphClassName);
+        m_previewArea.value = m_pendingGeneratedCode;
+
+        UpdatePath();
     }
-
-    private void UpdatePath(bool isNodeViewDrawer)
+    private int m_relatedNodeSelectedIndex = 0;
+    private void OnRelatedNodeClassDraw()
     {
-        if(isNodeViewDrawer)
+        EditorGUI.BeginChangeCheck();
+        m_relatedNodeSelectedIndex = EditorGUILayout.Popup(new GUIContent(" Related Node Class"), m_relatedNodeSelectedIndex, m_graphClassPopupOptions.ToArray());
+        if (EditorGUI.EndChangeCheck())
         {
-            m_pendingAssetPath_NodeViewDrawer = GetFullAssetPath(m_className_NodeViewDrawer.value, true);
-            m_assetPathLabel_NodeViewDrawer.text = m_pendingAssetPath_NodeViewDrawer;
-        }
-        else
-        {
-            m_pendingAssetPath_Node = GetFullAssetPath(m_className_Node.value, false);
-            m_assetPathLabel_Node.text = m_pendingAssetPath_Node;
+            OnGraphClassNameChanged(m_className.value);
         }
     }
 
-    private void UpdateCreateButtonState()
+    private void UpdatePath()
     {
-        if ((m_generateClass_Node.value == false && m_generateClass_NodeViewDrawer.value == false)
-            || (m_generateClass_Node.value == true && string.IsNullOrEmpty(m_className_Node.value))
-            || (m_generateClass_NodeViewDrawer.value == true && string.IsNullOrEmpty(m_className_NodeViewDrawer.value)))
-        {
-            m_createButton.SetEnabled(false);
-        }
-        else
-        {
-            m_createButton.SetEnabled(true);
-        }
+        m_pendingAssetPath = GetFullAssetPath(m_className.value);
+        m_assetPathLabel.text = m_pendingAssetPath;
     }
 
-    private string GetFullAssetPath(string name, bool inEditorFolder)
+    private string GetFullAssetPath(string name)
     {
         string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
 
         if (File.Exists(assetPath))
             assetPath = Path.GetDirectoryName(assetPath);
-        if (string.IsNullOrEmpty(assetPath)) 
-            assetPath = "Assets";
-        if (inEditorFolder)
-            assetPath += "\\Editor";
+        if (string.IsNullOrEmpty(assetPath)) assetPath = "Assets";
 
         return $"{assetPath}\\{name}.cs";
     }
@@ -226,27 +143,20 @@ public class GenerateNodeClassCustomMenu : CustomMenuElement
 
     private void OnCreateButtonPressed()
     {
-        if(m_generateClass_Node.value)
+        if (string.IsNullOrEmpty(m_className.value))
         {
-            CreateCodeFile(m_pendingGeneratedCode_Node, m_pendingAssetPath_Node);
+            Debug.LogError("New NodeViewDrawer class name not set!!!");
+            return;
         }
-        if(m_generateClass_NodeViewDrawer.value)
+        else if (File.Exists(m_pendingAssetPath))
         {
-            CreateCodeFile(m_pendingGeneratedCode_NodeViewDrawer, m_pendingAssetPath_NodeViewDrawer);
-        }
-    }
-
-    private void CreateCodeFile(string code, string path)
-    {
-        if (File.Exists(path))
-        {
-            Debug.LogError($"File at file path {path} already exists!");
+            Debug.LogError($"File at file path {m_pendingAssetPath} already exists!");
             return;
         }
         else
         {
-            StreamWriter sw = File.CreateText(path);
-            sw.Write(code);
+            StreamWriter sw = File.CreateText(m_pendingAssetPath);
+            sw.Write(m_pendingGeneratedCode);
             sw.Close();
 
             AssetDatabase.Refresh();

@@ -61,7 +61,7 @@ namespace Logical.Editor
 
             m_customMenuController.AddCustomMenu("CreateGraphInstance", new CreateGraphInstanceCustomMenu(m_graphTypeMetadata));
             m_customMenuController.AddCustomMenu("GenerateGraphClass", new GenerateGraphClassCustomMenu());
-            m_customMenuController.AddCustomMenu("GenerateNodeClass", new GenerateNodeClassCustomMenu());
+            m_customMenuController.AddCustomMenu("GenerateNodeClass", new GenerateNodeClassCustomMenu(m_graphTypeMetadata));
             m_customMenuController.AddCustomMenu("GenerateNodeViewDrawerClass", new GenerateNodeViewDrawerClassCustomMenu(m_graphTypeMetadata));
 
 

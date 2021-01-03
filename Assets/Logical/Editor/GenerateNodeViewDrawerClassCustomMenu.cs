@@ -24,7 +24,7 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
     private Button m_closeButton = null;
     private Button m_createButton = null;
     private TextField m_className = null;
-    private IMGUIContainer m_relatedNodeClassName = null;
+    private IMGUIContainer m_relatedNodeClassNameIMGUI = null;
     private Toggle m_includeComments = null;
     private TextField m_previewArea = null;
     private Label m_assetPathLabel = null;
@@ -43,7 +43,7 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
         m_closeButton = this.Q<Button>(CLOSE_BUTTON);
         m_createButton = this.Q<Button>(CREATE_BUTTON);
         m_className = this.Q<TextField>(NODEVIEWDRAWER_CLASS_NAME);
-        m_relatedNodeClassName = this.Q<IMGUIContainer>(NODE_CLASS_NAME_IMGUI);
+        m_relatedNodeClassNameIMGUI = this.Q<IMGUIContainer>(NODE_CLASS_NAME_IMGUI);
         m_includeComments = this.Q<Toggle>(INCLUDE_COMMENTS_TOGGLE);
         m_previewArea = this.Q<TextField>(PREVIEW_AREA);
         m_assetPathLabel = this.Q<Label>(ASSET_PATH_LABEL);
@@ -60,7 +60,7 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
         UpdatePath();
         Selection.selectionChanged -= UpdatePath;
         Selection.selectionChanged += UpdatePath;
-        m_relatedNodeClassName.onGUIHandler += OnRelatedNodeClassDraw;
+        m_relatedNodeClassNameIMGUI.onGUIHandler += OnRelatedNodeClassDraw;
 
         SetupPopupOptions();
     }
