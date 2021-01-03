@@ -21,15 +21,18 @@ MonoBehaviour:
     - id: 4
     - id: 5
     - id: 6
+    - id: 7
+    - id: 8
     m_entryNodeId: 6eedb5c5-a8e1-4bed-896a-1eca626b2e13
   GraphProperties:
-    id: 7
+    id: 9
   m_blackboardProperties:
     m_allElements:
-    - id: 8
-    - id: 9
     - id: 10
     - id: 11
+    - id: 12
+    - id: 13
+    - id: 14
   references:
     version: 1
     00000000:
@@ -39,7 +42,7 @@ MonoBehaviour:
         m_outports:
         - Id: 5a80ff70-8c74-45a6-bc1d-7772f05b16e2
           ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
-        m_position: {x: 254, y: 381}
+        m_position: {x: 78, y: 329}
         m_comment: 
     00000001:
       type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
@@ -50,12 +53,12 @@ MonoBehaviour:
           ConnectedNodeId: ed5b09de-9c34-4512-ae83-575a00019318
         - Id: becf95d8-08c8-48c0-a641-180dc115faf3
           ConnectedNodeId: 1d5f528d-c5c7-46a1-9183-c4c8ccaf9bd9
-        m_position: {x: 412, y: 321}
+        m_position: {x: 313, y: 304}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_conditionals:
-        - id: 12
-        - id: 13
+        - id: 15
+        - id: 16
     00000002:
       type: {class: BlackboardSetter, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
@@ -63,11 +66,11 @@ MonoBehaviour:
         m_outports:
         - Id: 57c7a062-0b3e-4af1-8c84-0b7469cb749f
           ConnectedNodeId: 0e6a9ca0-f171-424b-b871-690c778385ee
-        m_position: {x: 656, y: 555}
+        m_position: {x: 695, y: 549}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_setterValue:
-          id: 14
+          id: 17
     00000003:
       type: {class: DebugLogNode, ns: , asm: Assembly-CSharp}
       data:
@@ -75,7 +78,7 @@ MonoBehaviour:
         m_outports:
         - Id: caf09798-3f8d-486e-9a79-fccfadbb79ff
           ConnectedNodeId: 7ce92b50-84d2-46d6-b8a5-5ed3f4c176ef
-        m_position: {x: 464, y: 678}
+        m_position: {x: 477, y: 660}
         m_comment: 
         Message: new Single is ah
     00000004:
@@ -99,7 +102,7 @@ MonoBehaviour:
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_setterValue:
-          id: 15
+          id: 18
     00000006:
       type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
@@ -111,22 +114,46 @@ MonoBehaviour:
           ConnectedNodeId: 
         - Id: daf63c3f-2e5d-46b9-abc6-9e907ee5f2ea
           ConnectedNodeId: 
-        m_position: {x: 173, y: 160}
+        m_position: {x: 151, y: 105}
         m_comment: 
         m_blackboardElementId: 435fd638-2c36-4b87-931f-06d5d67e75cd
         m_conditionals:
-        - id: 16
-        - id: 17
-        - id: 18
+        - id: 19
+        - id: 20
+        - id: 21
     00000007:
+      type: {class: BlackboardConditional, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: f9c1a03e-de39-4a55-ac30-9f4d560008a8
+        m_outports:
+        - Id: a48c406f-a654-4c0d-a22a-6017004f2166
+          ConnectedNodeId: fcf54fcc-cb77-45fe-bc1c-1a42812c25c3
+        - Id: af19115c-667e-43f0-90fe-5227a3631ee2
+          ConnectedNodeId: 
+        m_position: {x: -325, y: 86}
+        m_comment: 
+        m_blackboardElementId: 830d02e8-1446-4da7-8d8a-be178e5fd601
+        m_conditionals:
+        - id: 22
+        - id: 23
+    00000008:
+      type: {class: BlackboardSetter, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_id: ba8672af-608d-425a-a741-e8684093b0ce
+        m_outports:
+        - Id: d6be8915-f5d7-4152-b65b-04c34c26bd6b
+          ConnectedNodeId: f9c1a03e-de39-4a55-ac30-9f4d560008a8
+        m_position: {x: -634, y: 65}
+        m_comment: 
+        m_blackboardElementId: 830d02e8-1446-4da7-8d8a-be178e5fd601
+        m_setterValue:
+          id: 24
+    00000009:
       type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
       data:
         thisint: 6
         thisstring: s
-        serializedClass:
-          serializedInt: 2
-          serializedString: 
-    00000008:
+    0000000A:
       type: {class: StringBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
         m_guid: 099bf71f-2aab-46b1-a144-7480402d4691
@@ -135,7 +162,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 
-    00000009:
+    0000000B:
       type: {class: BoolBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
         m_guid: cd90bb76-4db4-4e27-a2a5-63321a5cf154
@@ -144,7 +171,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 0
-    0000000A:
+    0000000C:
       type: {class: FloatBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
         m_guid: 435fd638-2c36-4b87-931f-06d5d67e75cd
@@ -153,7 +180,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 0
-    0000000B:
+    0000000D:
       type: {class: IntBlackboardElement, ns: Logical, asm: Assembly-CSharp}
       data:
         m_guid: 36813105-e12c-4905-ba86-1268f1bc9c6d
@@ -162,38 +189,62 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
         m_valueWrapper:
           Value: 0
-    0000000C:
+    0000000E:
+      type: {class: StringBlackboardElement, ns: Logical, asm: Assembly-CSharp}
+      data:
+        m_guid: 830d02e8-1446-4da7-8d8a-be178e5fd601
+        m_name: hjkghkdfagfd
+        m_serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_valueWrapper:
+          Value: 
+    0000000F:
       type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_comparator: 4
         m_comparedValue: 2
-    0000000D:
+    00000010:
       type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_comparator: 2
         m_comparedValue: 2
-    0000000E:
+    00000011:
       type: {class: BlackboardSetterFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_setterCommand: 1
         m_newValue: 1
-    0000000F:
+    00000012:
       type: {class: BlackboardSetterFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_setterCommand: 0
         m_newValue: 0
-    00000010:
+    00000013:
       type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_comparator: 0
         m_comparedValue: 0
-    00000011:
+    00000014:
       type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_comparator: 0
         m_comparedValue: 0
-    00000012:
+    00000015:
       type: {class: BlackboardConditionalFloat, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
         m_comparator: 0
         m_comparedValue: 0
+    00000016:
+      type: {class: BlackboardConditionalString, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_comparator: 0
+        m_comparedValue: fygdfhfggfffff
+    00000017:
+      type: {class: BlackboardConditionalString, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_comparator: 0
+        m_comparedValue: sssss
+    00000018:
+      type: {class: BlackboardSetterString, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
+      data:
+        m_setterCommand: 0
+        m_newValue: asdfsdfasdf

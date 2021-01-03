@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="centerer" style="align-items: center; overflow: hidden;">
+        <ui:VisualElement name="close-button-area" style="align-items: flex-end; width: 100%;">
+            <ui:Button text="Close" display-tooltip-when-elided="True" name="close-button" />
+        </ui:VisualElement>
+        <ui:VisualElement name="container" style="max-width: 600px;">
+            <ui:VisualElement name="title-container" style="align-items: center; padding-bottom: 13px; flex-shrink: 0; overflow: hidden;">
+                <ui:Label text="Generate NodeViewDrawer Class" display-tooltip-when-elided="True" name="title-label" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 23px;" />
+                <ui:VisualElement name="divider" style="height: 4px; width: 300px; border-top-width: 1px; border-left-color: rgb(196, 196, 196); border-right-color: rgb(196, 196, 196); border-top-color: rgb(196, 196, 196); border-bottom-color: rgb(196, 196, 196);" />
+            </ui:VisualElement>
+            <ui:ScrollView>
+                <ui:TextField picking-mode="Ignore" label="NodeViewDrawer Name" name="class-name-textfield" />
+                <ui:IMGUIContainer name="related-node-class-imgui" />
+                <ui:Toggle label="Include Helper Comments" name="include-comments-toggle" style="padding-bottom: 16px;" />
+                <ui:VisualElement name="path-container" style="overflow: visible; flex-direction: row; padding-bottom: 16px;">
+                    <ui:Label text="Path: " display-tooltip-when-elided="True" name="path-label" style="padding-bottom: 0; font-size: 18px; -unity-font-style: bold; -unity-text-align: middle-left;" />
+                    <ui:Label text="Assets/.cs" display-tooltip-when-elided="True" name="asset-path-label" style="-unity-text-align: middle-left; white-space: normal;" />
+                </ui:VisualElement>
+                <ui:Label text="   Preview" display-tooltip-when-elided="True" name="preview-label" style="-unity-font-style: italic; font-size: 9px;" />
+                <ui:TextField picking-mode="Ignore" readonly="true" multiline="true" name="preview-area-textfield" style="height: auto; align-items: stretch; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 600px;" />
+            </ui:ScrollView>
+            <ui:Button text="Create" display-tooltip-when-elided="True" name="create-button" style="margin-top: 16px; margin-bottom: 20px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

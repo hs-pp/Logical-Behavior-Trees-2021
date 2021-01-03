@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 
 namespace Logical.Editor
@@ -12,14 +13,12 @@ namespace Logical.Editor
     /// </summary>
     public class GraphTypeMetadata
     {
-        public Type GraphType { get; private set; } = null;
-        public List<Type> UniversalNodeTypes { get; private set; } = new List<Type>();
-        public List<Type> ValidNodeTypes { get; private set; } = new List<Type>();
+        public Dictionary<Type, List<Type>> GraphToNodes = new Dictionary<Type, List<Type>>();
+        public List<Type> UniversalNodeTypes = new List<Type>();
+        public Dictionary<Type, Type> NodeToNodeViewDrawer = new Dictionary<Type, Type>();
+        public Dictionary<Type, Type> GraphToGraphProperties = new Dictionary<Type, Type>();
 
-        private Dictionary<Type, Type> m_graphPropertiesToGraphType = new Dictionary<Type, Type>();
-        private List<Type> m_allNodeDrawers = new List<Type>();
-        private Dictionary<Type, Type> m_universalNodeViewDrawers = new Dictionary<Type, Type>();
-        private Dictionary<Type, Type> m_validNodeViewDrawers = new Dictionary<Type, Type>();
+        public Type ActiveGraphType { get; private set; } // This should probably be moved out of here.
 
         public GraphTypeMetadata()
         {
@@ -27,90 +26,106 @@ namespace Logical.Editor
 
             for (int i = 0; i < assemblies.Length; i++)
             {
-                UniversalNodeTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(ANode).IsAssignableFrom(x)
-                    && !x.IsAbstract
-                    && x.GetCustomAttribute<SupportedGraphTypesAttribute>() == null));
-
-                m_allNodeDrawers.AddRange(assemblies[i].GetTypes().Where(x => typeof(NodeViewDrawer).IsAssignableFrom(x)
-                    && !x.IsAbstract
-                    && x.GetCustomAttribute<CustomNodeViewDrawerAttribute>() != null));
-
-                List<Type> graphPropertyTypes = new List<Type>();
-                graphPropertyTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(AGraphProperties).IsAssignableFrom(x)
-                    && !x.IsAbstract
-                    && x.GetCustomAttribute<GraphPropertiesAttribute>() != null));
-                foreach(Type graphPropType in graphPropertyTypes)
+                foreach(Type type in assemblies[i].GetTypes())
                 {
-                    m_graphPropertiesToGraphType.Add(graphPropType.GetCustomAttribute<GraphPropertiesAttribute>().GraphType, graphPropType);
+                    if (type.IsAbstract)
+                        continue;
+
+                    if(typeof(NodeGraph).IsAssignableFrom(type))
+                    {
+                        if (!GraphToNodes.ContainsKey(type))
+                        {
+                            GraphToNodes.Add(type, new List<Type>());
+                        }
+                    }
+                    else if(typeof(ANode).IsAssignableFrom(type))
+                    {
+                        SupportedGraphTypesAttribute supportedGraphType = type.GetCustomAttribute<SupportedGraphTypesAttribute>();
+                        if(supportedGraphType == null)
+                        {
+                            UniversalNodeTypes.Add(type);
+                        }
+                        else
+                        {
+                            if (!GraphToNodes.ContainsKey(supportedGraphType.GraphType))
+                            {
+                                GraphToNodes.Add(supportedGraphType.GraphType, new List<Type>());
+                            }
+                            GraphToNodes[supportedGraphType.GraphType].Add(type);
+                        }
+                    }
+                    else if(typeof(NodeViewDrawer).IsAssignableFrom(type)
+                        && type.GetCustomAttribute<CustomNodeViewDrawerAttribute>() != null)
+                    {
+                        NodeToNodeViewDrawer.Add(type.GetCustomAttribute<CustomNodeViewDrawerAttribute>().NodeType, type);
+                    }
+                    else if(typeof(AGraphProperties).IsAssignableFrom(type)
+                        && type.GetCustomAttribute<GraphPropertiesAttribute>() != null)
+                    {
+                        GraphToGraphProperties.Add(type.GetCustomAttribute<GraphPropertiesAttribute>().GraphType, type);
+                    }
                 }
             }
+            //DebugTypes();
+        }
 
-            FindNodeDrawerTypes(UniversalNodeTypes, m_universalNodeViewDrawers);
-            //TODO SORT THEM!!
+        private void DebugTypes() 
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("Debug Types");
+            foreach(Type graphType in GraphToNodes.Keys)
+            {
+                stringBuilder.Append("\n" + graphType.Name);
+                foreach(Type nodeType in GraphToNodes[graphType])
+                {
+                    if(NodeToNodeViewDrawer.ContainsKey(nodeType))
+                    {
+                        stringBuilder.Append("\n --" + nodeType.Name + " -- " + NodeToNodeViewDrawer[nodeType]);
+                    }
+                    else
+                    {
+                        stringBuilder.Append("\n --" + nodeType.Name);
+                    }
+                }
+            }
+            Debug.Log(stringBuilder.ToString());
         }
 
         public void SetNewGraphType(Type graphType)
         {
-            if (graphType == GraphType)
-            {
-                return;
-            }
-
-            GraphType = graphType;
-            ValidNodeTypes.Clear();
-
-            if (graphType == null)
-            {
-                return;
-            }
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                ValidNodeTypes.AddRange(assemblies[i].GetTypes().Where(x => typeof(ANode).IsAssignableFrom(x)
-                    && !x.IsAbstract
-                    && x.GetCustomAttribute<SupportedGraphTypesAttribute>() != null
-                    && x.GetCustomAttribute<SupportedGraphTypesAttribute>().SupportedTypes.Contains(graphType)));
-                //TODO SORT THEM!
-            }
-
-            FindNodeDrawerTypes(ValidNodeTypes, m_validNodeViewDrawers);
+            ActiveGraphType = graphType;
         }
 
-        private void FindNodeDrawerTypes(List<Type> nodeTypes, Dictionary<Type, Type> nodeDrawers)
+        public List<Type> GetAllGraphTypes()
         {
-            nodeDrawers.Clear();
-            for(int i = 0; i < nodeTypes.Count; i++)
-            {
-                Type nodeDrawer = m_allNodeDrawers.Find(x => x.GetCustomAttribute<CustomNodeViewDrawerAttribute>().NodeType == nodeTypes[i]);
-                if (nodeDrawer != null)
-                {
-                    nodeDrawers.Add(nodeTypes[i], nodeDrawer);
-                }
-            }
+            return new List<Type>(GraphToNodes.Keys);
         }
 
-        public Type GetNodeViewDrawerType(Type nodeType)
+        public List<Type> GetNodeTypesFromGraphType(Type graphType)
         {
-            Type nodeViewDrawerType = typeof(NodeViewDrawer);
-            if(m_universalNodeViewDrawers.ContainsKey(nodeType))
+            return GraphToNodes[graphType];
+        }
+
+        public Type GetNodeViewDrawerType(Type nodeType) 
+        {
+            if(NodeToNodeViewDrawer.ContainsKey(nodeType))
             {
-                nodeViewDrawerType = m_universalNodeViewDrawers[nodeType];
+                return NodeToNodeViewDrawer[nodeType];
             }
-            else if (m_validNodeViewDrawers.ContainsKey(nodeType))
+            else
             {
-                nodeViewDrawerType = m_validNodeViewDrawers[nodeType];
+                return typeof(NodeViewDrawer);
             }
-            return nodeViewDrawerType;
         }
 
         public Type GetGraphPropertiesType(Type graphType)
         {
-            if(!m_graphPropertiesToGraphType.ContainsKey(graphType))
+            if(!GraphToGraphProperties.ContainsKey(graphType))
             {
                 Debug.LogError("Problem creating graph instance! Could not find associated GraphProperties. Ensure that your GraphProperties class has the GraphProperties Attribute on it!");
                 return null;
             }
-            return m_graphPropertiesToGraphType[graphType];
+            return GraphToGraphProperties[graphType];
         }
     }
 }

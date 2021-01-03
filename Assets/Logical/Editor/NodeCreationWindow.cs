@@ -36,12 +36,13 @@ namespace Logical.Editor
                     level = 2
                 });
             }
-            tree.Add(new SearchTreeGroupEntry(new GUIContent(m_graphTypeMetadata.GraphType.Name + " Nodes"), 1));
-            for (int i = 0; i < m_graphTypeMetadata.ValidNodeTypes.Count; i++)
+            tree.Add(new SearchTreeGroupEntry(new GUIContent(m_graphTypeMetadata.ActiveGraphType.Name + " Nodes"), 1));
+            List<Type> nodeTypes = m_graphTypeMetadata.GetNodeTypesFromGraphType(m_graphTypeMetadata.ActiveGraphType);
+            for (int i = 0; i < nodeTypes.Count; i++)
             {
-                tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.ValidNodeTypes[i].Name))
+                tree.Add(new SearchTreeEntry(new GUIContent(nodeTypes[i].Name))
                 {
-                    userData = m_graphTypeMetadata.ValidNodeTypes[i],
+                    userData = nodeTypes[i],
                     level = 2
                 });
             }

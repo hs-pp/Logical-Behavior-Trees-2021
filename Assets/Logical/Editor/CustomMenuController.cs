@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CustomMenuController : MonoBehaviour
+public class CustomMenuController
 {
     private VisualElement m_mainPanel = null;
     private NodeGraphView m_nodeGraphView = null;

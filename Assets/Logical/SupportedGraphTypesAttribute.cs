@@ -10,10 +10,10 @@ namespace Logical
     /// </summary>
     public class SupportedGraphTypesAttribute : Attribute
     {
-        public List<Type> SupportedTypes { get; private set; }
-        public SupportedGraphTypesAttribute(params Type[] supportedTypes)
+        public Type GraphType { get; private set; }
+        public SupportedGraphTypesAttribute(Type graphType)
         {
-            SupportedTypes = supportedTypes.ToList();
+            GraphType = graphType;
         }
     }
 }

@@ -5,11 +5,11 @@
         </ui:VisualElement>
         <ui:VisualElement name="container" style="max-width: 600px;">
             <ui:VisualElement name="title-container" style="align-items: center; padding-bottom: 13px; flex-shrink: 0; overflow: hidden;">
-                <ui:Label text="Generate Graph Type" display-tooltip-when-elided="True" name="title-label" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 23px;" />
+                <ui:Label text="Generate Graph Class" display-tooltip-when-elided="True" name="title-label" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 23px;" />
                 <ui:VisualElement name="divider" style="height: 4px; width: 300px; border-top-width: 1px; border-left-color: rgb(196, 196, 196); border-right-color: rgb(196, 196, 196); border-top-color: rgb(196, 196, 196); border-bottom-color: rgb(196, 196, 196);" />
             </ui:VisualElement>
             <ui:ScrollView>
-                <ui:TextField picking-mode="Ignore" label="Graph Type Name" name="graph-type-name-textfield" />
+                <ui:TextField picking-mode="Ignore" label="Graph Type Name" name="graph-class-name-textfield" />
                 <ui:Toggle label="Include Helper Comments" name="include-comments-toggle" style="padding-bottom: 16px;" />
                 <ui:VisualElement name="path-container" style="overflow: visible; flex-direction: row; padding-bottom: 16px;">
                     <ui:Label text="Path: " display-tooltip-when-elided="True" name="path-label" style="padding-bottom: 0; font-size: 18px; -unity-font-style: bold; -unity-text-align: middle-left;" />
