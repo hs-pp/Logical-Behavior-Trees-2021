@@ -2,7 +2,7 @@ using Logical;
 using System;
 
 [Serializable]
-[SupportedGraphTypes(typeof(GRAPHNAME))]
+[Node(typeof(GRAPHNAME))]
 public class NODENAME : ANode
 {
     //============= WARNING Instance Variables WARNING =============//

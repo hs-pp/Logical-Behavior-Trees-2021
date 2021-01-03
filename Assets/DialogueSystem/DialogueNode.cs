@@ -14,7 +14,7 @@ using UnityEditor;
 namespace DialogueSystem
 {
     [Serializable]
-    [SupportedGraphTypes(typeof(DialogueGraph))]
+    [Node(typeof(DialogueGraph))]
     public class DialogueNode : ANode
     {
         [SerializeField]

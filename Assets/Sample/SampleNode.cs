@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-[SupportedGraphTypes(typeof(SampleNodeGraph))]
+[Node(typeof(SampleNodeGraph))]
 public class SampleNode : ANode
 {
     int framecount = 0;

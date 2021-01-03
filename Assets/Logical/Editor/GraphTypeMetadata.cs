@@ -40,18 +40,18 @@ namespace Logical.Editor
                     }
                     else if(typeof(ANode).IsAssignableFrom(type))
                     {
-                        SupportedGraphTypesAttribute supportedGraphType = type.GetCustomAttribute<SupportedGraphTypesAttribute>();
-                        if(supportedGraphType == null)
+                        NodeAttribute nodeAttribute = type.GetCustomAttribute<NodeAttribute>();
+                        if(nodeAttribute == null)
                         {
                             UniversalNodeTypes.Add(type);
                         }
                         else
                         {
-                            if (!GraphToNodes.ContainsKey(supportedGraphType.GraphType))
+                            if (!GraphToNodes.ContainsKey(nodeAttribute.GraphType))
                             {
-                                GraphToNodes.Add(supportedGraphType.GraphType, new List<Type>());
+                                GraphToNodes.Add(nodeAttribute.GraphType, new List<Type>());
                             }
-                            GraphToNodes[supportedGraphType.GraphType].Add(type);
+                            GraphToNodes[nodeAttribute.GraphType].Add(type);
                         }
                     }
                     else if(typeof(NodeViewDrawer).IsAssignableFrom(type)

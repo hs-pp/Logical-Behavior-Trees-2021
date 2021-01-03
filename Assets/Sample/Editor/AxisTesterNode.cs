@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-[SupportedGraphTypes(typeof(SampleNodeGraph))]
+[Node(typeof(SampleNodeGraph))]
 public class AxisTesterNode : ANode
 {
 }

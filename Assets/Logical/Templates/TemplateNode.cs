@@ -2,7 +2,7 @@ using Logical;
 using System;
 
 [Serializable]
-[SupportedGraphTypes(typeof(TemplateNodeGraph))]
+[Node(typeof(TemplateNodeGraph))]
 public class TemplateNode : ANode
 {
     //============= WARNING Instance Variables WARNING =============//
