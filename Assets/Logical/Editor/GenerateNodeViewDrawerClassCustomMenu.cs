@@ -70,7 +70,7 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
         m_nodeClassPopupOptions.Clear();
         m_unselectablePopupOptions.Clear();
 
-        m_nodeClassPopupOptions.Add("None");
+        m_nodeClassPopupOptions.Add("---");
         foreach (Type graphType in m_graphTypeMetadata.GraphToNodes.Keys)
         {
             foreach(Type nodeType in m_graphTypeMetadata.GraphToNodes[graphType])
@@ -78,7 +78,7 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
                 bool exists = m_graphTypeMetadata.NodeToNodeViewDrawer.ContainsKey(nodeType);
                 if(exists)
                 {
-                    m_nodeClassPopupOptions.Add($"{graphType.Name}/{nodeType.Name} (EXISTS)");
+                    m_nodeClassPopupOptions.Add($"{graphType.Name}/{nodeType.Name}(EXISTS)");
                     m_unselectablePopupOptions.Add(m_nodeClassPopupOptions.Count - 1);
                 }
                 else
@@ -99,24 +99,45 @@ public class GenerateNodeViewDrawerClassCustomMenu : CustomMenuElement
     }
 
     private void OnGraphClassNameChanged(ChangeEvent<string> changeEvent) { OnGraphClassNameChanged(changeEvent.newValue); }
-    private void OnGraphClassNameChanged(string newName)
+    private void OnGraphClassNameChanged(string className)
     {
-        bool nameIsEmpty = string.IsNullOrEmpty(newName);
+        bool nameIsEmpty = string.IsNullOrEmpty(className);
         if (nameIsEmpty)
         {
-            newName = "***NO*NAME***";
+            className = "***NO*NAME***";
         }
         m_createButton.SetEnabled(!nameIsEmpty);
 
-        m_pendingGeneratedCode = m_template.text.Replace("NODEVIEWDRAWERNAME", newName);
+        string nodeClassName = "***NO*NAME***";
+        if (m_relatedNodeSelectedIndex > 0)
+        {
+            string selectedOption = m_nodeClassPopupOptions[m_relatedNodeSelectedIndex];
+            if (!selectedOption.Contains("(EXISTS)"))
+            {
+                string[] parsed = selectedOption.Split('/');
+                nodeClassName = parsed[parsed.Length - 1];
+            }
+            else
+            {
+                m_relatedNodeSelectedIndex = 0;
+            }
+        }
+
+        m_pendingGeneratedCode = m_template.text.Replace("NODEVIEWDRAWERNAME", className);
+        m_pendingGeneratedCode = m_pendingGeneratedCode.Replace("NODENAME", nodeClassName);
         m_previewArea.value = m_pendingGeneratedCode;
 
         UpdatePath();
     }
-
+    private int m_relatedNodeSelectedIndex = 0;
     private void OnRelatedNodeClassDraw()
     {
-        EditorGUILayout.Popup(new GUIContent(" Related Node Class"), 0, m_nodeClassPopupOptions.ToArray());
+        EditorGUI.BeginChangeCheck();
+        m_relatedNodeSelectedIndex = EditorGUILayout.Popup(new GUIContent(" Related Node Class"), m_relatedNodeSelectedIndex, m_nodeClassPopupOptions.ToArray());
+        if(EditorGUI.EndChangeCheck())
+        {
+            OnGraphClassNameChanged(m_className.value);
+        }
     }
 
     private void UpdatePath()
