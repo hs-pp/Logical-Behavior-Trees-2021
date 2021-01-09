@@ -1,13 +1,12 @@
 ﻿using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Logical.Editor 
 {
-    /// <summary>
-    /// TODO: Why is this here and not in LogicalGraphWindow?
-    /// </summary>
-    public class NodeGraphEditor
+    [CustomEditor(typeof(NodeGraph), true)]
+    public class NodeGraphEditor : UnityEditor.Editor
     {
         [MenuItem("Graph/Logical Graph")]
         public static LogicalTheoryWindow OpenWindow()
@@ -28,6 +27,20 @@ namespace Logical.Editor
                 return true;
             }
             return false;
+        }
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            VisualElement container = new VisualElement();
+            Button openButton = new Button();
+            openButton.text = "Open Graph";
+            openButton.clicked += () =>
+            {
+                LogicalTheoryWindow window = OpenWindow();
+                window.OpenGraph(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath((target as NodeGraph).GetInstanceID())));
+            };
+            container.Add(openButton);
+            return container;
         }
     }
 }
