@@ -27,15 +27,6 @@ namespace Logical.Editor
         {
             List<SearchTreeEntry> tree = new List<SearchTreeEntry>();
             tree.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"), 0));
-            tree.Add(new SearchTreeGroupEntry(new GUIContent("Universal Nodes"), 1));
-            for (int i = 0; i < m_graphTypeMetadata.UniversalNodeTypes.Count; i++)
-            {
-                tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.UniversalNodeTypes[i].Name))
-                {
-                    userData = m_graphTypeMetadata.UniversalNodeTypes[i],
-                    level = 2
-                });
-            }
             tree.Add(new SearchTreeGroupEntry(new GUIContent(m_graphTypeMetadata.ActiveGraphType.Name + " Nodes"), 1));
             List<Type> nodeTypes = m_graphTypeMetadata.GetNodeTypesFromGraphType(m_graphTypeMetadata.ActiveGraphType);
             for (int i = 0; i < nodeTypes.Count; i++)
@@ -43,6 +34,15 @@ namespace Logical.Editor
                 tree.Add(new SearchTreeEntry(new GUIContent(nodeTypes[i].Name))
                 {
                     userData = nodeTypes[i],
+                    level = 2
+                });
+            }
+            tree.Add(new SearchTreeGroupEntry(new GUIContent("Universal Nodes"), 1));
+            for (int i = 0; i < m_graphTypeMetadata.UniversalNodeTypes.Count; i++)
+            {
+                tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.UniversalNodeTypes[i].Name))
+                {
+                    userData = m_graphTypeMetadata.UniversalNodeTypes[i],
                     level = 2
                 });
             }

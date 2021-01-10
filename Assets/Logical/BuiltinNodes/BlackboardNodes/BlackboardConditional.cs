@@ -35,7 +35,7 @@ namespace Logical.BuiltInNodes
             {
                 if (m_conditionals[i].Evaluate(element))
                 {
-                    graphControls.TraverseEdge(this, i);
+                    graphControls.TraverseEdge(i, this);
                     return;
                 }
             }

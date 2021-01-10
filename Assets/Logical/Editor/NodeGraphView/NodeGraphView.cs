@@ -20,7 +20,7 @@ namespace Logical.Editor
         private IEdgeConnectorListener m_edgeConectorListener = null;
 
         public NodeGraph NodeGraph { get; private set; } = null;
-        private GraphTypeMetadata m_graphTypeMetadata = null;
+        public GraphTypeMetadata GraphTypeMetadata { get; private set; }
         private NodeCollection m_nodeCollection = null;
         private SerializedProperty m_nodeListProp = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
@@ -59,9 +59,9 @@ namespace Logical.Editor
             this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent evt) => { m_miniMap.SetPosition(new Rect(evt.newRect.xMax - 210, evt.newRect.yMax - 210, 200, 200)); });
             Add(m_miniMap);
 
-            m_graphTypeMetadata = graphTypeMetadata;
+            GraphTypeMetadata = graphTypeMetadata;
             m_nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
-            m_nodeCreationWindow.Setup(this, m_graphTypeMetadata);
+            m_nodeCreationWindow.Setup(this, GraphTypeMetadata);
 
             nodeCreationRequest = context =>
             {
@@ -93,14 +93,14 @@ namespace Logical.Editor
             }
 
             NodeCollection nodeCollection = GetNodeCollectionByBreadcrumb(nodeGraph);
-            m_nodeListProp = new SerializedObject(nodeGraph).FindProperty("m_nodeCollection").FindPropertyRelative("m_nodes");
+            m_nodeListProp = new SerializedObject(nodeGraph).FindProperty(NodeGraph.NodeCollection_VarName).FindPropertyRelative("m_nodes");
 
             if (nodeGraph == null || nodeCollection == null)
                 return;
 
             NodeGraph = nodeGraph;
              m_nodeCollection = nodeCollection;
-            m_graphTypeMetadata.SetNewGraphType(NodeGraph.GetType());
+            GraphTypeMetadata.SetNewGraphType(NodeGraph.GetType());
 
             NodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
             NodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
@@ -273,7 +273,7 @@ namespace Logical.Editor
             }
 
             NodeView nodeView = new NodeView(node, serializedNode, this, m_edgeConectorListener,
-                Activator.CreateInstance(m_graphTypeMetadata.GetNodeViewDrawerType(node.GetType())) as NodeViewDrawer);
+                Activator.CreateInstance(GraphTypeMetadata.GetNodeViewDrawerType(node.GetType())) as NodeViewDrawer);
 
             AddElement(nodeView);
             m_nodeViews.Add(node.Id, nodeView);

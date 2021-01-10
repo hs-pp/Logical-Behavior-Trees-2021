@@ -11,6 +11,6 @@ public class DebugLogNode : ANode
     public override void OnNodeEnter(GraphControls graphControls)
     {
         Debug.Log(Message);
-        graphControls.TraverseEdge(this, 0);
+        graphControls.TraverseEdge(0, this);
     }
 }

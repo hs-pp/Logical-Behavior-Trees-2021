@@ -10,32 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74389df87b874854a9f55ee5f92b7135, type: 3}
-  m_Name: aaa
+  m_Name: ffff
   m_EditorClassIdentifier: 
-  m_nodeCollection:
+  NodeCollection:
     m_nodes:
     - id: 0
-    m_entryNodeId: 99bb4134-459a-4f81-b211-a1e0e1b488c9
-  GraphProperties:
-    id: 1
-  m_blackboardProperties:
+    m_entryNodeId: b023d4cf-8959-429c-8ba0-b678b1a65b01
+  BlackboardProperties:
     m_allElements: []
   references:
     version: 1
     00000000:
       type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Assembly-CSharp}
       data:
-        m_id: 99bb4134-459a-4f81-b211-a1e0e1b488c9
+        m_id: b023d4cf-8959-429c-8ba0-b678b1a65b01
         m_outports:
-        - Id: 723220f3-097a-4dbf-b842-7e0ca1bd4280
+        - Id: ba1245da-0f3f-4fec-8626-c25e95aace9e
           ConnectedNodeId: 
         m_position: {x: 0, y: 0}
         m_comment: 
-    00000001:
-      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Assembly-CSharp}
-      data:
-        thisint: 6
-        thisstring: 
-        serializedClass:
-          serializedInt: 2
-          serializedString: 

@@ -115,9 +115,9 @@ namespace Logical
         /// <summary>
         /// Call this method from any of a node's methods to traverse a particular edge and enter another node.
         /// </summary>
-        /// <param name="node"> The current node. </param>
         /// <param name="index"> The index of the edge (aka outport) we want to traverse. </param>
-        public void TraverseEdge(ANode node, int index)
+        /// <param name="node"> The current node. </param>
+        public void TraverseEdge(int index, ANode node)
         {
             m_onTraverseEdge?.Invoke(node.GetOutportEdge(index));
         }

@@ -17,7 +17,7 @@ public class SampleNode : ANode
         framecount++;
         if(framecount >= 100)
         {
-            graphControls.TraverseEdge(this, 0);
+            graphControls.TraverseEdge(0, this);
         }
     }
 

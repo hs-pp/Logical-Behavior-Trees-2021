@@ -30,7 +30,7 @@ namespace Logical.BuiltInNodes
             }
             BlackboardElement element = graphControls.BlackboardProperties.GetElementById(m_blackboardElementId);
             m_setterValue.Evaluate(element);
-            graphControls.TraverseEdge(this, 0);
+            graphControls.TraverseEdge(0, this);
         }
 
 #if UNITY_EDITOR

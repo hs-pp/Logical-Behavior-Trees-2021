@@ -112,7 +112,7 @@ public class GenerateNodeClassCustomMenu : CustomMenuElement
     private void OnRelatedNodeClassDraw()
     {
         EditorGUI.BeginChangeCheck();
-        m_relatedNodeSelectedIndex = EditorGUILayout.Popup(new GUIContent(" Related Node Class"), m_relatedNodeSelectedIndex, m_graphClassPopupOptions.ToArray());
+        m_relatedNodeSelectedIndex = EditorGUILayout.Popup(new GUIContent(" Related Graph Class"), m_relatedNodeSelectedIndex, m_graphClassPopupOptions.ToArray());
         if (EditorGUI.EndChangeCheck())
         {
             OnGraphClassNameChanged(m_className.value);

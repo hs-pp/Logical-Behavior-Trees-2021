@@ -26,13 +26,12 @@ namespace Logical
         {
             return m_allElements.Find(x => x.Name == name);
         }
-
-#if UNITY_EDITOR
-
         public BlackboardElement GetElementById(string id)
         {
             return m_allElements.Find(x => x.GUID == id);
         }
+
+#if UNITY_EDITOR
 
         public void AddElement(BlackboardElement element)
         {

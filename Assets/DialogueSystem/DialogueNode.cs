@@ -4,11 +4,11 @@ using UnityEngine;
 using Logical;
 using System;
 using System.Runtime.Serialization;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 #endif
 
 namespace DialogueSystem

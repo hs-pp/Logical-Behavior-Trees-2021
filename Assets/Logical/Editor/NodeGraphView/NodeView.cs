@@ -260,7 +260,7 @@ namespace Logical.Editor
 
             // Add ability to open the node's script file
             // This isn't very performant but is there a better way?
-            evt.menu.AppendAction("Open Script", (menuAction) => 
+            evt.menu.AppendAction("Open Node Script", (menuAction) => 
             {
                 string nodeTypeName = NodeType.Name;
                 IEnumerable<string> scriptPaths = AssetDatabase.FindAssets($"t:script {nodeTypeName}").Select(AssetDatabase.GUIDToAssetPath);
@@ -273,6 +273,24 @@ namespace Logical.Editor
                     }
                 }
                 Debug.LogError("Script not found. Is your node class in it's own script with its own name?");
+            });
+            evt.menu.AppendAction("Open NodeViewDrawer Script", (menuAction) =>
+            {
+                Type nodeViewDrawerType = m_nodeGraphView.GraphTypeMetadata.GetNodeViewDrawerType(NodeType);
+                if(nodeViewDrawerType != typeof(NodeViewDrawer))
+                {
+                    string typeName = nodeViewDrawerType.Name;
+                    IEnumerable<string> scriptPaths = AssetDatabase.FindAssets($"t:script {typeName}").Select(AssetDatabase.GUIDToAssetPath);
+                    foreach (string path in scriptPaths)
+                    {
+                        if (Path.GetFileName(path) == $"{typeName}.cs")
+                        {
+                            UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(path, 0);
+                            return;
+                        }
+                    }
+                    Debug.LogError("Script not found. Is your nodeviewdrawer class in it's own script with its own name?");
+                }
             });
         }
 
