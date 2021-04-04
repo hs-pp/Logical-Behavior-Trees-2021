@@ -99,7 +99,6 @@ public class CreateGraphInstanceCustomMenu : CustomMenuElement
 
         NodeGraph createdGraph = ScriptableObject.CreateInstance(m_allGraphTypes[m_selectedIndex]) as NodeGraph;
         createdGraph.GraphProperties = (AGraphProperties)Activator.CreateInstance(m_graphTypeMetaData.GetGraphPropertiesType(m_allGraphTypes[m_selectedIndex]));
-
         AssetDatabase.CreateAsset(createdGraph, GetFullAssetPath(m_graphNameField.value));
         GraphModificationProcessor.OnAssetCreated(createdGraph);
         OnCloseButtonPressed();

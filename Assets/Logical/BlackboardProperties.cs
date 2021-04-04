@@ -6,15 +6,16 @@ namespace Logical
 {
     /// <summary>
     /// The container that holds all of our blackboard elements.
-    /// Blackboard elements can be added to a graph using the graph editor window.
-    /// Elements are only intended to be accessable within the graph using the 
+    /// BlackboardElements can be added to a graph using the graph editor window.
+    /// BlackboardElements are only intended to be accessable within the graph using the 
     /// built-in BlackboardSetter and BlackboardConditional nodes as well as custom
     /// nodes that may need them.
     /// 
     /// These elements are also accessable from code using GetElementByName(). 
     /// However, this is not recommended because blackboard elements are 
     /// graph instance-based and cannot be guaranteed to exist in a particular
-    /// graph asset.
+    /// graph asset. For any data that should exist for all graphs of a given graph
+    /// type, please use GraphProperties instead.
     /// </summary>
     [Serializable]
     public class BlackboardProperties

@@ -1,30 +1,17 @@
-using Logical;
+﻿using Logical;
 using Logical.Editor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-/// <summary>
-/// This is the node view's drawer class! A NodeView is the visual representation of a node in the graph editor.
-/// The NodeView is broken up into many smaller parts for maximum control in customization.
-/// The overridable methods provide the base VisualElement to be added to. If you prefer IMGUI, you can easily
-/// add an IMGUIContainer to the base VisualElement and work from there.
-/// </summary>
-[CustomNodeViewDrawer(typeof(TemplateNode))]
-public class TemplateNodeViewDrawer : NodeViewDrawer
+[CustomNodeViewDrawer(typeof(SampleNode))]
+public class SampleNodeViewDrawer : NodeViewDrawer
 {
-    /// <summary>
-    /// The display nade of the node in the NodeView's title.
-    /// </summary>
-    public override string DisplayName { get { return "Template Node"; } }
-
-    /// <summary>
-    /// The color of the node as well as the color of the edges connected to the node.
-    /// </summary>
+    public override string DisplayName { get { return "Sample Node"; } }
     public override Color NodeColor { get { return new Color(0.58f, 0.22f, 0.22f); } }
 
     public override void OnDrawHeader(VisualElement headerContainer)
     {
-        headerContainer.Add(new Label("Header"));
+        //headerContainer.Add(new Label("Header"));
     }
 
     public override void OnDrawTitle(VisualElement preTitleContainer, VisualElement postTitleContainer)
@@ -68,12 +55,10 @@ public class TemplateNodeViewDrawer : NodeViewDrawer
 
     public override void OnDrawFooter(VisualElement footerContainer)
     {
-        footerContainer.Add(new Label("Footer"));
+        //footerContainer.Add(new Label("Footer"));
     }
 
-    /// <summary>
-    /// Super simple helper method to create a bordered VisualElement with a label.
-    /// </summary>
+
     private VisualElement GetPlaceholderElement(string name, float height)
     {
         VisualElement placeholder = new VisualElement();

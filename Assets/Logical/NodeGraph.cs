@@ -16,6 +16,7 @@ namespace Logical
     public abstract class NodeGraph : ScriptableObject
     {
         public NodeCollection NodeCollection; // The nodes
+        [SerializeReference]
         public AGraphProperties GraphProperties; // Properties universally associated to the graph
         public BlackboardProperties BlackboardProperties; // Properties associated to a specific instance of the graph.
 
