@@ -34,15 +34,6 @@ namespace Logical.Editor
 
         private NodeGraph m_openedGraphInstance = null;
         private GraphTypeMetadata m_graphTypeMetadata = null;
-        
-        /// <summary>
-        /// Temp method to clear graph data for testing.
-        /// </summary>
-        [MenuItem("Graph/Clear Graph Data")]
-        public static void ClearGraphData()
-        {
-            EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(new GraphWindowData(), true));
-        }
 
         /// <summary>
         /// When the UI is enabled, it sets up all the VisualElement references and loads in the window data.
