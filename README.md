@@ -8,7 +8,7 @@ Logical was developed to be extremely generic to allow any type of data to be re
 
 Logical was built entirely using Unity's new UIToolkit and utilizes their experimental GraphView system to display the graphs. However, for ease of use, every customizable view allows supports both UIToolkit and IMGUI in their implementations.
 
-![a](DocAssets/GeneralWindow.png)
+![a](DocAssets/GeneralWindow.PNG)
 
 ## **Features:**
 
