@@ -35,7 +35,7 @@ Unity 2020.2 and higher is required because there are a number of changes to Uni
 
 This tool requires an intermediate level of Unity Editor scripting to use it effectively. Custom nodes will need pretty property drawers and NodeView drawers, which can be implemented using UIToolkit/IMGUI, for them to be useful.
 
-## Full Disclosure
+## Other Notes
 This was a personal project of my throughout the span of 3-4 months and was not production tested. I've used this system in my own hobby games but that does not mean it is bug proof. I moved on from this project many months ago and don't plan on updating it again for a while. And so I decided to make this project public in case it could be useful to others rather than keep it in the closet just to collect dust. Hope you find something useful out of it!
 
 ## Future Features 
