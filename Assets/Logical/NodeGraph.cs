@@ -4,6 +4,7 @@ using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using Logical.Editor;
 #endif
 
 namespace Logical
@@ -33,6 +34,7 @@ namespace Logical
             NodeCollection = new NodeCollection();
             ANode entryNode = NodeCollection.CreateNode(typeof(EntryNode), Vector2.zero);
             NodeCollection.SetEntryNode(entryNode.Id);
+            GraphProperties = (AGraphProperties)Activator.CreateInstance(GraphTypeMetadata.GetGraphPropertiesType(GetType()));
             BlackboardProperties = new BlackboardProperties();
         }
 

@@ -33,7 +33,6 @@ namespace Logical.Editor
         private CustomMenuController m_customMenuController = null;
 
         private NodeGraph m_openedGraphInstance = null;
-        private GraphTypeMetadata m_graphTypeMetadata = null;
 
         /// <summary>
         /// When the UI is enabled, it sets up all the VisualElement references and loads in the window data.
@@ -44,7 +43,6 @@ namespace Logical.Editor
             var uxmlAsset = Resources.Load<VisualTreeAsset>(ResourceAssetPaths.LogicalGraphWindow_UXML);
             uxmlAsset.CloneTree(rootVisualElement);
             m_mainSplitView = rootVisualElement.Q<UIElements.TwoPaneSplitView>(MAIN_SPLITVIEW);
-            m_graphTypeMetadata = new GraphTypeMetadata();
             //=========================================================================================//=
 
             //==================================Register Toolbar=======================================//
@@ -69,7 +67,7 @@ namespace Logical.Editor
             VisualElement mainPanelLeft = rootVisualElement.Q<VisualElement>(MAIN_PANEL_LEFT);
 
             // Populate right panel
-            m_nodeGraphView = new NodeGraphView(m_graphTypeMetadata);
+            m_nodeGraphView = new NodeGraphView();
             m_nodeGraphView.StretchToParentSize();
             m_nodeGraphView.OnAddToSelection += OnGraphElementSelectionAdded;
             m_nodeGraphView.OnRemoveFromSelection += OnGraphElementSelectionRemoved;
@@ -80,7 +78,7 @@ namespace Logical.Editor
 
             // Populate left panel
             List<(string, TabContentElement)> tabs = new List<(string, TabContentElement)>();
-            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); }, m_customMenuController, m_graphTypeMetadata)));
+            tabs.Add(("Library", m_libraryTab = new LibraryTabElement((string guid) => { OpenGraph(guid); }, m_customMenuController)));
             tabs.Add(("Inspector", m_inspectorTab = new InspectorTabElement(m_nodeGraphView)));
             m_nodeGraphView.OnRemoveNode += (node) => { m_inspectorTab.SetNode(null, null); };
             m_mainTabGroup = new TabGroupElement(tabs);
@@ -159,6 +157,7 @@ namespace Logical.Editor
             m_graphWindowData.MainSplitViewPosition = m_mainSplitView.SplitPosition;
             m_graphWindowData.MainTabGroup = m_mainTabGroup.GetSerializedData();
             m_graphWindowData.GraphViewPosition = m_nodeGraphView.GetViewPosition();
+            m_graphWindowData.ShowMinimap = m_nodeGraphView.IsMinimapShowing();
 
             //Debug.Log("Serializing data: " + JsonUtility.ToJson(m_graphWindowData, true));
             EditorPrefs.SetString(DATA_STRING, JsonUtility.ToJson(m_graphWindowData, true));

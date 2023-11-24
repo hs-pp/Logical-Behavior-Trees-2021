@@ -31,7 +31,6 @@ namespace Logical.Editor
         private Button m_generateNodeClassButton = null;
         private Button m_generateNodeViewDrawerClassButton = null;
 
-        private GraphTypeMetadata m_graphTypeMetadata = null;
         private RecentsController m_recentsController = null;
         private FavoritesController m_favoritesController = null;
         private AllGraphsController m_allGraphsController = null;
@@ -40,7 +39,7 @@ namespace Logical.Editor
         private LibraryTabData LibraryTabData { get; set; }
         private Action<string> OnObjectFieldDoubleClick { get; }
 
-        public LibraryTabElement(Action<string> onObjectFieldDoubleClick, CustomMenuController customMenuController, GraphTypeMetadata graphTypeMetadata)
+        public LibraryTabElement(Action<string> onObjectFieldDoubleClick, CustomMenuController customMenuController)
         {
             OnObjectFieldDoubleClick = onObjectFieldDoubleClick;
 
@@ -53,16 +52,15 @@ namespace Logical.Editor
             m_generateNodeClassButton = this.Q<Button>(GENERATE_NODE_CLASS_BUTTON);
             m_generateNodeViewDrawerClassButton = this.Q<Button>(GENERATE_NODEVIEWDRAWER_CLASS_BUTTON);
 
-            m_graphTypeMetadata = graphTypeMetadata;
             m_recentsController = new RecentsController(this);
             m_favoritesController = new FavoritesController(this);
             m_allGraphsController = new AllGraphsController(this);
             m_customMenuController = customMenuController;
 
-            m_customMenuController.AddCustomMenu("CreateGraphInstance", new CreateGraphInstanceCustomMenu(m_graphTypeMetadata));
+            m_customMenuController.AddCustomMenu("CreateGraphInstance", new CreateGraphInstanceCustomMenu());
             m_customMenuController.AddCustomMenu("GenerateGraphClass", new GenerateGraphClassCustomMenu());
-            m_customMenuController.AddCustomMenu("GenerateNodeClass", new GenerateNodeClassCustomMenu(m_graphTypeMetadata));
-            m_customMenuController.AddCustomMenu("GenerateNodeViewDrawerClass", new GenerateNodeViewDrawerClassCustomMenu(m_graphTypeMetadata));
+            m_customMenuController.AddCustomMenu("GenerateNodeClass", new GenerateNodeClassCustomMenu());
+            m_customMenuController.AddCustomMenu("GenerateNodeViewDrawerClass", new GenerateNodeViewDrawerClassCustomMenu());
 
 
             m_createGraphInstanceButton.clicked += () => { m_customMenuController.ShowCustomMenu("CreateGraphInstance"); };

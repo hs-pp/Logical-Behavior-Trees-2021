@@ -74,7 +74,6 @@ namespace Logical.Editor
                     SetNode(m_selectedNode, m_selectedNodeProperty);
                 }
             };
-
         }
 
         public void SetVisible(bool visible)

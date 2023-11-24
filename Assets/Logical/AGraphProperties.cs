@@ -1,4 +1,6 @@
-﻿namespace Logical
+﻿using System;
+
+namespace Logical
 {
     /// <summary>
     /// Base class for GraphProperties.
@@ -9,6 +11,7 @@
     /// Each implementation of NodeGraph should have it's own AGraphProperties implementation
     /// to go with it.
     /// </summary>
+    [Serializable]
     public abstract class AGraphProperties 
     {
         /// <summary>

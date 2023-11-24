@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -10,17 +9,16 @@ namespace Logical.Editor
     /// <summary>
     /// Class that fetches and stores all pertinent classes to the whole Logical system.
     /// Uses some cute one-time reflection to find stuff with the right attributes.
+    /// Should only be used in editor scripts.
     /// </summary>
-    public class GraphTypeMetadata
+    public static class GraphTypeMetadata
     {
-        public Dictionary<Type, List<Type>> GraphToNodes = new Dictionary<Type, List<Type>>();
-        public List<Type> UniversalNodeTypes = new List<Type>();
-        public Dictionary<Type, Type> NodeToNodeViewDrawer = new Dictionary<Type, Type>();
-        public Dictionary<Type, Type> GraphToGraphProperties = new Dictionary<Type, Type>();
+        public static Dictionary<Type, List<Type>> GraphToNodes = new Dictionary<Type, List<Type>>();
+        public static List<Type> UniversalNodeTypes = new List<Type>();
+        public static Dictionary<Type, Type> NodeToNodeViewDrawer = new Dictionary<Type, Type>();
+        public static Dictionary<Type, Type> GraphToGraphProperties = new Dictionary<Type, Type>();
 
-        public Type ActiveGraphType { get; private set; } // This should probably be moved out of here.
-
-        public GraphTypeMetadata()
+        static GraphTypeMetadata()
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -69,7 +67,7 @@ namespace Logical.Editor
             //DebugTypes();
         }
 
-        private void DebugTypes() 
+        private static void DebugTypes() 
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("Debug Types");
@@ -91,22 +89,17 @@ namespace Logical.Editor
             Debug.Log(stringBuilder.ToString());
         }
 
-        public void SetNewGraphType(Type graphType)
-        {
-            ActiveGraphType = graphType;
-        }
-
-        public List<Type> GetAllGraphTypes()
+        public static List<Type> GetAllGraphTypes()
         {
             return new List<Type>(GraphToNodes.Keys);
         }
 
-        public List<Type> GetNodeTypesFromGraphType(Type graphType)
+        public static List<Type> GetNodeTypesFromGraphType(Type graphType)
         {
             return GraphToNodes[graphType];
         }
 
-        public Type GetNodeViewDrawerType(Type nodeType) 
+        public static Type GetNodeViewDrawerType(Type nodeType) 
         {
             if(NodeToNodeViewDrawer.ContainsKey(nodeType))
             {
@@ -118,7 +111,7 @@ namespace Logical.Editor
             }
         }
 
-        public Type GetGraphPropertiesType(Type graphType)
+        public static Type GetGraphPropertiesType(Type graphType)
         {
             if(!GraphToGraphProperties.ContainsKey(graphType))
             {

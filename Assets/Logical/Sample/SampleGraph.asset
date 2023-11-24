@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: SampleGraph
+  m_EditorClassIdentifier: Logical::SampleNodeGraph
+  NodeCollection:
+    m_nodes:
+    - rid: 7313442617529204736
+    m_entryNodeId: 12ba4878-c093-4474-8179-dd5f741e2666
+  GraphProperties:
+    rid: 7313442617529204737
+  BlackboardProperties:
+    m_allElements: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7313442617529204736
+      type: {class: EntryNode, ns: Logical.BuiltInNodes, asm: Logical}
+      data:
+        m_id: 12ba4878-c093-4474-8179-dd5f741e2666
+        m_outports:
+        - Id: 41c32632-9faa-4b3e-9c80-8320b5e518c1
+          ConnectedNodeId: 
+        m_position: {x: 0, y: 0}
+        m_comment: 
+    - rid: 7313442617529204737
+      type: {class: SampleNodeGraph/SampleNodeGraphProperties, ns: , asm: Logical}
+      data:
+        thisint: 6
+        thisstring: 

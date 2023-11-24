@@ -61,7 +61,6 @@ namespace Logical.Editor
 
             m_graphNameLabel.text = nodeGraph.name;
             m_graphObjectField.SetObject(nodeGraph);
-
             if (nodeGraph.GraphProperties.UseIMGUIPropertyDrawer)
             {
                 m_imguiContainer.Bind(m_nodeGraphSO);

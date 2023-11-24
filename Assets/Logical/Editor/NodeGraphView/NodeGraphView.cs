@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using System;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 
 namespace Logical.Editor
@@ -20,7 +21,6 @@ namespace Logical.Editor
         private IEdgeConnectorListener m_edgeConectorListener = null;
 
         public NodeGraph NodeGraph { get; private set; } = null;
-        public GraphTypeMetadata GraphTypeMetadata { get; private set; }
         private NodeCollection m_nodeCollection = null;
         private SerializedProperty m_nodeListProp = null;
         private Dictionary<string, NodeView> m_nodeViews = new Dictionary<string, NodeView>();
@@ -35,8 +35,9 @@ namespace Logical.Editor
 
         //private AxisGraphElement m_xAxisIndicator = null;
         private GraphAxesController m_graphAxesController = null;
+        private PropertyInfo m_worldClipProp;
 
-        public NodeGraphView(GraphTypeMetadata graphTypeMetadata) 
+        public NodeGraphView() 
         {
             styleSheets.Add(Resources.Load<StyleSheet>(ResourceAssetPaths.NodeGraphView_StyleSheet));
 
@@ -59,12 +60,12 @@ namespace Logical.Editor
             this.RegisterCallback<GeometryChangedEvent>((GeometryChangedEvent evt) => { m_miniMap.SetPosition(new Rect(evt.newRect.xMax - 210, evt.newRect.yMax - 210, 200, 200)); });
             Add(m_miniMap);
 
-            GraphTypeMetadata = graphTypeMetadata;
             m_nodeCreationWindow = ScriptableObject.CreateInstance<NodeCreationWindow>();
-            m_nodeCreationWindow.Setup(this, GraphTypeMetadata);
+            m_nodeCreationWindow.Setup(this);
 
             nodeCreationRequest = context =>
             {
+                m_nodeCreationWindow.SetMousePosition(GetGraphMousePosition());
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition, 0, 0), m_nodeCreationWindow);
             };
             graphViewChanged += OnGraphViewChanged;
@@ -82,6 +83,10 @@ namespace Logical.Editor
             Add(m_graphAxesController);
             m_graphAxesController.PlaceBehind(contentViewContainer);
             m_graphAxesController.SetEnable(true);
+
+            // Needed to get the worldclip value on the contentViewContainer when getting mouse position.
+            m_worldClipProp =
+                typeof(VisualElement).GetProperty("worldClip", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         public void SetNodeCollection(NodeGraph nodeGraph)
@@ -99,8 +104,7 @@ namespace Logical.Editor
                 return;
 
             NodeGraph = nodeGraph;
-             m_nodeCollection = nodeCollection;
-            GraphTypeMetadata.SetNewGraphType(NodeGraph.GetType());
+            m_nodeCollection = nodeCollection;
 
             NodeGraph.OnNodeOutportAdded -= OnNodeOutportAdded;
             NodeGraph.OnNodeOutportAdded += OnNodeOutportAdded;
@@ -119,19 +123,6 @@ namespace Logical.Editor
             RefreshSerializedNodeReferences();
             m_graphAxesController?.RefreshPositions();
         }
-
-        //public void SetNodeCollection(NodeGraph nodeGraph)
-        //{
-        //    ANode entryNode = nodeGraph?.NodeCollection?.GetEntryNode();
-        //    if(entryNode != null)
-        //    {
-        //        SetNodeCollection(nodeGraph, entryNode.Position);
-        //    }
-        //    else
-        //    {
-        //        SetNodeCollection(nodeGraph, Vector2.zero);
-        //    }
-        //}
 
         public void Reset()
         {
@@ -152,6 +143,15 @@ namespace Logical.Editor
             m_nodeViews.Clear();
         }
 
+        private Vector2 GetGraphMousePosition()
+        {
+            float zoom = contentViewContainer.worldTransform.m00;
+            Vector2 worldClipPos = ((Rect)m_worldClipProp.GetValue(contentViewContainer)).position;
+            Vector2 offset = contentViewContainer.worldBound.position - worldClipPos;
+            //Debug.Log( " result: " + (mousePos - offset) / zoom + "\nmousePos: " + mousePos + "\noffset: " + offset + "\nzoom: " + zoom );
+            return (m_mousePosition - offset) / zoom;
+        }
+        
         public Vector2 GetViewPosition()
         {
             return viewTransform.position;
@@ -163,6 +163,17 @@ namespace Logical.Editor
         public void ShowMinimap(bool show)
         {
             m_miniMap.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public void ToggleMinimap()
+        {
+            bool isOn = m_miniMap.style.display == DisplayStyle.Flex;
+            ShowMinimap(!isOn);
+        }
+
+        public bool IsMinimapShowing()
+        {
+            return m_miniMap.style.display == DisplayStyle.Flex;
         }
 
         public NodeView GetNodeViewById(string id)
@@ -426,8 +437,7 @@ namespace Logical.Editor
             {
                 Undo.RegisterCompleteObjectUndo(NodeGraph, "Paste Graph Elements");
 
-                Vector2 pos = m_mousePosition - new Vector2(contentViewContainer.transform.position.x, contentViewContainer.transform.position.y);
-                List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), pos);
+                List<ANode> clipboardNodes = SanitizeClipboardElements(copiedData.GetGraphElements(), GetGraphMousePosition());
                 LoadSanitizedClipboardNodes(clipboardNodes);
             }
             else
@@ -467,6 +477,15 @@ namespace Logical.Editor
             {
                 nodeView.HandleOnBlackboardElementChanged(undoGroup);
             }
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            evt.menu.AppendAction("Show MiniMap", (x) => { ToggleMinimap(); }, 
+                IsMinimapShowing() ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal);
+            evt.menu.AppendAction("Reset Graph Position", (x) => { FrameAll(); });
+            evt.menu.AppendAction("Reset Graph Position to origin", (x) => { FrameOrigin(); });
         }
     }
 }

@@ -276,7 +276,7 @@ namespace Logical.Editor
             });
             evt.menu.AppendAction("Open NodeViewDrawer Script", (menuAction) =>
             {
-                Type nodeViewDrawerType = m_nodeGraphView.GraphTypeMetadata.GetNodeViewDrawerType(NodeType);
+                Type nodeViewDrawerType = GraphTypeMetadata.GetNodeViewDrawerType(NodeType);
                 if(nodeViewDrawerType != typeof(NodeViewDrawer))
                 {
                     string typeName = nodeViewDrawerType.Name;

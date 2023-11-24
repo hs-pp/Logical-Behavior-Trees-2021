@@ -15,20 +15,25 @@ namespace Logical.Editor
     public class NodeCreationWindow : ScriptableObject, ISearchWindowProvider
     {
         private NodeGraphView m_nodeGraphView = null;
-        private GraphTypeMetadata m_graphTypeMetadata = null;
+        private Vector2 m_mousePos = Vector2.zero;
 
-        public void Setup(NodeGraphView nodeGraphView, GraphTypeMetadata graphTypeMetadata)
+        public void Setup(NodeGraphView nodeGraphView)
         {
             m_nodeGraphView = nodeGraphView;
-            m_graphTypeMetadata = graphTypeMetadata;
+        }
+        
+        public void SetMousePosition(Vector2 mousePos)
+        {
+            m_mousePos = mousePos;
         }
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
+            Type graphType = m_nodeGraphView.NodeGraph.GetType();
             List<SearchTreeEntry> tree = new List<SearchTreeEntry>();
             tree.Add(new SearchTreeGroupEntry(new GUIContent("Create Node"), 0));
-            tree.Add(new SearchTreeGroupEntry(new GUIContent(m_graphTypeMetadata.ActiveGraphType.Name + " Nodes"), 1));
-            List<Type> nodeTypes = m_graphTypeMetadata.GetNodeTypesFromGraphType(m_graphTypeMetadata.ActiveGraphType);
+            tree.Add(new SearchTreeGroupEntry(new GUIContent(graphType.Name + " Nodes"), 1));
+            List<Type> nodeTypes = GraphTypeMetadata.GetNodeTypesFromGraphType(graphType);
             for (int i = 0; i < nodeTypes.Count; i++)
             {
                 tree.Add(new SearchTreeEntry(new GUIContent(nodeTypes[i].Name))
@@ -38,11 +43,11 @@ namespace Logical.Editor
                 });
             }
             tree.Add(new SearchTreeGroupEntry(new GUIContent("Universal Nodes"), 1));
-            for (int i = 0; i < m_graphTypeMetadata.UniversalNodeTypes.Count; i++)
+            for (int i = 0; i < GraphTypeMetadata.UniversalNodeTypes.Count; i++)
             {
-                tree.Add(new SearchTreeEntry(new GUIContent(m_graphTypeMetadata.UniversalNodeTypes[i].Name))
+                tree.Add(new SearchTreeEntry(new GUIContent(GraphTypeMetadata.UniversalNodeTypes[i].Name))
                 {
-                    userData = m_graphTypeMetadata.UniversalNodeTypes[i],
+                    userData = GraphTypeMetadata.UniversalNodeTypes[i],
                     level = 2
                 });
             }
@@ -51,17 +56,21 @@ namespace Logical.Editor
 
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
-            LogicalTheoryWindow window = EditorWindow.GetWindow<LogicalTheoryWindow>();
-
-            Vector2 pos = m_nodeGraphView.contentViewContainer.WorldToLocal(
-                window.rootVisualElement.ChangeCoordinatesTo(
-                    window.rootVisualElement.parent,
-                    context.screenMousePosition - window.position.position));
-
+            // Vector2 pos = m_nodeGraphView.contentViewContainer.WorldToLocal(
+            //     m_editorWindow.rootVisualElement.ChangeCoordinatesTo(
+            //         m_editorWindow.rootVisualElement.parent,
+            //         context.screenMousePosition - m_editorWindow.position.position));
+            // VisualElement root = m_nodeGraphView.panel.visualTree;
+            // Rect rect = GUIUtility.GUIToScreenRect(m_nodeGraphView.worldBound);
+            // EditorWindow window = EditorWindow.GetWindow<LogicalTheoryWindow>();
+            // Vector3 pos222 = window.position.position;
+            // Vector2 pos = m_nodeGraphView.contentViewContainer.WorldToLocal(
+            //     root.ChangeCoordinatesTo(root, context.screenMousePosition - rect.position));
+            
             if (SearchTreeEntry.userData != null
                 && !(typeof(EntryNode).IsAssignableFrom(SearchTreeEntry.userData as Type)))
             {
-                m_nodeGraphView.CreateNode(SearchTreeEntry.userData as Type, pos);
+                m_nodeGraphView.CreateNode(SearchTreeEntry.userData as Type, m_mousePos);
                 return true;
             }
             return false;

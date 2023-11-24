@@ -1,7 +1,10 @@
 using System;
 using UnityEngine.UIElements;
 
-public class CustomMenuElement : VisualElement
+namespace Logical.Editor
 {
-    public Action OnCloseClicked = null;
+    public class CustomMenuElement : VisualElement
+    {
+        public Action OnCloseClicked = null;
+    }
 }
